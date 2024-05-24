@@ -26,11 +26,21 @@ export class MonitoramentoController {
     return this.monitoramentoFacade.request(input)
   }
 
-  @Get('/records')
+  @Get('/bruto')
   @Roles([Role.ADMIN, Role.USER])
-  @ApiOperation({ summary: 'Lista os Registros de Monitoramento no sistema' })
+  @ApiOperation({ summary: 'Lista os Registros Brutos de Monitoramento no sistema' })
   @ApiOkResponse({ type: RegistroMonitoramentoResponse, isArray: true })
-  list(
+  bruto(
+    @Body() input: ListRegistrosMonitoramentoRequest,
+  ): Promise<RegistroMonitoramentoResponse[]> {
+    return this.monitoramentoFacade.list(input)
+  }
+
+  @Get('/summary')
+  @Roles([Role.ADMIN, Role.USER])
+  @ApiOperation({ summary: 'Lista os Registros Brutos de Monitoramento no sistema' })
+  @ApiOkResponse({ type: RegistroMonitoramentoResponse, isArray: true })
+  summary(
     @Body() input: ListRegistrosMonitoramentoRequest,
   ): Promise<RegistroMonitoramentoResponse[]> {
     return this.monitoramentoFacade.list(input)
