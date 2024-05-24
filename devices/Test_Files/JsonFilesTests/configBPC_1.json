@@ -1,0 +1,42 @@
+{
+    "type": "BPC",
+    "mac": "A8:48:FA:DC:BC:60",
+    "id": 2,
+    "zone": 1,
+    "latitude": 15.3456,
+    "longitude": -85.8765,
+    "active_sensors": [
+        {
+            "variable": "luminosity",
+            "model": "lm393",
+            "sample_interval": null,
+            "min_variation_rate": 0
+        },
+        {
+            "variable": "infra-red",
+            "model": "lm393",
+            "sample_interval": null,
+            "min_variation_rate": 0
+        },
+        {
+            "variable": "vibration",
+            "model": "potentiometer",
+            "sample_interval": null,
+            "min_variation_rate": 0
+        }
+    ],
+    "emergencies": {
+        "fire": [
+            {
+                "luminosity": {
+                    "thresholdMinimo": null,
+                    "thresholdMaximo": 80
+                },
+                "infra-red": {
+                    "thresholdMinimo": null,
+                    "thresholdMaximo": 0
+                }
+            }
+        ]
+    }
+}

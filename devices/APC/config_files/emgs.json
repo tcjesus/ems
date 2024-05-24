@@ -1,0 +1,2 @@
+{"emg": "fire", "monitoring": [{"temperature": {"thresholdMinimo": null, "thresholdMaximo": 50}, "humidity": {"thresholdMinimo": 10, "thresholdMaximo": null}}, {"temperature": {"thresholdMinimo": null, "thresholdMaximo": 45}, "humidity": {"thresholdMinimo": null, "thresholdMaximo": 20}}, {"luminosity": {"thresholdMinimo": null, "thresholdMaximo": 80}, "infra-red": {"thresholdMinimo": null, "thresholdMaximo": 0}}]}
+{"emg": "flood", "monitoring": [{"humidity": {"thresholdMinimo": null, "thresholdMaximo": 85}}, {"humidity": {"thresholdMinimo": null, "thresholdMaximo": 93}}]}
