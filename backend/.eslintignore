@@ -1,0 +1,13 @@
+coverage
+dist
+docker-compose.yml
+nest-cli.json
+node_modules
+package.json
+package-lock.json
+README.md
+tsconfig.build.json
+tsconfig.ts
+jest.config.js
+jest.config.unit.js
+jest.config.integration.js

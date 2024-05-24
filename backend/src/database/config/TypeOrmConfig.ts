@@ -1,0 +1,45 @@
+import { TypeOrmModuleOptions } from '@nestjs/typeorm'
+
+import { Environment as envs } from '@/Environment'
+import { AccountModel } from '@/account/models/AccountModel'
+import { DeteccaoEmergenciaModel } from '@/emergency/models/DeteccaoEmergenciaModel'
+import { EspecificacaoGrandezaModel } from '@/emergency/models/EspecificacaoGrandezaModel'
+import { GrandezaModel } from '@/emergency/models/GrandezaModel'
+import { MonitoramentoGrandezaModel } from '@/emergency/models/MonitoramentoGrandezaModel'
+import { RegistroMonitoramentoBrutoModel } from '@/emergency/models/RegistroMonitoramentoBrutoModel'
+import { RegistroMonitoramentoModel } from '@/emergency/models/RegistroMonitoramentoModel'
+import { SensorModel } from '@/emergency/models/SensorModel'
+import { TipoEmergenciaModel } from '@/emergency/models/TipoEmergenciaModel'
+import { UdeModel } from '@/emergency/models/UdeModel'
+import { ZonaModel } from '@/emergency/models/ZonaModel'
+
+import DatabaseConfig from '@/database/config/DatabaseConfig'
+
+export default {
+  ...DatabaseConfig,
+
+  synchronize: false,
+  migrationsRun: false,
+  extra: {
+    connectionLimit: envs.DB_CONNECTION_LIMIT,
+  },
+  logging: false,
+  entities: [
+    // Account Module
+    AccountModel,
+
+    // Emergency Module
+    GrandezaModel,
+    TipoEmergenciaModel,
+    SensorModel,
+    EspecificacaoGrandezaModel,
+    ZonaModel,
+    UdeModel,
+    DeteccaoEmergenciaModel,
+    MonitoramentoGrandezaModel,
+    RegistroMonitoramentoBrutoModel,
+    RegistroMonitoramentoModel,
+  ],
+  bigNumberStrings: false,
+  timezone: '+00:00',
+} as TypeOrmModuleOptions

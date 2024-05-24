@@ -1,0 +1,21 @@
+{
+  "editor.rulers": [120],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "eslint.enable": true,
+  "files.exclude": {
+    "**/node_modules": true
+  },
+  "prettier.useEditorConfig": true,
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.suggest.includeAutomaticOptionalChainCompletions": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.tabSize": 2
+}

@@ -1,0 +1,68 @@
+version: '2.2'
+services:
+  local-mysql:
+    image: mysql:5.7
+    container_name: local-mysql
+    cpus: 2
+    mem_limit: 2048m
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_DATABASE=ems_db
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8
+      - --collation-server=utf8_unicode_ci
+      - --connect-timeout=60
+      - --max-connections=11000
+      - --max-allowed-packet=32M
+      - --thread-cache-size=300
+      - --sort-buffer-size=4M
+      - --bulk-insert-buffer-size=16M
+      - --tmp-table-size=256M
+      - --max-heap-table-size=2048M
+      - --query-cache-limit=4M
+      - --query-cache-size=64M
+      - --query-cache-type=0
+      - --long-query-time=10
+      - --expire-logs-days=10
+      - --max-binlog-size=100M
+      - --innodb-buffer-pool-size=256M
+      - --innodb-log-buffer-size=32M
+      - --innodb-file-per-table=1
+      - --innodb-open-files=400
+      - --innodb-io-capacity=400
+      - --innodb-flush-method=O_DIRECT
+      - --sql-mode=STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+    networks:
+      - local-network
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql-volume:/var/lib/mysql
+
+  ems-api:
+    container_name: ems-api
+    cpus: 2
+    mem_limit: 2000m
+    environment:
+      - NODE_ENV=development
+    networks:
+      - local-network
+    build:
+      dockerfile: ./Dockerfile
+      context: .
+    ports:
+      - 3001:3001
+    volumes:
+      - .:/root/workspace
+      - ~/.npmrc:/root/.npmrc
+    depends_on:
+      - local-mysql
+
+networks:
+  local-network:
+    external: true
+
+volumes:
+  mysql-volume: {}
