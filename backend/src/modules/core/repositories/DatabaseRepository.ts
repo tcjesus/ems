@@ -23,7 +23,10 @@ export abstract class DatabaseRepository<MODEL_TYPE extends ObjectLiteral, ID_TY
   }
 
   private addRelations = (query: SelectQueryBuilder<MODEL_TYPE>, relations?: (Relation | string)[]) => {
-    const _relations = [...this.defaultRelations, ...(relations || [])]
+    const _relations = [...(relations || [])]
+    if (!relations) {
+      _relations.push(...this.defaultRelations)
+    }
 
     if (!_relations?.length) return
 

@@ -43,14 +43,14 @@ export class ProcessRegistroMonitoramentoUseCase {
       return acc
     }, {})
 
-    const sensores = await this.sensorRepository.findAll()
+    const sensores = await this.sensorRepository.findAll([])
     const sensoresMap = sensores.reduce((acc, sensor) => {
       acc[sensor.modelo.toLocaleLowerCase()] = sensor
       return acc
     }, {})
 
     const udesIds = new Set(registrosBrutos.map((registroBruto) => registroBruto.udeId))
-    const udes = await this.udeRepository.findManyById(Array.from(udesIds))
+    const udes = await this.udeRepository.findManyById(Array.from(udesIds), ['zona'])
     const udesMap = udes.reduce((acc, ude) => {
       acc[ude.id] = ude
       return acc

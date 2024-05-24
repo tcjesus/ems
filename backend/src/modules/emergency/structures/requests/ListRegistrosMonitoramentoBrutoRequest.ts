@@ -5,7 +5,7 @@ import { ZonaIdRequest } from "@/emergency/structures/requests/ZonaIdRequest"
 import { ApiProperty } from "@nestjs/swagger"
 import { IsArray, IsOptional } from "class-validator"
 
-export class ListRegistrosMonitoramentoRequest {
+export class ListRegistrosMonitoramentoBrutoRequest {
   @IsOptional()
   @ApiProperty({ description: 'Identificador da Zona que originou o registro', required: false, example: 1 })
   zona?: ZonaIdRequest

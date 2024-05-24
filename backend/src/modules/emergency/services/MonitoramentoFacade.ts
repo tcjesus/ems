@@ -1,8 +1,8 @@
 import { NovoRegistroMonitoramentoPayload } from '@/emergency/structures/payloads/NovoRegistroMonitoramentoPayload'
-import { ListRegistrosMonitoramentoRequest } from '@/emergency/structures/requests/ListRegistrosMonitoramentoRequest'
+import { ListRegistrosMonitoramentoBrutoRequest } from '@/emergency/structures/requests/ListRegistrosMonitoramentoBrutoRequest'
 import { RequestMonitoramentoRequest } from '@/emergency/structures/requests/RequestMonitoramentoRequest'
-import { RegistroMonitoramentoResponse } from '@/emergency/structures/responses/RegistroMonitoramentoResponse'
-import { ListRegistrosMonitoramentoUseCase } from '@/emergency/usecases/registro-monitoramento/ListRegistrosMonitoramentoUseCase'
+import { RegistroMonitoramentoBrutoResponse } from '@/emergency/structures/responses/RegistroMonitoramentoBrutoResponse'
+import { ListRegistrosMonitoramentoBrutoUseCase } from '@/emergency/usecases/registro-monitoramento/ListRegistrosMonitoramentoUseCase'
 import { ProcessRegistroMonitoramentoUseCase } from '@/emergency/usecases/registro-monitoramento/ProcessRegistroMonitoramentoUseCase'
 import { RequestMonitoramentoUseCase } from '@/emergency/usecases/registro-monitoramento/RequestMonitoramentoUseCase'
 import { Injectable } from '@nestjs/common'
@@ -12,7 +12,7 @@ export class MonitoramentoFacade {
   constructor(
     private readonly requestMonitoramentoUseCase: RequestMonitoramentoUseCase,
     private readonly processRegistroMonitoramentoUseCase: ProcessRegistroMonitoramentoUseCase,
-    private readonly listRegistrosMonitoramentoUseCase: ListRegistrosMonitoramentoUseCase,
+    private readonly listRegistrosMonitoramentoBrutoUseCase: ListRegistrosMonitoramentoBrutoUseCase,
   ) { }
 
   request(input: RequestMonitoramentoRequest): Promise<void> {
@@ -23,7 +23,11 @@ export class MonitoramentoFacade {
     return this.processRegistroMonitoramentoUseCase.execute(input)
   }
 
-  list(input: ListRegistrosMonitoramentoRequest): Promise<RegistroMonitoramentoResponse[]> {
-    return this.listRegistrosMonitoramentoUseCase.execute(input)
+  bruto(input: ListRegistrosMonitoramentoBrutoRequest): Promise<RegistroMonitoramentoBrutoResponse[]> {
+    return this.listRegistrosMonitoramentoBrutoUseCase.execute(input)
+  }
+
+  summary(input: ListRegistrosMonitoramentoBrutoRequest): Promise<RegistroMonitoramentoBrutoResponse[]> {
+    return this.listRegistrosMonitoramentoBrutoUseCase.execute(input)
   }
 }

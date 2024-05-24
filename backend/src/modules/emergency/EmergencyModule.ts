@@ -35,9 +35,6 @@ import { DeleteGrandezaUseCase } from '@/emergency/usecases/grandeza/DeleteGrand
 import { FindGrandezaByIdUseCase } from '@/emergency/usecases/grandeza/FindGrandezaByIdUseCase'
 import { ListGrandezasUseCase } from '@/emergency/usecases/grandeza/ListGrandezasUseCase'
 import { UpdateGrandezaUseCase } from '@/emergency/usecases/grandeza/UpdateGrandezaUseCase'
-import { ListRegistrosMonitoramentoUseCase } from '@/emergency/usecases/registro-monitoramento/ListRegistrosMonitoramentoUseCase'
-import { ProcessRegistroMonitoramentoUseCase } from '@/emergency/usecases/registro-monitoramento/ProcessRegistroMonitoramentoUseCase'
-import { RequestMonitoramentoUseCase } from '@/emergency/usecases/registro-monitoramento/RequestMonitoramentoUseCase'
 import { CreateSensorUseCase } from '@/emergency/usecases/sensor/CreateSensorUseCase'
 import { DeleteSensorUseCase } from '@/emergency/usecases/sensor/DeleteSensorUseCase'
 import { FindSensorByIdUseCase } from '@/emergency/usecases/sensor/FindSensorByIdUseCase'
@@ -59,6 +56,9 @@ import { DeleteZonaUseCase } from '@/emergency/usecases/zona/DeleteZonaUseCase'
 import { FindZonaByIdUseCase } from '@/emergency/usecases/zona/FindZonaByIdUseCase'
 import { ListZonasUseCase } from '@/emergency/usecases/zona/ListZonasUseCase'
 import { UpdateZonaUseCase } from '@/emergency/usecases/zona/UpdateZonaUseCase'
+import { RequestMonitoramentoUseCase } from '@/emergency/usecases/registro-monitoramento/RequestMonitoramentoUseCase'
+import { ProcessRegistroMonitoramentoUseCase } from '@/emergency/usecases/registro-monitoramento/ProcessRegistroMonitoramentoUseCase'
+import { ListRegistrosMonitoramentoBrutoUseCase } from '@/emergency/usecases/registro-monitoramento/ListRegistrosMonitoramentoUseCase'
 
 @Module({
   imports: [
@@ -136,7 +136,7 @@ import { UpdateZonaUseCase } from '@/emergency/usecases/zona/UpdateZonaUseCase'
 
     RequestMonitoramentoUseCase,
     ProcessRegistroMonitoramentoUseCase,
-    ListRegistrosMonitoramentoUseCase,
+    ListRegistrosMonitoramentoBrutoUseCase,
   ],
 })
 export class EmergencyModule { }

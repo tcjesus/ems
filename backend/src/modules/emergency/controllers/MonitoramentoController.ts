@@ -1,17 +1,16 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Get, Post } from '@nestjs/common'
 import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { Role } from '@/account/structures/enum/Role'
 import { Roles } from '@/auth/decorators/Roles'
-import { RoleGuard } from '@/auth/guards/RoleGuard'
 import { MonitoramentoFacade } from '@/emergency/services/MonitoramentoFacade'
-import { ListRegistrosMonitoramentoRequest } from '@/emergency/structures/requests/ListRegistrosMonitoramentoRequest'
+import { ListRegistrosMonitoramentoBrutoRequest } from '@/emergency/structures/requests/ListRegistrosMonitoramentoBrutoRequest'
 import { RequestMonitoramentoRequest } from '@/emergency/structures/requests/RequestMonitoramentoRequest'
-import { RegistroMonitoramentoResponse } from '@/emergency/structures/responses/RegistroMonitoramentoResponse'
+import { RegistroMonitoramentoBrutoResponse } from '@/emergency/structures/responses/RegistroMonitoramentoBrutoResponse'
 
 @Controller({ version: '1', path: 'monitoramento' })
 @ApiTags('monitoramento')
-@UseGuards(RoleGuard)
+  // @UseGuards(RoleGuard)
 @ApiBearerAuth('Role Access Token')
 export class MonitoramentoController {
   constructor(private readonly monitoramentoFacade: MonitoramentoFacade) { }
@@ -29,20 +28,22 @@ export class MonitoramentoController {
   @Get('/bruto')
   @Roles([Role.ADMIN, Role.USER])
   @ApiOperation({ summary: 'Lista os Registros Brutos de Monitoramento no sistema' })
-  @ApiOkResponse({ type: RegistroMonitoramentoResponse, isArray: true })
+  @ApiOkResponse({ type: RegistroMonitoramentoBrutoResponse, isArray: true })
   bruto(
-    @Body() input: ListRegistrosMonitoramentoRequest,
-  ): Promise<RegistroMonitoramentoResponse[]> {
-    return this.monitoramentoFacade.list(input)
+    // @Body() input: ListRegistrosMonitoramentoBrutoRequest,
+  ): Promise<RegistroMonitoramentoBrutoResponse[]> {
+    const input: ListRegistrosMonitoramentoBrutoRequest = {}
+    return this.monitoramentoFacade.bruto(input)
   }
 
   @Get('/summary')
   @Roles([Role.ADMIN, Role.USER])
-  @ApiOperation({ summary: 'Lista os Registros Brutos de Monitoramento no sistema' })
-  @ApiOkResponse({ type: RegistroMonitoramentoResponse, isArray: true })
+  @ApiOperation({ summary: 'Lista os Registros de Monitoramento no sistema de maneira sumarizada' })
+  @ApiOkResponse({ type: RegistroMonitoramentoBrutoResponse, isArray: true })
   summary(
-    @Body() input: ListRegistrosMonitoramentoRequest,
-  ): Promise<RegistroMonitoramentoResponse[]> {
-    return this.monitoramentoFacade.list(input)
+    // @Body() input: ListRegistrosMonitoramentoBrutoRequest,
+  ): Promise<RegistroMonitoramentoBrutoResponse[]> {
+    const input: ListRegistrosMonitoramentoBrutoRequest = {}
+    return this.monitoramentoFacade.summary(input)
   }
 }
