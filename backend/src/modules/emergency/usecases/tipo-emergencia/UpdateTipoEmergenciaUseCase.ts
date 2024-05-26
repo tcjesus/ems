@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 
-import { TipoEmergenciaRepository } from '@/emergency/repositories/TipoEmergenciaRepository'
-import { TipoEmergenciaResponse } from '@/emergency/structures/responses/TipoEmergenciaResponse'
-import { UpdateTipoEmergenciaRequest } from '@/emergency/structures/requests/UpdateTipoEmergenciaRequest'
-import { GrandezaModel } from '@/emergency/models/GrandezaModel'
 import { ErrorMessages } from '@/core/helpers/ErrorMessages'
+import { GrandezaModel } from '@/emergency/models/GrandezaModel'
+import { TipoEmergenciaRepository } from '@/emergency/repositories/TipoEmergenciaRepository'
+import { UpdateTipoEmergenciaRequest } from '@/emergency/structures/requests/UpdateTipoEmergenciaRequest'
+import { TipoEmergenciaResponse } from '@/emergency/structures/responses/TipoEmergenciaResponse'
 
 @Injectable()
 export class UpdateTipoEmergenciaUseCase {
@@ -12,13 +12,16 @@ export class UpdateTipoEmergenciaUseCase {
     private readonly tipoEmergenciaRepository: TipoEmergenciaRepository,
   ) { }
 
-  async execute(id: number, input: UpdateTipoEmergenciaRequest): Promise<TipoEmergenciaResponse> {
+  async execute(
+    id: number,
+    { nome, grandezas: grandezasIds }: UpdateTipoEmergenciaRequest
+
+  ): Promise<TipoEmergenciaResponse> {
     const model = await this.tipoEmergenciaRepository.findById(id)
     if (!model) {
       throw new NotFoundException(ErrorMessages.emergency.tipoEmergencia.notFound)
     }
 
-    const { nome, grandezas: grandezasIds } = input
     const grandezas = grandezasIds?.map((grandezaId) => new GrandezaModel({ id: grandezaId.id })) || []
 
     model.nome = nome

@@ -11,9 +11,7 @@ export class CreateAccountUseCase {
     private readonly accountRepository: AccountRepository,
   ) { }
 
-  async execute(input: CreateAccountRequest): Promise<AccountResponse> {
-    const { nome, email, password, role } = input
-
+  async execute({ nome, email, password, role }: CreateAccountRequest): Promise<AccountResponse> {
     const model = new AccountModel({
       nome,
       email,

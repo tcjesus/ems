@@ -1,10 +1,15 @@
-import { DeleteResult, UpdateResult, ObjectLiteral, Repository, SelectQueryBuilder } from 'typeorm'
+import { DeleteResult, ObjectLiteral, Repository, SelectQueryBuilder, UpdateResult } from 'typeorm'
 
 class Relation {
   field: string
   alias?: string
   condition?: string
   join?: string
+}
+
+class QueryOptions {
+  relations?: (Relation | string)[]
+  select?: string[]
 }
 
 export abstract class DatabaseRepository<MODEL_TYPE extends ObjectLiteral, ID_TYPE> {
@@ -14,12 +19,24 @@ export abstract class DatabaseRepository<MODEL_TYPE extends ObjectLiteral, ID_TY
     protected defaultRelations: (Relation | string)[] = []
   ) { }
 
-  async save (model: MODEL_TYPE): Promise<MODEL_TYPE> {
+  async save(model: MODEL_TYPE): Promise<MODEL_TYPE> {
     return this.repository.save(model)
   }
 
-  async saveMany (models: MODEL_TYPE[]): Promise<MODEL_TYPE[]> {
+  async saveMany(models: MODEL_TYPE[]): Promise<MODEL_TYPE[]> {
     return this.repository.save(models)
+  }
+
+  private addClauses = (query: SelectQueryBuilder<MODEL_TYPE>, values: object) => {
+    Object.keys(values).forEach(key => {
+      const field = key.split('.').pop() || key
+      const isArray = Array.isArray(values[key])
+      if (isArray) {
+        query.andWhere(`${key} IN (:...${field})`, { [field]: values[key] })
+      } else {
+        query.andWhere(`${key} = :${field}`, { [field]: values[key] })
+      }
+    })
   }
 
   private addRelations = (query: SelectQueryBuilder<MODEL_TYPE>, relations?: (Relation | string)[]) => {
@@ -35,7 +52,7 @@ export abstract class DatabaseRepository<MODEL_TYPE extends ObjectLiteral, ID_TY
         query.leftJoinAndSelect(`${this.table}.${relation}`, relation)
         return
       }
-      
+
       const alias = relation.alias || relation.field.split('.').pop() || relation.field
       if (relation.join === 'inner') {
         query.innerJoinAndSelect(`${relation.field}`, alias, relation.condition)
@@ -45,64 +62,62 @@ export abstract class DatabaseRepository<MODEL_TYPE extends ObjectLiteral, ID_TY
     })
   }
 
-  async findAll (relations?: (Relation |string)[]): Promise<MODEL_TYPE[]> {
+  async findAll(options?: QueryOptions): Promise<MODEL_TYPE[]> {
+    const { relations } = options || {}
+
     const query = this.repository
       .createQueryBuilder(this.table)
 
     this.addRelations(query, relations)
-    
+
     return query.getMany()
   }
 
-  async findById (id: ID_TYPE, relations?: (Relation |string)[]): Promise<MODEL_TYPE | null> {
+  async findById(id: ID_TYPE, options?: QueryOptions): Promise<MODEL_TYPE | null> {
+    const { relations } = options || {}
+
     const query = this.repository
       .createQueryBuilder(this.table)
       .where(`${this.table}.id = :id`, { id })
 
     this.addRelations(query, relations)
-    
+
     return query.getOne()
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async findOneBy (values: object, relations?: (Relation |string)[]): Promise<MODEL_TYPE | null> {
+  async findOneBy(values: object, options?: QueryOptions): Promise<MODEL_TYPE | null> {
+    const { relations } = options || {}
+
     const query = this.repository
       .createQueryBuilder(this.table)
-    
-    Object.keys(values).forEach(key => {
-      const isArray = Array.isArray(values[key])
-      if (isArray) {
-        query.andWhere(`${key} IN (:...${key})`, { [key]: values[key] })
-      } else {
-        query.andWhere(`${key} = :${key}`, { [key]: values[key] })
-      }
-    })
 
+    this.addClauses(query, values)
     this.addRelations(query, relations)
 
     return query.getOne()
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async findManyBy (values: object, relations?: (Relation |string)[]): Promise<MODEL_TYPE[]> {
+  async findManyBy(values: object, options?: QueryOptions): Promise<MODEL_TYPE[]> {
+    const { relations, select } = options || {}
+
     const query = this.repository
       .createQueryBuilder(this.table)
-    
-    Object.keys(values).forEach(key => {
-      const isArray = Array.isArray(values[key])
-      if (isArray) {
-        query.andWhere(`${key} IN (:...${key})`, { [key]: values[key] })
-      } else {
-        query.andWhere(`${key} = :${key}`, { [key]: values[key] })
-      }
-    })
 
+    if (select?.length) {
+      query.select(select)
+    }
+
+    this.addClauses(query, values)
     this.addRelations(query, relations)
 
     return query.getMany()
   }
 
-  async findManyById (ids: ID_TYPE[], relations?: (Relation |string)[]): Promise<MODEL_TYPE[]> {
+  async findManyById(ids: ID_TYPE[], options?: QueryOptions): Promise<MODEL_TYPE[]> {
+    const { relations } = options || {}
+
     const query = this.repository
       .createQueryBuilder(this.table)
       .where(`${this.table}.id IN (:...ids)`, { ids })
@@ -113,23 +128,19 @@ export abstract class DatabaseRepository<MODEL_TYPE extends ObjectLiteral, ID_TY
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async deleteBy (values: object): Promise<DeleteResult> {
+  async deleteBy(values: object, options?: QueryOptions): Promise<DeleteResult> {
+    const { relations } = options || {}
+
     const query = this.repository
       .createQueryBuilder(this.table)
-    
-    Object.keys(values).forEach(key => {
-      const isArray = Array.isArray(values[key])
-      if (isArray) {
-        query.andWhere(`${key} IN (:...${key})`, { [key]: values[key] })
-      } else {
-        query.andWhere(`${key} = :${key}`, { [key]: values[key] })
-      }
-    })
+
+    this.addClauses(query, values)
+    this.addRelations(query, relations)
 
     return query.delete().execute()
   }
 
-  async delete (id: ID_TYPE): Promise<DeleteResult> {
+  async delete(id: ID_TYPE): Promise<DeleteResult> {
     return this.repository
       .createQueryBuilder(this.table)
       .delete()
@@ -137,7 +148,7 @@ export abstract class DatabaseRepository<MODEL_TYPE extends ObjectLiteral, ID_TY
       .execute();
   }
 
-  async deleteMany (ids: ID_TYPE[]): Promise<DeleteResult> {
+  async deleteMany(ids: ID_TYPE[]): Promise<DeleteResult> {
     return this.repository
       .createQueryBuilder(this.table)
       .delete()
@@ -145,7 +156,7 @@ export abstract class DatabaseRepository<MODEL_TYPE extends ObjectLiteral, ID_TY
       .execute();
   }
 
-  async softDelete (id: ID_TYPE): Promise<UpdateResult> {
+  async softDelete(id: ID_TYPE): Promise<UpdateResult> {
     return this.repository
       .createQueryBuilder(this.table)
       .softDelete()
@@ -153,7 +164,7 @@ export abstract class DatabaseRepository<MODEL_TYPE extends ObjectLiteral, ID_TY
       .execute();
   }
 
-  async softDeleteMany (ids: ID_TYPE[]): Promise<UpdateResult> {
+  async softDeleteMany(ids: ID_TYPE[]): Promise<UpdateResult> {
     return this.repository
       .createQueryBuilder(this.table)
       .softDelete()
@@ -161,7 +172,7 @@ export abstract class DatabaseRepository<MODEL_TYPE extends ObjectLiteral, ID_TY
       .execute();
   }
 
-  async restore (id: ID_TYPE): Promise<UpdateResult> {
+  async restore(id: ID_TYPE): Promise<UpdateResult> {
     return this.repository
       .createQueryBuilder(this.table)
       .restore()
@@ -169,7 +180,7 @@ export abstract class DatabaseRepository<MODEL_TYPE extends ObjectLiteral, ID_TY
       .execute();
   }
 
-  async restoreMany (ids: ID_TYPE[]): Promise<UpdateResult> {
+  async restoreMany(ids: ID_TYPE[]): Promise<UpdateResult> {
     return this.repository
       .createQueryBuilder(this.table)
       .restore()

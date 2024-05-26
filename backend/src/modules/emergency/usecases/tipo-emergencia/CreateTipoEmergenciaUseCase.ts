@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common'
 
+import { GrandezaModel } from '@/emergency/models/GrandezaModel'
 import { TipoEmergenciaModel } from '@/emergency/models/TipoEmergenciaModel'
 import { TipoEmergenciaRepository } from '@/emergency/repositories/TipoEmergenciaRepository'
 import { CreateTipoEmergenciaRequest } from '@/emergency/structures/requests/CreateTipoEmergenciaRequest'
 import { TipoEmergenciaResponse } from '@/emergency/structures/responses/TipoEmergenciaResponse'
-import { GrandezaModel } from '@/emergency/models/GrandezaModel'
 
 @Injectable()
 export class CreateTipoEmergenciaUseCase {
@@ -12,9 +12,7 @@ export class CreateTipoEmergenciaUseCase {
     private readonly tipoEmergenciaRepository: TipoEmergenciaRepository,
   ) { }
 
-  async execute(input: CreateTipoEmergenciaRequest): Promise<TipoEmergenciaResponse> {
-    const { nome, grandezas: grandezasIds } = input
-
+  async execute({ nome, grandezas: grandezasIds }: CreateTipoEmergenciaRequest): Promise<TipoEmergenciaResponse> {
     const grandezas = grandezasIds?.map((grandezaId) => new GrandezaModel({ id: grandezaId.id })) || []
 
     const model = new TipoEmergenciaModel({

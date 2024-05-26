@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 
-import { GrandezaRepository } from '@/emergency/repositories/GrandezaRepository'
-import { GrandezaResponse } from '@/emergency/structures/responses/GrandezaResponse'
-import { UpdateGrandezaRequest } from '@/emergency/structures/requests/UpdateGrandezaRequest'
 import { ErrorMessages } from '@/core/helpers/ErrorMessages'
+import { GrandezaRepository } from '@/emergency/repositories/GrandezaRepository'
+import { UpdateGrandezaRequest } from '@/emergency/structures/requests/UpdateGrandezaRequest'
+import { GrandezaResponse } from '@/emergency/structures/responses/GrandezaResponse'
 
 @Injectable()
 export class UpdateGrandezaUseCase {
@@ -11,13 +11,15 @@ export class UpdateGrandezaUseCase {
     private readonly grandezaRepository: GrandezaRepository,
   ) { }
 
-  async execute(id: number, input: UpdateGrandezaRequest): Promise<GrandezaResponse> {
+  async execute(
+    id: number,
+    { nome, unidadeMedida, sigla }: UpdateGrandezaRequest
+  ): Promise<GrandezaResponse> {
     const model = await this.grandezaRepository.findById(id)
     if (!model) {
       throw new NotFoundException(ErrorMessages.emergency.grandeza.notFound)
     }
 
-    const { nome, unidadeMedida, sigla } = input
     model.nome = nome
     model.unidadeMedida = unidadeMedida
     model.sigla = sigla

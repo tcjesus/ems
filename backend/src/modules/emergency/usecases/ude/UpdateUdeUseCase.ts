@@ -1,18 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 
 import { ErrorMessages } from '@/core/helpers/ErrorMessages'
+import { DeteccaoEmergenciaModel } from '@/emergency/models/DeteccaoEmergenciaModel'
+import { GrandezaModel } from '@/emergency/models/GrandezaModel'
+import { MonitoramentoGrandezaModel } from '@/emergency/models/MonitoramentoGrandezaModel'
+import { SensorModel } from '@/emergency/models/SensorModel'
+import { TipoEmergenciaModel } from '@/emergency/models/TipoEmergenciaModel'
 import { ZonaModel } from '@/emergency/models/ZonaModel'
 import { UdeRepository } from '@/emergency/repositories/UdeRepository'
+import { DeteccaoEmergenciaRequest } from '@/emergency/structures/requests/DeteccaoEmergenciaRequest'
+import { MonitoramentoGrandezaRequest } from '@/emergency/structures/requests/MonitoramentoGrandezaRequest'
 import { UpdateUdeRequest } from '@/emergency/structures/requests/UpdateUdeRequest'
 import { UdeResponse } from '@/emergency/structures/responses/UdeResponse'
 import { NotifyUdeUpdatedUseCase } from '@/emergency/usecases/ude/NotifyUdeUpdatedUseCase'
-import { DeteccaoEmergenciaRequest } from '@/emergency/structures/requests/DeteccaoEmergenciaRequest'
-import { MonitoramentoGrandezaRequest } from '@/emergency/structures/requests/MonitoramentoGrandezaRequest'
-import { MonitoramentoGrandezaModel } from '@/emergency/models/MonitoramentoGrandezaModel'
-import { SensorModel } from '@/emergency/models/SensorModel'
-import { GrandezaModel } from '@/emergency/models/GrandezaModel'
-import { DeteccaoEmergenciaModel } from '@/emergency/models/DeteccaoEmergenciaModel'
-import { TipoEmergenciaModel } from '@/emergency/models/TipoEmergenciaModel'
 
 @Injectable()
 export class UpdateUdeUseCase {
@@ -21,13 +21,9 @@ export class UpdateUdeUseCase {
     private readonly notifyUdeUpdatedUseCase: NotifyUdeUpdatedUseCase,
   ) { }
 
-  async execute(id: number, input: UpdateUdeRequest): Promise<UdeResponse> {
-    const model = await this.udeRepository.findById(id)
-    if (!model) {
-      throw new NotFoundException(ErrorMessages.emergency.ude.notFound)
-    }
-
-    const {
+  async execute(
+    id: number,
+    {
       tipo,
       label,
       mac,
@@ -36,7 +32,12 @@ export class UpdateUdeUseCase {
       operatingRange,
       zona: zonaId,
       deteccoesEmergencia: deteccoesEmergenciaInput
-    } = input
+    }: UpdateUdeRequest
+  ): Promise<UdeResponse> {
+    const model = await this.udeRepository.findById(id)
+    if (!model) {
+      throw new NotFoundException(ErrorMessages.emergency.ude.notFound)
+    }
 
     const zona = new ZonaModel({ id: zonaId?.id })
 

@@ -11,9 +11,7 @@ export class CreateGrandezaUseCase {
     private readonly grandezaRepository: GrandezaRepository,
   ) { }
 
-  async execute(input: CreateGrandezaRequest): Promise<GrandezaResponse> {
-    const { nome, unidadeMedida, sigla } = input
-
+  async execute({ nome, unidadeMedida, sigla }: CreateGrandezaRequest): Promise<GrandezaResponse> {
     const model = new GrandezaModel({
       nome,
       unidadeMedida,

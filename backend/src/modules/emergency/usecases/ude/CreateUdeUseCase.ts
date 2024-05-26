@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common'
 
+import { DeteccaoEmergenciaModel } from '@/emergency/models/DeteccaoEmergenciaModel'
+import { GrandezaModel } from '@/emergency/models/GrandezaModel'
+import { MonitoramentoGrandezaModel } from '@/emergency/models/MonitoramentoGrandezaModel'
+import { SensorModel } from '@/emergency/models/SensorModel'
+import { TipoEmergenciaModel } from '@/emergency/models/TipoEmergenciaModel'
 import { UdeModel } from '@/emergency/models/UdeModel'
 import { ZonaModel } from '@/emergency/models/ZonaModel'
 import { UdeRepository } from '@/emergency/repositories/UdeRepository'
 import { CreateUdeRequest } from '@/emergency/structures/requests/CreateUdeRequest'
-import { UdeResponse } from '@/emergency/structures/responses/UdeResponse'
-import { NotifyUdeUpdatedUseCase } from '@/emergency/usecases/ude/NotifyUdeUpdatedUseCase'
 import { DeteccaoEmergenciaRequest } from '@/emergency/structures/requests/DeteccaoEmergenciaRequest'
 import { MonitoramentoGrandezaRequest } from '@/emergency/structures/requests/MonitoramentoGrandezaRequest'
-import { MonitoramentoGrandezaModel } from '@/emergency/models/MonitoramentoGrandezaModel'
-import { SensorModel } from '@/emergency/models/SensorModel'
-import { GrandezaModel } from '@/emergency/models/GrandezaModel'
-import { DeteccaoEmergenciaModel } from '@/emergency/models/DeteccaoEmergenciaModel'
-import { TipoEmergenciaModel } from '@/emergency/models/TipoEmergenciaModel'
+import { UdeResponse } from '@/emergency/structures/responses/UdeResponse'
+import { NotifyUdeUpdatedUseCase } from '@/emergency/usecases/ude/NotifyUdeUpdatedUseCase'
 import { IsolationLevel, Transactional } from 'typeorm-transactional'
 
 @Injectable()
@@ -23,8 +23,8 @@ export class CreateUdeUseCase {
   ) { }
 
   @Transactional({ isolationLevel: IsolationLevel.READ_UNCOMMITTED })
-  async execute(input: CreateUdeRequest): Promise<UdeResponse> {
-    const {
+  async execute(
+    {
       tipo,
       label,
       mac,
@@ -33,8 +33,8 @@ export class CreateUdeUseCase {
       operatingRange,
       zona: zonaId,
       deteccoesEmergencia: deteccoesEmergenciaInput
-    } = input
-
+    }: CreateUdeRequest
+  ): Promise<UdeResponse> {
     const zona = new ZonaModel({ id: zonaId?.id })
 
     const deteccoesEmergencia = deteccoesEmergenciaInput.map((deteccao: DeteccaoEmergenciaRequest) => {
