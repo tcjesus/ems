@@ -24,6 +24,7 @@
       "@/account/*": ["src/modules/account/*"],
       "@/auth/*": ["src/modules/auth/*"],
       "@/core/*": ["src/modules/core/*"],
+      "@/utils/*": ["src/utils/*"],
       "@/emergency/*": ["src/modules/emergency/*"],
       "@/health-check/*": ["src/modules/health-check/*"],
       "@/*": ["src/*"]
