@@ -51,12 +51,14 @@ client.connect(broker, port, 60)
 
 # List of JSON files to send
 json_configFiles  = [ pathFiles + "configAPC.json", pathFiles + "configBPC_1.json", pathFiles + "configBPC_2.json", pathFiles + "configMPC_1.json"]
-json_subFiles    = [ pathFiles + "subscrBPC_1.json", pathFiles +  "subscrBPC_2.json", pathFiles + "subscrMPC_1.json"]
+json_subFiles     = [ pathFiles + "subscrBPC_1.json", pathFiles +  "subscrBPC_2.json", pathFiles + "subscrMPC_1.json"]
 #json_subFiles     = [ pathFiles + "subscrBPC_1.json"]
-#for js in json_configFiles:
-#    sendJsonContent(js, configTopic)
+for js in json_configFiles:
+    sendJsonContent(js, configTopic)
 for js in json_subFiles:
     sendJsonContent(js, subscrTopic)
+# Send test node update
+sendJsonContent(pathFiles + "config_newBPC_2.json", configTopic)
 
 # Disconnect from the MQTT broker
 client.disconnect()

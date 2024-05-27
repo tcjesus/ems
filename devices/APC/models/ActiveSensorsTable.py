@@ -2,7 +2,6 @@ import pandas as pd
 import json
 
 class ActiveSensorsTable():
-	__activeNodes = None
 
 	def __init__(self):
 		self.__activeNodes = self.create_edu_table()
@@ -19,14 +18,14 @@ class ActiveSensorsTable():
 			print("[Table Active Nodes] Table is Empty")
 			return None
 		else:
-			return self.__activeNodes
+			return self.__activeNodes.copy()
 
 	def addNewNode(self, edu_data):
-		self.__activeNodes = pd.concat([self.__activeNodes, pd.DataFrame(edu_data)], ignore_index=True)
+		self.__activeNodes = pd.concat([self.__activeNodes, pd.DataFrame(edu_data)], ignore_index = True)
 	
 	def updateTable(self, device_mac, edu_data):
 		self.deleteNode(device_mac)
-		self.addNewNode(device_mac, edu_data)
+		self.addNewNode(edu_data)
 
 	def deleteNode(self, device_mac):
    		idx = self.__activeNodes[ self.__activeNodes["mac"] == device_mac ].index
@@ -42,17 +41,9 @@ class ActiveSensorsTable():
 		pass
 	
 	def getNodeByMac(self, device_mac):
-		idx = self.__activeNodes[ self.__activeNodes["mac"] == device_mac ].index.item()
-		infoEDU = {
-			"type": self.__activeNodes._get_value(idx, "type"),
-			"id":   self.__activeNodes._get_value(idx, "id"),
-			"zone": self.__activeNodes._get_value(idx, "zone"),
-			"latitude": self.__activeNodes._get_value(idx, "latitude"),
-			"longitude": self.__activeNodes._get_value(idx, "longitude"),
-			"active_sensors": self.__activeNodes._get_value(idx, "active_sensors"),
-			"emergencies": self.__activeNodes._get_value(idx, "emergencies")
-		}
-		return infoEDU
+		infoEDU = self.__activeNodes.loc[self.__activeNodes["mac"] == device_mac]
+		#idx = self.__activeNodes[ self.__activeNodes["mac"] == device_mac ].index.item()
+		return infoEDU.to_dict('records')[0].copy()
 	
 	def isActiveNode(self, device_mac):
 		df = self.__activeNodes[ self.__activeNodes["mac"] == device_mac ]

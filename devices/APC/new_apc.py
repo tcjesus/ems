@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 from models.edu import EDU
 from models.ActiveSensorsTable import ActiveSensorsTable
 from jsonFileHandler.JsonFileHandler import JsonFileHandler
+from getmac import get_mac_address as gma
 import threading
 import numpy as np
 import json
@@ -16,6 +17,14 @@ eduFile_handler  = JsonFileHandler(eduFile_path)
 emgFile_handler  = JsonFileHandler(emgFile_path)
 
 mutex_config     = threading.Lock()
+
+def get_mac_address():
+    # Gets the MAC address
+    mac = uuid.getnode()
+    print(mac)
+    # Formats the MAC address in a corret string.
+    mac_address = ':'.join(['{:02x}'.format((mac >> elements) & 0xff) for elements in range(0, 2*6, 2)][::-1])
+    return mac_address
 
 def compare_dicts(dict1, dict2):
     # Checks if the number of keys is the same.
@@ -119,20 +128,21 @@ class APC(EDU):
                         emgFile_handler.write_to_file({"emg": key, "monitoring": self.emerg[key] })
                         apcConfigData["emergencies"][key].append(len(self.emerg[key]) - 1)
             if(self.active_nodes_Table.isActiveNode(device_mac)):   # Update process
-                print("[INFO] Device Updated.")
+                print(f"[INFO] Device {device_mac} updated.")
                 line_number = eduFile_handler.get_line_number("mac", device_mac)
                 eduFile_handler.delete_line(line_number)
                 eduFile_handler.write_to_file(apcConfigData)
                 self.active_nodes_Table.updateTable(device_mac, [apcConfigData])
+                self.send_config(device_mac)
             else:                                                   # New EDU
-                print("[INFO] New device added.")
+                print(f"[INFO] New device {device_mac} added.")
                 eduFile_handler.write_to_file(apcConfigData)
                 self.active_nodes_Table.addNewNode([apcConfigData])
-            self.log_config(device_mac)
             if(device_mac == self.get_mac_id()):
                 mutex_config.acquire()
                 self.isConfig = True
                 mutex_config.release()
+            self.send_nodes_to_MPC()
         elif message.topic == self.mqtt_topics['topic_subscribe']:
             print("[INFO] Enrollment message received")
             msg         = json.loads(str_msg)
@@ -140,9 +150,7 @@ class APC(EDU):
             if not self.active_nodes_Table.isActiveNode(device_mac):
                 print("[WARNING] Device with MAC: " + device_mac + " is not registed.")
             else:
-                print("[INFO] Sending Config Message to device with MAC: " + device_mac)
                 self.send_config(device_mac)
-                print("[INFO] Config Messsage sent.")
         elif message.topic == self.mqtt_topics['topic_hazard_data']:
             print(f"***  Sensing message received *** ")
             print(str_msg)
@@ -173,30 +181,34 @@ class APC(EDU):
         print("\t Latitude: "       + str(infoEDU["latitude"])       )
         print("\t Longitude: "      + str(infoEDU["longitude"])      )
         print("\t Active Sensors: " + str(infoEDU["active_sensors"]) )
+        print("\t Emergencies: " + str(infoEDU["emergencies"]) )
 
-    def send_node_sensors(self):
+    def send_nodes_to_MPC(self):
         '''
-        Método que publica no tópico específico a tabela node_sensors atualizada. Dessa forma, os MPCs sempre terão
-        essa tabela atualizada.
+        Methods that publishes the updated active nodes table in the specific topic. This way, MPCs will always have this table 
+        updated.
         '''
         msg = {}
-        msg["node_table"] = self.active_nodes_Table.to_dict()
+        msg["node_table"] = self.active_nodes_Table.getTable().to_dict()
         json_msg = json.dumps(msg)
+        print("[INFO] Sending to all MPCs the active nodes table updated.")
         self.client.publish(self.mqtt_topics['topic_update_node_table'], json_msg)
 
-    def send_config(self, device_mac,):
+    def send_config(self, device_mac):
         configEDU     = self.active_nodes_Table.getNodeByMac(device_mac)
-        eduEmg_config = {}
+        aux           = {"emergencies":{}}
         for emg, value in configEDU["emergencies"].items():
             eduEmg_config = []
             for index in value:
                 eduEmg_config .append( self.emerg[emg][index] )
-            configEDU["emergencies"][emg] = eduEmg_config.copy()
+            aux["emergencies"][emg] = eduEmg_config.copy()
+        configEDU["emergencies"] = aux["emergencies"]
         if(configEDU["type"] == "MPC"):
             # Include the list of emergencies registered by APC
             configEDU["emg_list"] = self.emerg
+        print("[INFO] Sending Config Message to device with MAC: " + device_mac)
         self.client.publish(self.mqtt_topics['topic_config'], str(configEDU))
-
+        print("[INFO] Config Messsage sent.")
     def sensoring(self):
         return super().sensoring()
     
@@ -239,8 +251,8 @@ if __name__  == "__main__":
     #mac_id = ':'.join(['{:02x}'.format((uuid.getnode() >> ele) & 0xff)
     #            for ele in range(0,8*6,8)][::-1])
     # Set up signal handler for "Ctrl + C"
-    mac_id = ':'.join(re.findall('..', '%012x' % uuid.getnode()))
-    apc = APC(mac_id)
+    mac_id = gma()
+    apc    = APC(mac_id)
     print("[INFO] Device MAC: " + apc.get_mac_id())
     signal.signal(signal.SIGINT, apc.handle_exit)
     apc.loop()
