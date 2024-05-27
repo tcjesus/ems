@@ -14,9 +14,9 @@ export class CreateSensorUseCase {
     private readonly sensorRepository: SensorRepository,
   ) { }
 
-  async execute(input: CreateSensorRequest): Promise<SensorResponse> {
-    const { modelo, descricao, especificacoes: especificacoesInput } = input
-
+  async execute(
+    { modelo, descricao, especificacoes: especificacoesInput }: CreateSensorRequest
+  ): Promise<SensorResponse> {
     const especificacoes = especificacoesInput.map((especificacao: EspecificacaoGrandezaRequest) => {
       const { grandeza: grandezaId, valorMinimo, valorMaximo, sinal } = especificacao
 

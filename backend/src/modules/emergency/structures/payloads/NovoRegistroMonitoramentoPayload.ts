@@ -2,8 +2,8 @@ class MedidaPayload {
   variable: string
   sensor: string
   value: number
-  start_time: string
-  end_time: string
+  start_time: number
+  end_time: number
 }
 
 export class NovoRegistroMonitoramentoPayload {

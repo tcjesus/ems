@@ -10,9 +10,18 @@ const buildHeaders = async () => ({
 });
 
 const Service = {
+  /**
+   * filters:
+   * - tipoEmergencia?: number
+   * - grandezas?: number[]
+   * - zona?: number
+   * - ude?: number
+   */
   async request(filters) {
+    const queryParams = new URLSearchParams(filters).toString();
+
     const response = await fetch(
-      `${baseUrl}/request`,
+      `${baseUrl}/request?${queryParams}`,
       {
         method: 'POST',
         headers: await buildHeaders(),
@@ -23,23 +32,46 @@ const Service = {
     return handleResponse(response, () => this.request(filters));
   },
 
-  async listRawData() {
+  /**
+   * filters:
+   * - dataInicial: Date
+   * - dataFinal?: Date
+   * - tipoEmergencia?: number
+   * - grandezas?: number[]
+   * - zona?: number
+   * - ude?: number
+   */
+  async listRawData(filters) {
+    const queryParams = new URLSearchParams(filters).toString();
+
     const response = await fetch(
-      `${baseUrl}/bruto`,
+      `${baseUrl}/raw-data?${queryParams}`,
       { headers: await buildHeaders() }
     );
     return handleResponse(response, () => this.listRawData());
   },
 
-  async summary(filters) {
+  /**
+   * filters:
+   * - dataInicial: Date
+   * - dataFinal?: Date
+   * - intervalo?: number
+   * - tipoEmergencia?: number
+   * - grandezas?: number[]
+   * - zona?: number
+   * - ude?: number
+   */
+  async getSummary(filters) {
+    const queryParams = new URLSearchParams(filters).toString();
+
     const response = await fetch(
-      `${baseUrl}/summary`,
+      `${baseUrl}/summary?${queryParams}`,
       {
         headers: await buildHeaders(),
         body: JSON.stringify(filters),
       }
     );
-    return handleResponse(response, () => this.summary());
+    return handleResponse(response, () => this.getSummary());
   },
 }
 

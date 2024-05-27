@@ -1,11 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 
 import { SoftDeleteBaseModel } from '@/core/models/SoftDeleteBaseModel'
 import { ColumnNumericTransformer } from '@/core/repositories/ColumnNumericTransformer'
+import { UdeModel } from '@/emergency/models/UdeModel'
 
-@Entity('registro_monitoramento_bruto')
-export class RegistroMonitoramentoBrutoModel extends SoftDeleteBaseModel {
-  constructor(params?: Partial<RegistroMonitoramentoBrutoModel>) {
+@Entity('monitoramento_raw_data')
+export class MonitoramentoRawDataModel extends SoftDeleteBaseModel {
+  constructor(params?: Partial<MonitoramentoRawDataModel>) {
     super()
     Object.assign(this, params)
   }
@@ -15,6 +16,10 @@ export class RegistroMonitoramentoBrutoModel extends SoftDeleteBaseModel {
 
   @Column({ name: 'ude_id' })
   udeId: number
+
+  @ManyToOne(() => UdeModel, (model) => model.id)
+  @JoinColumn({ name: 'ude_id' })
+  ude?: UdeModel
 
   @Column()
   sensor: string

@@ -5,7 +5,7 @@ import { ColumnNumericTransformer } from '@/core/repositories/ColumnNumericTrans
 import { GrandezaModel } from '@/emergency/models/GrandezaModel'
 import { SensorModel } from '@/emergency/models/SensorModel'
 import { UdeModel } from '@/emergency/models/UdeModel'
-import { RegistroMonitoramentoBrutoModel } from '@/emergency/models/RegistroMonitoramentoBrutoModel'
+import { MonitoramentoRawDataModel } from '@/emergency/models/MonitoramentoRawDataModel'
 
 @Entity('registro_monitoramento')
 export class RegistroMonitoramentoModel extends SoftDeleteBaseModel {
@@ -17,12 +17,12 @@ export class RegistroMonitoramentoModel extends SoftDeleteBaseModel {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({ name: 'registro_bruto_id' })
-  registroBrutoId: number
+  @Column({ name: 'raw_data_id' })
+  rawDataId: number
 
-  @ManyToOne(() => RegistroMonitoramentoBrutoModel, (model) => model.id)
-  @JoinColumn({ name: 'registro_bruto_id' })
-  registroBruto?: RegistroMonitoramentoBrutoModel
+  @ManyToOne(() => MonitoramentoRawDataModel, (model) => model.id)
+  @JoinColumn({ name: 'raw_data_id' })
+  registroBruto?: MonitoramentoRawDataModel
 
   @Column({ name: 'ude_id' })
   udeId: number

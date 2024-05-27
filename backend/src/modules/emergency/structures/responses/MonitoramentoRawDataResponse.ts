@@ -2,12 +2,12 @@ import { ApiProperty } from '@nestjs/swagger'
 
 import { IsDefined, IsNumber } from 'class-validator'
 
-import { RegistroMonitoramentoBrutoModel } from '@/emergency/models/RegistroMonitoramentoBrutoModel'
+import { MonitoramentoRawDataModel } from '@/emergency/models/MonitoramentoRawDataModel'
 import { GrandezaResponse } from '@/emergency/structures/responses/GrandezaResponse'
 import { SensorResponse } from '@/emergency/structures/responses/SensorResponse'
 import { UdeResponse } from '@/emergency/structures/responses/UdeResponse'
 
-export class RegistroMonitoramentoBrutoResponse {
+export class MonitoramentoRawDataResponse {
   @IsDefined()
   @IsNumber()
   @ApiProperty({ description: 'Identificador da Grandeza', example: 1 })
@@ -38,17 +38,16 @@ export class RegistroMonitoramentoBrutoResponse {
   dataFinal: Date
 
   static toResponse(
-    model: RegistroMonitoramentoBrutoModel,
+    model: MonitoramentoRawDataModel,
     udesMap,
     sensoresMap,
     grandezasMap,
-  ): RegistroMonitoramentoBrutoResponse {
-    console.log(model, sensoresMap, grandezasMap, udesMap)
+  ): MonitoramentoRawDataResponse {
     return {
       id: model.id,
       ude: UdeResponse.toResponse(udesMap[model.udeId]),
-      sensor: SensorResponse.toResponse(sensoresMap[model.sensor.toLowerCase()]),
-      grandeza: GrandezaResponse.toResponse(grandezasMap[model.grandeza.toLowerCase()]),
+      sensor: SensorResponse.toResponse(sensoresMap[model.sensor.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")]),
+      grandeza: GrandezaResponse.toResponse(grandezasMap[model.grandeza.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")]),
       valor: model.valor,
       dataInicial: model.dataInicial,
       dataFinal: model.dataFinal,

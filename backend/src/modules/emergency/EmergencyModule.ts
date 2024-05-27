@@ -11,14 +11,14 @@ import { DeteccaoEmergenciaModel } from '@/emergency/models/DeteccaoEmergenciaMo
 import { EspecificacaoGrandezaModel } from '@/emergency/models/EspecificacaoGrandezaModel'
 import { GrandezaModel } from '@/emergency/models/GrandezaModel'
 import { MonitoramentoGrandezaModel } from '@/emergency/models/MonitoramentoGrandezaModel'
-import { RegistroMonitoramentoBrutoModel } from '@/emergency/models/RegistroMonitoramentoBrutoModel'
+import { MonitoramentoRawDataModel } from '@/emergency/models/MonitoramentoRawDataModel'
 import { RegistroMonitoramentoModel } from '@/emergency/models/RegistroMonitoramentoModel'
 import { SensorModel } from '@/emergency/models/SensorModel'
 import { TipoEmergenciaModel } from '@/emergency/models/TipoEmergenciaModel'
 import { UdeModel } from '@/emergency/models/UdeModel'
 import { ZonaModel } from '@/emergency/models/ZonaModel'
 import { GrandezaRepository } from '@/emergency/repositories/GrandezaRepository'
-import { RegistroMonitoramentoBrutoRepository } from '@/emergency/repositories/RegistroMonitoramentoBrutoRepository'
+import { MonitoramentoRawDataRepository } from '@/emergency/repositories/MonitoramentoRawDataRepository'
 import { RegistroMonitoramentoRepository } from '@/emergency/repositories/RegistroMonitoramentoRepository'
 import { SensorRepository } from '@/emergency/repositories/SensorRepository'
 import { TipoEmergenciaRepository } from '@/emergency/repositories/TipoEmergenciaRepository'
@@ -35,6 +35,10 @@ import { DeleteGrandezaUseCase } from '@/emergency/usecases/grandeza/DeleteGrand
 import { FindGrandezaByIdUseCase } from '@/emergency/usecases/grandeza/FindGrandezaByIdUseCase'
 import { ListGrandezasUseCase } from '@/emergency/usecases/grandeza/ListGrandezasUseCase'
 import { UpdateGrandezaUseCase } from '@/emergency/usecases/grandeza/UpdateGrandezaUseCase'
+import { GetMonitoramentoSummaryUseCase } from '@/emergency/usecases/registro-monitoramento/GetMonitoramentoSummaryUseCase'
+import { ListMonitoramentoRawDataUseCase } from '@/emergency/usecases/registro-monitoramento/ListMonitoramentoRawDataUseCase'
+import { ProcessRegistroMonitoramentoUseCase } from '@/emergency/usecases/registro-monitoramento/ProcessRegistroMonitoramentoUseCase'
+import { RequestMonitoramentoDataUseCase } from '@/emergency/usecases/registro-monitoramento/RequestMonitoramentoDataUseCase'
 import { CreateSensorUseCase } from '@/emergency/usecases/sensor/CreateSensorUseCase'
 import { DeleteSensorUseCase } from '@/emergency/usecases/sensor/DeleteSensorUseCase'
 import { FindSensorByIdUseCase } from '@/emergency/usecases/sensor/FindSensorByIdUseCase'
@@ -56,9 +60,6 @@ import { DeleteZonaUseCase } from '@/emergency/usecases/zona/DeleteZonaUseCase'
 import { FindZonaByIdUseCase } from '@/emergency/usecases/zona/FindZonaByIdUseCase'
 import { ListZonasUseCase } from '@/emergency/usecases/zona/ListZonasUseCase'
 import { UpdateZonaUseCase } from '@/emergency/usecases/zona/UpdateZonaUseCase'
-import { RequestMonitoramentoUseCase } from '@/emergency/usecases/registro-monitoramento/RequestMonitoramentoUseCase'
-import { ProcessRegistroMonitoramentoUseCase } from '@/emergency/usecases/registro-monitoramento/ProcessRegistroMonitoramentoUseCase'
-import { ListRegistrosMonitoramentoBrutoUseCase } from '@/emergency/usecases/registro-monitoramento/ListRegistrosMonitoramentoUseCase'
 
 @Module({
   imports: [
@@ -71,7 +72,7 @@ import { ListRegistrosMonitoramentoBrutoUseCase } from '@/emergency/usecases/reg
       UdeModel,
       DeteccaoEmergenciaModel,
       MonitoramentoGrandezaModel,
-      RegistroMonitoramentoBrutoModel,
+      MonitoramentoRawDataModel,
       RegistroMonitoramentoModel,
     ]),
   ],
@@ -98,7 +99,7 @@ import { ListRegistrosMonitoramentoBrutoUseCase } from '@/emergency/usecases/reg
     SensorRepository,
     ZonaRepository,
     UdeRepository,
-    RegistroMonitoramentoBrutoRepository,
+    MonitoramentoRawDataRepository,
     RegistroMonitoramentoRepository,
 
     // Usecases
@@ -134,9 +135,10 @@ import { ListRegistrosMonitoramentoBrutoUseCase } from '@/emergency/usecases/reg
 
     NotifyUdeUpdatedUseCase,
 
-    RequestMonitoramentoUseCase,
+    RequestMonitoramentoDataUseCase,
     ProcessRegistroMonitoramentoUseCase,
-    ListRegistrosMonitoramentoBrutoUseCase,
+    ListMonitoramentoRawDataUseCase,
+    GetMonitoramentoSummaryUseCase,
   ],
 })
 export class EmergencyModule { }

@@ -11,9 +11,7 @@ export class CreateZonaUseCase {
     private readonly zonaRepository: ZonaRepository,
   ) { }
 
-  async execute(input: CreateZonaRequest): Promise<ZonaResponse> {
-    const { nome } = input
-
+  async execute({ nome }: CreateZonaRequest): Promise<ZonaResponse> {
     const model = new ZonaModel({
       nome,
     })

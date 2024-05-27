@@ -3,17 +3,18 @@
 import { DeteccaoEmergenciaModel } from '@/emergency/models/DeteccaoEmergenciaModel'
 import { UdeModel } from '@/emergency/models/UdeModel'
 import { TipoUdeEnum } from '@/emergency/structures/enum/TipoUdeEnum'
+import { MathUtils } from '@/utils/MathUtils'
 
 class SensorAtivoPayload {
   model: string
   variable: string
+  sample_interval: number | null
 }
 
 class EmergenciaPayload {
   [key: string]: {
     min_threshold: number | null
     max_threshold: number | null
-    sample_interval: number | null
     min_variation_rate: number
   }
 }
@@ -33,6 +34,25 @@ export class NotifyUdeUpdatedPayload {
   emergencies: EmergenciasPayload
 
   static parse(model: UdeModel): NotifyUdeUpdatedPayload {
+    const sensoresMDC: { [key: string]: { values: number[], mdc: number } } = {}
+    model.deteccoesEmergencia.forEach((deteccao) => {
+      deteccao.monitoramentosGrandeza
+        ?.filter(m => m.ativo)
+        .forEach(monitoramento => {
+          if (!sensoresMDC[monitoramento.sensorId]) {
+            sensoresMDC[monitoramento.sensorId] = {
+              values: [],
+              mdc: 0
+            }
+          }
+          sensoresMDC[monitoramento.sensorId].values.push(monitoramento.intervaloAmostragem)
+        })
+    })
+
+    Object.values(sensoresMDC).forEach((v) => {
+      v.mdc = MathUtils.gcd(v.values)
+    })
+
     const sensoresAtivos = model.deteccoesEmergencia
       ?.reduce((result: any, deteccao: DeteccaoEmergenciaModel) => {
         deteccao.monitoramentosGrandeza
@@ -40,10 +60,11 @@ export class NotifyUdeUpdatedPayload {
           // Remove duplicates by sensor id
           .filter((m1, index, self) => index === self.findIndex((m2) => (m1.sensorId === m2.sensorId && m1.grandezaId === m2.grandezaId)))
           .forEach(monitoramento => result.push({
-            modelo: monitoramento.sensor!!.modelo,
-            grandeza: (monitoramento.grandeza?.nome.toLowerCase() || 'grandeza')
+            model: monitoramento.sensor!!.modelo,
+            variable: (monitoramento.grandeza?.nome.toLowerCase() || 'grandeza')
               .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")
+              .replace(/[\u0300-\u036f]/g, ""),
+            sample_interval: sensoresMDC[monitoramento.sensorId]?.mdc || null,
           }))
         return result
       }, [] as SensorAtivoPayload[])
@@ -57,7 +78,6 @@ export class NotifyUdeUpdatedPayload {
             mAcc[mKey] = {
               min_threshold: monitoramento.thresholdMinimo || null,
               max_threshold: monitoramento.thresholdMaximo || null,
-              sample_interval: monitoramento.intervaloAmostragem,
               min_variation_rate: monitoramento.taxaVariacaoMinima,
             }
             return mAcc

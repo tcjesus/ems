@@ -5,7 +5,7 @@ export class CreateRegistroMonitoramentoTables1716523573120 implements Migration
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(
-            'CREATE TABLE `registro_monitoramento_bruto` (' +
+            'CREATE TABLE `monitoramento_raw_data` (' +
             '  `id` int NOT NULL AUTO_INCREMENT, ' +
             '  `ude_id` int NOT NULL, ' +
             '  `sensor` varchar NOT NULL, ' +
@@ -26,7 +26,7 @@ export class CreateRegistroMonitoramentoTables1716523573120 implements Migration
         await queryRunner.query(
             'CREATE TABLE `registro_monitoramento` (' +
             '  `id` int NOT NULL AUTO_INCREMENT, ' +
-            '  `registro_bruto_id` int NOT NULL, ' +
+            '  `raw_data_id` int NOT NULL, ' +
             '  `ude_id` int NOT NULL, ' +
             '  `sensor_id` int NOT NULL, ' +
             '  `grandeza_id` int NOT NULL, ' +
@@ -41,7 +41,7 @@ export class CreateRegistroMonitoramentoTables1716523573120 implements Migration
             '  PRIMARY KEY (`id`)' +
             ') ENGINE=InnoDB'
         );
-        await queryRunner.query('ALTER TABLE `registro_monitoramento` ADD CONSTRAINT `FK_5f863808d7b1f065b8596773a90` FOREIGN KEY (`registro_bruto_id`) REFERENCES `registro_monitoramento_bruto`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION');
+        await queryRunner.query('ALTER TABLE `registro_monitoramento` ADD CONSTRAINT `FK_5f863808d7b1f065b8596773a90` FOREIGN KEY (`raw_data_id`) REFERENCES `monitoramento_raw_data`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION');
         await queryRunner.query('ALTER TABLE `registro_monitoramento` ADD CONSTRAINT `FK_72ef93beb50088aa1c53357a9b4` FOREIGN KEY (`ude_id`) REFERENCES `ude`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION');
         await queryRunner.query('ALTER TABLE `registro_monitoramento` ADD CONSTRAINT `FK_d48f7fa14348be549f20d1b8a6d` FOREIGN KEY (`sensor_id`) REFERENCES `sensor`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION');
         await queryRunner.query('ALTER TABLE `registro_monitoramento` ADD CONSTRAINT `FK_3378dff7e5a7dbc0fb70a964b56` FOREIGN KEY (`grandeza_id`) REFERENCES `grandeza`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION');
@@ -54,8 +54,8 @@ export class CreateRegistroMonitoramentoTables1716523573120 implements Migration
         await queryRunner.query('ALTER TABLE `registro_monitoramento` DROP FOREIGN KEY `FK_5f863808d7b1f065b8596773a90`');
         await queryRunner.query('DROP INDEX `IDX_fb0dde7b7412071c72854328b0` ON `registro_monitoramento`');
         await queryRunner.query('DROP TABLE `registro_monitoramento`');
-        await queryRunner.query('DROP INDEX `IDX_a8e3451f8a3f494203b5013b61` ON `registro_monitoramento_bruto`');
-        await queryRunner.query('DROP TABLE `registro_monitoramento_bruto`');
+        await queryRunner.query('DROP INDEX `IDX_a8e3451f8a3f494203b5013b61` ON `monitoramento_raw_data`');
+        await queryRunner.query('DROP TABLE `monitoramento_raw_data`');
     }
 
 }

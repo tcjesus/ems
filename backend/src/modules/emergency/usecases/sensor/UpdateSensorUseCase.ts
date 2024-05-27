@@ -14,13 +14,14 @@ export class UpdateSensorUseCase {
     private readonly sensorRepository: SensorRepository,
   ) { }
 
-  async execute(id: number, input: UpdateSensorRequest): Promise<SensorResponse> {
+  async execute(
+    id: number,
+    { modelo, descricao, especificacoes: especificacoesInput }: UpdateSensorRequest
+  ): Promise<SensorResponse> {
     const model = await this.sensorRepository.findById(id)
     if (!model) {
       throw new NotFoundException(ErrorMessages.emergency.sensor.notFound)
     }
-
-    const { modelo, descricao, especificacoes: especificacoesInput } = input
 
     const especificacoes = especificacoesInput.map((especificacao: EspecificacaoGrandezaRequest) => {
       const { grandeza: grandezaId, valorMinimo, valorMaximo, sinal } = especificacao

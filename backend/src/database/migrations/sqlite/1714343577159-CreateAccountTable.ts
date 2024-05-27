@@ -23,8 +23,8 @@ export class CreateAccountTable1714343577159 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query('DROP INDEX "IDX_account_email" ON "account"');
-    await queryRunner.query('DROP INDEX "IDX_10389424cb6dac9dc4e8ee91c4" ON "account"');
+    await queryRunner.query('DROP INDEX "IDX_account_email"');
+    await queryRunner.query('DROP INDEX "IDX_10389424cb6dac9dc4e8ee91c4"');
     await queryRunner.query('DROP TABLE "account"');
   }
 }

@@ -6,7 +6,7 @@ import { DeteccaoEmergenciaModel } from '@/emergency/models/DeteccaoEmergenciaMo
 import { EspecificacaoGrandezaModel } from '@/emergency/models/EspecificacaoGrandezaModel'
 import { GrandezaModel } from '@/emergency/models/GrandezaModel'
 import { MonitoramentoGrandezaModel } from '@/emergency/models/MonitoramentoGrandezaModel'
-import { RegistroMonitoramentoBrutoModel } from '@/emergency/models/RegistroMonitoramentoBrutoModel'
+import { MonitoramentoRawDataModel } from '@/emergency/models/MonitoramentoRawDataModel'
 import { RegistroMonitoramentoModel } from '@/emergency/models/RegistroMonitoramentoModel'
 import { SensorModel } from '@/emergency/models/SensorModel'
 import { TipoEmergenciaModel } from '@/emergency/models/TipoEmergenciaModel'
@@ -37,7 +37,7 @@ export default {
     UdeModel,
     DeteccaoEmergenciaModel,
     MonitoramentoGrandezaModel,
-    RegistroMonitoramentoBrutoModel,
+    MonitoramentoRawDataModel,
     RegistroMonitoramentoModel,
   ],
   bigNumberStrings: false,
