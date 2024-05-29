@@ -60,20 +60,20 @@ export class ListMonitoramentoRawDataUseCase {
       : (await udesQuery)?.map(ude => ude.id)
 
     const grandezasIds = grandezas?.length
-      ? grandezas
+      ? grandezas.map(id => parseInt(id as any))
       : tipoEmergencia
         ? tipoEmergencia.grandezas.map(grandeza => grandeza.id)
         : undefined
 
     const grandezasNomes = grandezasIds
-      ? (await this.grandezaRepository.findManyById(grandezasIds)).map(grandeza => grandeza.nome)
+      ? (await this.grandezaRepository.findManyById(grandezasIds)).map(grandeza => grandeza.nome.toLowerCase())
       : undefined
 
     return {
       dataInicial,
       dataFinal,
       udesIds,
-      grandezas: grandezasNomes,
+      grandezasNomes,
     } as MonitoramentoRawDataSearchFilters
   }
 

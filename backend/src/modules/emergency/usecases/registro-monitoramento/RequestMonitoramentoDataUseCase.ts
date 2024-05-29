@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { RequestMonitoramentoDataRequest } from '@/emergency/structures/requests/RequestMonitoramentoDataRequest';
 
@@ -48,17 +48,13 @@ export class RequestMonitoramentoDataUseCase {
     devicesTopicSuffix = udesIds?.map(id => `/device/${id}`)
 
     const grandezasIds = grandezas?.length
-      ? grandezas
+      ? grandezas.map(id => parseInt(id as any))
       : tipoEmergencia
         ? tipoEmergencia.grandezas.map(grandeza => grandeza.id)
         : undefined
 
-    if (!grandezasIds?.length) {
-      throw new BadRequestException('Ao menos uma grandeza deve ser informada')
-    }
-
     const payload = {
-      variables: grandezasIds
+      variables: grandezasIds || []
     }
 
     const topics = (
