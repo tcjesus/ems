@@ -27,7 +27,7 @@ export class RequestMonitoramentoDataUseCase {
       ude: udeId
     }: RequestMonitoramentoDataRequest
   ): Promise<void> {
-    let zonaTopicSuffix = zonaId ? [`/zona/${zonaId}`] : undefined
+    let zonaTopicSuffix = zonaId ? [`/zone/${zonaId}`] : undefined
     let devicesTopicSuffix: string[] | undefined = udeId ? [`/device/${udeId}`] : undefined
 
     const tipoEmergencia = tipoEmergenciaId
