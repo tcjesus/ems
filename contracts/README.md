@@ -1,7 +1,7 @@
 ## Integrations between backend and devices
 ### Update Device Configuration
 #### Request:
-**Topic:** `update_device_config`
+**Topic:** `uefs/pgcc/ems/update_device_config`
 ```json
 {
   "id": 1,
@@ -34,9 +34,9 @@
 ### Request Monitoring Data
 #### Request:
 **Topics:**
-* `request_realtime_data`
-* `request_realtime_data/zone/:zone_id`
-* `request_realtime_data/device/:device_id`
+* `uefs/pgcc/ems/request_realtime_data`
+* `uefs/pgcc/ems/request_realtime_data/zone/:zone_id`
+* `uefs/pgcc/ems/request_realtime_data/device/:device_id`
 
 ```json
 {
@@ -44,7 +44,7 @@
 }
 ```
 #### Response:
-**Topic:** `response_realtime_data`
+**Topic:** `uefs/pgcc/ems/response_realtime_data`
 ```json
 {
   "device_id": 1,
