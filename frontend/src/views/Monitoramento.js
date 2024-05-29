@@ -2,6 +2,7 @@ import Header from 'components/Headers/Header';
 import TipoEmergenciaSelect from 'components/Selects/TipoEmergenciaSelect';
 import UdeSelect from 'components/Selects/UdeSelect';
 import ZonaSelect from 'components/Selects/ZonaSelect';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import ReactSelect, { components } from "react-select";
 import { Button, Card, CardBody, CardFooter, CardHeader, Col, Container, FormGroup, Input, Pagination, PaginationItem, PaginationLink, Row, Table } from 'reactstrap';
@@ -32,7 +33,7 @@ const Monitoramento = () => {
     tipoEmergencia: '',
     grandezas: [],
     ude: '',
-    dataInicial: '',
+    dataInicial: moment().subtract(30, 'days').format("YYYY-MM-DD"),
     dataFinal: '',
     page: 1,
     limit: 7,
