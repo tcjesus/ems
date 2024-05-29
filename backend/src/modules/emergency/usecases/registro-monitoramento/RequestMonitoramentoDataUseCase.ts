@@ -6,6 +6,8 @@ import { Environment as envs } from '@/Environment';
 import { TipoEmergenciaRepository } from '@/emergency/repositories/TipoEmergenciaRepository';
 import { UdeRepository } from '@/emergency/repositories/UdeRepository';
 import { connect } from "mqtt";
+import { GrandezaRepository } from '@/emergency/repositories/GrandezaRepository';
+import normalizeStr from '@/utils/normalizeStr';
 
 const util = require('util')
 
@@ -14,6 +16,7 @@ export class RequestMonitoramentoDataUseCase {
   constructor(
     private readonly tipoEmergenciaRepository: TipoEmergenciaRepository,
     private readonly udeRepository: UdeRepository,
+    private readonly grandezaRepository: GrandezaRepository,
   ) { }
 
   async execute(
@@ -53,8 +56,12 @@ export class RequestMonitoramentoDataUseCase {
         ? tipoEmergencia.grandezas.map(grandeza => grandeza.id)
         : undefined
 
+    const grandezasNomes = grandezasIds
+      ? (await this.grandezaRepository.findManyById(grandezasIds)).map(grandeza => normalizeStr(grandeza.nome))
+      : undefined
+
     const payload = {
-      variables: grandezasIds || []
+      variables: grandezasNomes || []
     }
 
     const topics = (

@@ -7,6 +7,7 @@ import { RegistroMonitoramentoRepository } from '@/emergency/repositories/Regist
 import { SensorRepository } from '@/emergency/repositories/SensorRepository'
 import { UdeRepository } from '@/emergency/repositories/UdeRepository'
 import { NovoRegistroMonitoramentoPayload } from '@/emergency/structures/payloads/NovoRegistroMonitoramentoPayload'
+import normalizeStr from '@/utils/normalizeStr'
 import { Injectable } from '@nestjs/common'
 
 
@@ -43,13 +44,13 @@ export class ProcessRegistroMonitoramentoUseCase {
 
     const grandezas = await this.grandezaRepository.findAll()
     const grandezasMap = grandezas.reduce((acc, grandeza) => {
-      acc[grandeza.nome.toLocaleLowerCase()] = grandeza
+      acc[normalizeStr(grandeza.nome)] = grandeza
       return acc
     }, {})
 
     const sensores = await this.sensorRepository.findAll({ relations: [] })
     const sensoresMap = sensores.reduce((acc, sensor) => {
-      acc[sensor.modelo.toLocaleLowerCase()] = sensor
+      acc[normalizeStr(sensor.modelo)] = sensor
       return acc
     }, {})
 
@@ -68,8 +69,8 @@ export class ProcessRegistroMonitoramentoUseCase {
         let monitoramento
         for (const deteccao of ude.deteccoesEmergencia || []) {
           for (const m of deteccao.monitoramentosGrandeza) {
-            if (m.sensor.modelo.toLowerCase() === registroBruto.sensor.toLowerCase()
-              && m.grandeza.nome.toLowerCase() === registroBruto.grandeza.toLowerCase()) {
+            if (normalizeStr(m.sensor.modelo) === normalizeStr(registroBruto.sensor)
+              && normalizeStr(m.grandeza.nome) === normalizeStr(registroBruto.grandeza)) {
               monitoramento = m
               break
             }
@@ -85,8 +86,8 @@ export class ProcessRegistroMonitoramentoUseCase {
           registros.push(new RegistroMonitoramentoModel({
             rawDataId: registroBruto.id,
             udeId: registroBruto.udeId,
-            sensorId: sensoresMap[registroBruto.sensor.toLocaleLowerCase()].id,
-            grandezaId: grandezasMap[registroBruto.grandeza.toLocaleLowerCase()].id,
+            sensorId: sensoresMap[normalizeStr(registroBruto.sensor)].id,
+            grandezaId: grandezasMap[normalizeStr(registroBruto.grandeza)].id,
             valor: registroBruto.valor,
             dataColeta
           }))
