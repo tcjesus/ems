@@ -24,6 +24,7 @@ npm install
 ```
 
 ### Running the app
+First, you need to create a `.env` file in the root of the project with the following the .env.example file.
 
 ```bash
 # first run
