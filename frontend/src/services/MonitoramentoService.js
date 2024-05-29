@@ -9,6 +9,20 @@ const buildHeaders = async () => ({
   Authorization: await AuthService.getAuthorizationHeader(),
 });
 
+const buildQueryParams = (filters) => {
+  let queryParams = []
+
+  Object.keys(filters).forEach((key) => {
+    if (Array.isArray(filters[key])) {
+      queryParams.push(filters[key].map(v => `${key}[]=${encodeURI(v)}`).join('&'))
+    } else {
+      queryParams.push(`${key}=${encodeURI(filters[key])}`)
+    }
+  })
+
+  return queryParams.join('&')
+}
+
 const Service = {
   /**
    * filters:
@@ -18,7 +32,7 @@ const Service = {
    * - ude?: number
    */
   async request(filters) {
-    const queryParams = new URLSearchParams(filters).toString();
+    const queryParams = buildQueryParams(filters);
 
     const response = await fetch(
       `${baseUrl}/request?${queryParams}`,
@@ -42,7 +56,7 @@ const Service = {
    * - ude?: number
    */
   async listRawData(filters) {
-    const queryParams = new URLSearchParams(filters).toString();
+    const queryParams = buildQueryParams(filters);
 
     const response = await fetch(
       `${baseUrl}/raw-data?${queryParams}`,
@@ -62,7 +76,7 @@ const Service = {
    * - ude?: number
    */
   async getSummary(filters) {
-    const queryParams = new URLSearchParams(filters).toString();
+    const queryParams = buildQueryParams(filters);
 
     const response = await fetch(
       `${baseUrl}/summary?${queryParams}`,
