@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { AccountController } from '@/account/controllers/AccountController'
 import { AccountModel } from '@/account/models/AccountModel'
+import { AuditModel } from '@/account/models/AuditModel'
 import { AccountRepository } from '@/account/repositories/AccountRepository'
 import { AccountFacade } from '@/account/services/AccountFacade'
 import { CreateAccountUseCase } from '@/account/usecases/CreateAccountUseCase'
@@ -12,11 +13,13 @@ import { FindAccountByIdUseCase } from '@/account/usecases/FindAccountByIdUseCas
 import { ListAccountsUseCase } from '@/account/usecases/ListAccountUseCase'
 import { SignInUseCase } from '@/account/usecases/SignInUseCase'
 import { UpdateAccountUseCase } from '@/account/usecases/UpdateAccountUseCase'
+import { AuditRepository } from '@/account/repositories/AuditRepository'
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      AccountModel, //
+      AccountModel,
+      AuditModel,
     ]),
   ],
   controllers: [AccountController],
@@ -35,10 +38,12 @@ import { UpdateAccountUseCase } from '@/account/usecases/UpdateAccountUseCase'
 
     // Repositories
     AccountRepository,
+    AuditRepository,
   ],
   exports: [
     AccountFacade,
     AccountRepository,
+    AuditRepository,
   ]
 })
 export class AccountModule {}

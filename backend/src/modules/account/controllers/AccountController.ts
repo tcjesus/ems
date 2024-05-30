@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Response, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put, Response, UseGuards, UseInterceptors } from '@nestjs/common'
 import { ApiBearerAuth, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger'
 
 import { AccountParam } from '@/account/helpers/AccountParam'
@@ -14,6 +14,7 @@ import { Roles } from '@/auth/decorators/Roles'
 import { RoleGuard } from '@/auth/guards/RoleGuard'
 import { Account } from '@/auth/interfaces/AuthPayload'
 import { Response as Res } from 'express'
+import { AuditInterceptor } from '@/account/interceptors/AuditInterceptor'
 
 @Controller({ version: '1', path: 'usuarios' })
 @ApiTags('usuarios')
@@ -37,6 +38,7 @@ export class AccountController {
   @Roles([Role.ADMIN])
   @ApiOperation({ summary: 'Cria um novo Usuário' })
   @ApiCreatedResponse({ type: AccountResponse })
+  @UseInterceptors(AuditInterceptor('account'))
   create(
     @Body() input: CreateAccountRequest,
   ): Promise<AccountResponse> {
@@ -50,6 +52,7 @@ export class AccountController {
   @ApiParam({ name: 'id', description: 'Identificador do Usuário', type: Number, example: 1 })
   @ApiOkResponse({ type: AccountResponse })
   @ApiNotFoundResponse({ description: 'Usuário não encontrado' })
+  @UseInterceptors(AuditInterceptor('account'))
   update(
     @Param('id') id: number,
     @Body() input: UpdateAccountRequest,
@@ -64,6 +67,7 @@ export class AccountController {
   @ApiParam({ name: 'id', description: 'Identificador do Usuário', type: Number, example: 1 })
   @ApiOkResponse()
   @ApiNotFoundResponse({ description: 'Usuário não encontrado' })
+  @UseInterceptors(AuditInterceptor('account'))
   delete(
     @Param('id') id: number,
   ): Promise<void> {
@@ -73,6 +77,7 @@ export class AccountController {
   @Post('/sign-in')
   @ApiOperation({ summary: 'Sign in' })
   @ApiOkResponse({ type: SignInResponse })
+  @UseInterceptors(AuditInterceptor('account'))
   signIn(
     @Body() request: SignInRequest
   ): Promise<SignInResponse> {

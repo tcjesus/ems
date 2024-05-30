@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UseInterceptors } from '@nestjs/common'
 import { ApiBearerAuth, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger'
 
 import { SensorFacade } from '@/emergency/services/SensorFacade'
@@ -8,6 +8,7 @@ import { UpdateSensorRequest } from '@/emergency/structures/requests/UpdateSenso
 import { Role } from '@/account/structures/enum/Role'
 import { Roles } from '@/auth/decorators/Roles'
 import { RoleGuard } from '@/auth/guards/RoleGuard'
+import { AuditInterceptor } from '@/account/interceptors/AuditInterceptor'
 
 @Controller({ version: '1', path: 'sensores' })
 @ApiTags('sensores')
@@ -40,6 +41,7 @@ export class SensorController {
   @Roles([Role.ADMIN, Role.USER])
   @ApiOperation({ summary: 'Cria um novo Sensor' })
   @ApiCreatedResponse({ type: SensorResponse })
+  @UseInterceptors(AuditInterceptor('sensor'))
   create(
     @Body() input: CreateSensorRequest,
   ): Promise<SensorResponse> {
@@ -52,6 +54,7 @@ export class SensorController {
   @ApiParam({ name: 'id', description: 'Identificador do Sensor', type: Number, example: 1 })
   @ApiOkResponse({ type: SensorResponse })
   @ApiNotFoundResponse({ description: 'Sensor não encontrado' })
+  @UseInterceptors(AuditInterceptor('sensor'))
   update(
     @Param('id') id: number,
     @Body() input: UpdateSensorRequest,
@@ -65,6 +68,7 @@ export class SensorController {
   @ApiParam({ name: 'id', description: 'Identificador do Sensor', type: Number, example: 1 })
   @ApiOkResponse()
   @ApiNotFoundResponse({ description: 'Sensor não encontrado' })
+  @UseInterceptors(AuditInterceptor('sensor'))
   delete(
     @Param('id') id: number,
   ): Promise<void> {
