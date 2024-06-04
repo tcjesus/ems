@@ -37,11 +37,10 @@ const DefaultList = (service, resource, recordsName, headers, attributes) => {
       setIsLoading(false);
     }, [isLoading]);
 
-    const deleteRecord = async (e) => {
-      e.preventDefault();
+    const deleteRecord = async (id) => {
       if (window.confirm('Deseja realmente excluir este registro?')) {
         try {
-          await service.delete(e.target.value);
+          await service.delete(id);
           setIsLoading(true);
         } catch (error) {
           console.error(error);
@@ -88,7 +87,7 @@ const DefaultList = (service, resource, recordsName, headers, attributes) => {
                   Editar
                 </DropdownItem>
                 <DropdownItem
-                  onClick={deleteRecord}
+                  onClick={() => deleteRecord(record.id)}
                 >
                   Remover
                 </DropdownItem>

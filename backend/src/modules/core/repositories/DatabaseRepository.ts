@@ -187,4 +187,8 @@ export abstract class DatabaseRepository<MODEL_TYPE extends ObjectLiteral, ID_TY
       .where(`${this.table}.id IN (:...ids)`, { ids })
       .execute();
   }
+
+  async nativeQuery(query: string, parameters?: any[]): Promise<any> {
+    return this.repository.query(query, parameters)
+  }
 }

@@ -41,7 +41,7 @@ const BuildForm = (record, onChange) => {
       try {
         const response = await GrandezaService.list();
         setGrandezas(response);
-        setGrandezasSelected(record.grandezas.map(g => ({ value: g, label: g.nome })))
+        setGrandezasSelected(record.grandezas.map(g => ({ value: g, label: `${g.nome} (${g.sigla})` })))
       } catch (error) {
         console.error(error);
         alert('Erro ao carregar grandezas!');
@@ -91,7 +91,7 @@ const BuildForm = (record, onChange) => {
             <ReactSelect
               id="input-grandezas"
               className="form-control-alternative form-control-partial"
-              options={grandezas.map((g) => ({ value: g, label: g.nome }))}
+              options={grandezas.map((g) => ({ value: g, label: `${g.nome} (${g.sigla})` }))}
               isMulti
               closeMenuOnSelect={false}
               hideSelectedOptions={false}

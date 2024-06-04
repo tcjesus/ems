@@ -2,6 +2,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm'
 
 import { Environment as envs } from '@/Environment'
 import { AccountModel } from '@/account/models/AccountModel'
+import { AuditModel } from '@/account/models/AuditModel'
 import { DeteccaoEmergenciaModel } from '@/emergency/models/DeteccaoEmergenciaModel'
 import { EspecificacaoGrandezaModel } from '@/emergency/models/EspecificacaoGrandezaModel'
 import { GrandezaModel } from '@/emergency/models/GrandezaModel'
@@ -27,6 +28,7 @@ export default {
   entities: [
     // Account Module
     AccountModel,
+    AuditModel,
 
     // Emergency Module
     GrandezaModel,

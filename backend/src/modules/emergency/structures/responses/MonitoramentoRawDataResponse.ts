@@ -6,6 +6,7 @@ import { MonitoramentoRawDataModel } from '@/emergency/models/MonitoramentoRawDa
 import { GrandezaResponse } from '@/emergency/structures/responses/GrandezaResponse'
 import { SensorResponse } from '@/emergency/structures/responses/SensorResponse'
 import { UdeResponse } from '@/emergency/structures/responses/UdeResponse'
+import normalizeStr from '@/utils/normalizeStr'
 
 export class MonitoramentoRawDataResponse {
   @IsDefined()
@@ -46,8 +47,8 @@ export class MonitoramentoRawDataResponse {
     return {
       id: model.id,
       ude: UdeResponse.toResponse(udesMap[model.udeId]),
-      sensor: SensorResponse.toResponse(sensoresMap[model.sensor.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")]),
-      grandeza: GrandezaResponse.toResponse(grandezasMap[model.grandeza.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")]),
+      sensor: SensorResponse.toResponse((sensoresMap[normalizeStr(model.sensor)])),
+      grandeza: GrandezaResponse.toResponse(grandezasMap[normalizeStr(model.grandeza)]),
       valor: model.valor,
       dataInicial: model.dataInicial,
       dataFinal: model.dataFinal,

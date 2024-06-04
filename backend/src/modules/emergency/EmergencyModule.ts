@@ -1,6 +1,7 @@
-import { Module } from '@nestjs/common'
+import { Module, forwardRef } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
+import { AccountModule } from '@/account/AccountModule'
 import { GrandezaController } from '@/emergency/controllers/GrandezaController'
 import { MonitoramentoController } from '@/emergency/controllers/MonitoramentoController'
 import { SensorController } from '@/emergency/controllers/SensorController'
@@ -75,6 +76,7 @@ import { UpdateZonaUseCase } from '@/emergency/usecases/zona/UpdateZonaUseCase'
       MonitoramentoRawDataModel,
       RegistroMonitoramentoModel,
     ]),
+    forwardRef(() => AccountModule),
   ],
   controllers: [
     GrandezaController,

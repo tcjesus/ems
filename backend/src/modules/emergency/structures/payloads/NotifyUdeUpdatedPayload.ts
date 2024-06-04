@@ -4,6 +4,7 @@ import { DeteccaoEmergenciaModel } from '@/emergency/models/DeteccaoEmergenciaMo
 import { UdeModel } from '@/emergency/models/UdeModel'
 import { TipoUdeEnum } from '@/emergency/structures/enum/TipoUdeEnum'
 import { MathUtils } from '@/utils/MathUtils'
+import normalizeStr from '@/utils/normalizeStr'
 
 class SensorAtivoPayload {
   model: string
@@ -61,9 +62,7 @@ export class NotifyUdeUpdatedPayload {
           .filter((m1, index, self) => index === self.findIndex((m2) => (m1.sensorId === m2.sensorId && m1.grandezaId === m2.grandezaId)))
           .forEach(monitoramento => result.push({
             model: monitoramento.sensor!!.modelo,
-            variable: (monitoramento.grandeza?.nome.toLowerCase() || 'grandeza')
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, ""),
+            variable: normalizeStr(monitoramento.grandeza?.nome || 'grandeza'),
             sample_interval: sensoresMDC[monitoramento.sensorId]?.mdc || null,
           }))
         return result
@@ -73,8 +72,7 @@ export class NotifyUdeUpdatedPayload {
       ?.reduce((result: any, d: DeteccaoEmergenciaModel, dIndex: number) => {
         const grandezas = d.monitoramentosGrandeza
           ?.reduce((mAcc: any, monitoramento, mIndex: number) => {
-            let mKey = monitoramento.grandeza?.nome.toLowerCase() || `grandeza_${mIndex}`
-            mKey = mKey.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            let mKey = normalizeStr(monitoramento.grandeza?.nome) || `grandeza_${mIndex}`
             mAcc[mKey] = {
               min_threshold: monitoramento.thresholdMinimo || null,
               max_threshold: monitoramento.thresholdMaximo || null,
@@ -83,8 +81,7 @@ export class NotifyUdeUpdatedPayload {
             return mAcc
           }, {} as EmergenciaPayload)
 
-        let eKey = d.tipoEmergencia?.nome.toLowerCase() || `emergencia_${dIndex}`
-        eKey = eKey.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        let eKey = normalizeStr(d.tipoEmergencia?.nome) || `emergencia_${dIndex}`
 
         if (!result[eKey]) {
           result[eKey] = []

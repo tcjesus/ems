@@ -1,14 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UseInterceptors } from '@nestjs/common'
 import { ApiBearerAuth, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger'
 
+import { AuditInterceptor } from '@/account/interceptors/AuditInterceptor'
+import { Role } from '@/account/structures/enum/Role'
+import { Roles } from '@/auth/decorators/Roles'
+import { RoleGuard } from '@/auth/guards/RoleGuard'
 import { UdeFacade } from '@/emergency/services/UdeFacade'
-import { UdeResponse } from '@/emergency/structures/responses/UdeResponse'
+import { NotifyUdeUpdatedPayload } from '@/emergency/structures/payloads/NotifyUdeUpdatedPayload'
 import { CreateUdeRequest } from '@/emergency/structures/requests/CreateUdeRequest'
 import { UpdateUdeRequest } from '@/emergency/structures/requests/UpdateUdeRequest'
-import { Roles } from '@/auth/decorators/Roles'
-import { Role } from '@/account/structures/enum/Role'
-import { RoleGuard } from '@/auth/guards/RoleGuard'
-import { NotifyUdeUpdatedPayload } from '@/emergency/structures/payloads/NotifyUdeUpdatedPayload'
+import { UdeResponse } from '@/emergency/structures/responses/UdeResponse'
 
 @Controller({ version: '1', path: 'udes' })
 @ApiTags('udes')
@@ -41,6 +42,7 @@ export class UdeController {
   @Roles([Role.ADMIN, Role.USER])
   @ApiOperation({ summary: 'Cria uma nova UDE' })
   @ApiCreatedResponse({ type: UdeResponse })
+  @UseInterceptors(AuditInterceptor('ude'))
   create(
     @Body() input: CreateUdeRequest,
   ): Promise<UdeResponse> {
@@ -53,6 +55,7 @@ export class UdeController {
   @ApiParam({ name: 'id', description: 'Identificador da UDE', type: Number, example: 1 })
   @ApiOkResponse({ type: UdeResponse })
   @ApiNotFoundResponse({ description: 'UDE não encontrada' })
+  @UseInterceptors(AuditInterceptor('ude'))
   update(
     @Param('id') id: number,
     @Body() input: UpdateUdeRequest,
@@ -66,6 +69,7 @@ export class UdeController {
   @ApiParam({ name: 'id', description: 'Identificador da UDE', type: Number, example: 1 })
   @ApiOkResponse()
   @ApiNotFoundResponse({ description: 'UDE não encontrada' })
+  @UseInterceptors(AuditInterceptor('ude'))
   delete(
     @Param('id') id: number,
   ): Promise<void> {
@@ -77,6 +81,7 @@ export class UdeController {
   @ApiOperation({ summary: 'Força a notificação de atualização de uma UDE com os dados atuais' })
   @ApiParam({ name: 'id', description: 'Identificador da UDE', type: Number, example: 1 })
   @ApiOkResponse()
+  @UseInterceptors(AuditInterceptor())
   notifyUpdate(
     @Param('id') id: number,
   ): Promise<NotifyUdeUpdatedPayload> {

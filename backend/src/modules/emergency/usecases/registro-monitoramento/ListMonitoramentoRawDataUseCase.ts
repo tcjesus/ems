@@ -11,6 +11,7 @@ import { ListMonitoramentoRawDataRequest } from '@/emergency/structures/requests
 import { MonitoramentoRawDataResponse } from '@/emergency/structures/responses/MonitoramentoRawDataResponse'
 import { PaginationOptions } from '@/core/helpers/pagination/PaginationOptions'
 import { Paginated } from '@/core/helpers/pagination/Paginated'
+import normalizeStr from '@/utils/normalizeStr'
 
 @Injectable()
 export class ListMonitoramentoRawDataUseCase {
@@ -60,20 +61,20 @@ export class ListMonitoramentoRawDataUseCase {
       : (await udesQuery)?.map(ude => ude.id)
 
     const grandezasIds = grandezas?.length
-      ? grandezas
+      ? grandezas.map(id => parseInt(id as any))
       : tipoEmergencia
         ? tipoEmergencia.grandezas.map(grandeza => grandeza.id)
         : undefined
 
     const grandezasNomes = grandezasIds
-      ? (await this.grandezaRepository.findManyById(grandezasIds)).map(grandeza => grandeza.nome)
+      ? (await this.grandezaRepository.findManyById(grandezasIds)).map(grandeza => normalizeStr(grandeza.nome))
       : undefined
 
     return {
       dataInicial,
       dataFinal,
       udesIds,
-      grandezas: grandezasNomes,
+      grandezasNomes,
     } as MonitoramentoRawDataSearchFilters
   }
 
@@ -81,13 +82,13 @@ export class ListMonitoramentoRawDataUseCase {
     const results = paginated.results
     const grandezas = await this.grandezaRepository.findAll()
     const grandezasMap = grandezas.reduce((acc, grandeza) => {
-      acc[grandeza.nome.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")] = grandeza
+      acc[normalizeStr(grandeza.nome)] = grandeza
       return acc
     }, {})
 
     const sensores = await this.sensorRepository.findAll({ relations: [] })
     const sensoresMap = sensores.reduce((acc, sensor) => {
-      acc[sensor.modelo.toLocaleLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")] = sensor
+      acc[normalizeStr(sensor.modelo)] = sensor
       return acc
     }, {})
 

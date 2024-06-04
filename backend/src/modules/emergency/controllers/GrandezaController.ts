@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UseInterceptors } from '@nestjs/common'
 import { ApiBearerAuth, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger'
 
 import { Role } from '@/account/structures/enum/Role'
@@ -8,6 +8,7 @@ import { GrandezaFacade } from '@/emergency/services/GrandezaFacade'
 import { CreateGrandezaRequest } from '@/emergency/structures/requests/CreateGrandezaRequest'
 import { UpdateGrandezaRequest } from '@/emergency/structures/requests/UpdateGrandezaRequest'
 import { GrandezaResponse } from '@/emergency/structures/responses/GrandezaResponse'
+import { AuditInterceptor } from '@/account/interceptors/AuditInterceptor'
 
 @Controller({ version: '1', path: 'grandezas' })
 @ApiTags('grandezas')
@@ -40,6 +41,7 @@ export class GrandezaController {
   @Roles([Role.ADMIN, Role.USER])
   @ApiOperation({ summary: 'Cria uma nova Grandeza' })
   @ApiCreatedResponse({ type: GrandezaResponse })
+  @UseInterceptors(AuditInterceptor('grandeza'))
   create(
     @Body() input: CreateGrandezaRequest,
   ): Promise<GrandezaResponse> {
@@ -52,6 +54,7 @@ export class GrandezaController {
   @ApiParam({ name: 'id', description: 'Identificador da Grandeza', type: Number, example: 1 })
   @ApiOkResponse({ type: GrandezaResponse })
   @ApiNotFoundResponse({ description: 'Grandeza não encontrada' })
+  @UseInterceptors(AuditInterceptor('grandeza'))
   update(
     @Param('id') id: number,
     @Body() input: UpdateGrandezaRequest,
@@ -65,6 +68,7 @@ export class GrandezaController {
   @ApiParam({ name: 'id', description: 'Identificador da Grandeza', type: Number, example: 1 })
   @ApiOkResponse()
   @ApiNotFoundResponse({ description: 'Grandeza não encontrada' })
+  @UseInterceptors(AuditInterceptor('grandeza'))
   delete(
     @Param('id') id: number,
   ): Promise<void> {

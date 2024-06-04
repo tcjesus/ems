@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { RequestMonitoramentoDataRequest } from '@/emergency/structures/requests/RequestMonitoramentoDataRequest';
 
@@ -6,6 +6,8 @@ import { Environment as envs } from '@/Environment';
 import { TipoEmergenciaRepository } from '@/emergency/repositories/TipoEmergenciaRepository';
 import { UdeRepository } from '@/emergency/repositories/UdeRepository';
 import { connect } from "mqtt";
+import { GrandezaRepository } from '@/emergency/repositories/GrandezaRepository';
+import normalizeStr from '@/utils/normalizeStr';
 
 const util = require('util')
 
@@ -14,6 +16,7 @@ export class RequestMonitoramentoDataUseCase {
   constructor(
     private readonly tipoEmergenciaRepository: TipoEmergenciaRepository,
     private readonly udeRepository: UdeRepository,
+    private readonly grandezaRepository: GrandezaRepository,
   ) { }
 
   async execute(
@@ -24,7 +27,7 @@ export class RequestMonitoramentoDataUseCase {
       ude: udeId
     }: RequestMonitoramentoDataRequest
   ): Promise<void> {
-    let zonaTopicSuffix = zonaId ? [`/zona/${zonaId}`] : undefined
+    let zonaTopicSuffix = zonaId ? [`/zone/${zonaId}`] : undefined
     let devicesTopicSuffix: string[] | undefined = udeId ? [`/device/${udeId}`] : undefined
 
     const tipoEmergencia = tipoEmergenciaId
@@ -48,17 +51,17 @@ export class RequestMonitoramentoDataUseCase {
     devicesTopicSuffix = udesIds?.map(id => `/device/${id}`)
 
     const grandezasIds = grandezas?.length
-      ? grandezas
+      ? grandezas.map(id => parseInt(id as any))
       : tipoEmergencia
         ? tipoEmergencia.grandezas.map(grandeza => grandeza.id)
         : undefined
 
-    if (!grandezasIds?.length) {
-      throw new BadRequestException('Ao menos uma grandeza deve ser informada')
-    }
+    const grandezasNomes = grandezasIds
+      ? (await this.grandezaRepository.findManyById(grandezasIds)).map(grandeza => normalizeStr(grandeza.nome))
+      : undefined
 
     const payload = {
-      variables: grandezasIds
+      variables: grandezasNomes || []
     }
 
     const topics = (

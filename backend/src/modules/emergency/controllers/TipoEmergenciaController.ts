@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UseInterceptors } from '@nestjs/common'
 import { ApiBearerAuth, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger'
 
 import { TipoEmergenciaFacade } from '@/emergency/services/TipoEmergenciaFacade'
@@ -8,6 +8,7 @@ import { UpdateTipoEmergenciaRequest } from '@/emergency/structures/requests/Upd
 import { RoleGuard } from '@/auth/guards/RoleGuard'
 import { Role } from '@/account/structures/enum/Role'
 import { Roles } from '@/auth/decorators/Roles'
+import { AuditInterceptor } from '@/account/interceptors/AuditInterceptor'
 
 @Controller({ version: '1', path: 'tipos-emergencia' })
 @ApiTags('tipos-emergencia')
@@ -40,6 +41,7 @@ export class TipoEmergenciaController {
   @Roles([Role.ADMIN, Role.USER])
   @ApiOperation({ summary: 'Cria um novo Tipo de Emergência' })
   @ApiCreatedResponse({ type: TipoEmergenciaResponse })
+  @UseInterceptors(AuditInterceptor('tipo_emergencia'))
   create(
     @Body() request: CreateTipoEmergenciaRequest,
   ): Promise<TipoEmergenciaResponse> {
@@ -52,6 +54,7 @@ export class TipoEmergenciaController {
   @ApiParam({ name: 'id', description: 'Identificador do Tipo de Emergência', type: Number, example: 1 })
   @ApiOkResponse({ type: TipoEmergenciaResponse })
   @ApiNotFoundResponse({ description: 'Tipo de Emergência não encontrado' })
+  @UseInterceptors(AuditInterceptor('tipo_emergencia'))
   update(
     @Param('id') id: number,
     @Body() input: UpdateTipoEmergenciaRequest,
@@ -65,6 +68,7 @@ export class TipoEmergenciaController {
   @ApiParam({ name: 'id', description: 'Identificador do Tipo de Emergência', type: Number, example: 1 })
   @ApiOkResponse()
   @ApiNotFoundResponse({ description: 'Tipo de Emergência não encontrado' })
+  @UseInterceptors(AuditInterceptor('tipo_emergencia'))
   delete(
     @Param('id') id: number,
   ): Promise<void> {
