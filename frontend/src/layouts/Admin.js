@@ -34,13 +34,20 @@ const Admin = (props) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function checkStorage() {
+    async function checkPermissions() {
       const isNotAuthorized = !await AuthService.isAuthorized();
       if (isNotAuthorized) {
         navigate('/login');
       }
+
+      const accountRole = await AuthService.getRole();
+
+      const route = routes.find(route => route.layout + route.path === location.pathname);
+      if (!route?.roles?.includes(accountRole)) {
+        navigate('/admin/index');
+      }
     };
-    checkStorage();
+    checkPermissions();
   });
 
   useEffect(() => {

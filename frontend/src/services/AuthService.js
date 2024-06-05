@@ -1,5 +1,6 @@
 import envs from "environment";
 import handleResponse from "./handleResponse";
+import Role from "./Role";
 
 const baseUrl = `${envs.backendUrl}/usuarios`
 
@@ -20,6 +21,11 @@ const Service = {
   async getAccount() {
     const account = JSON.parse(await localStorage.getItem('account'))
     return account
+  },
+
+  async getRole() {
+    const account = await this.getAccount();
+    return account?.role || Role.PUBLIC;
   },
 
   async isAuthorized() {

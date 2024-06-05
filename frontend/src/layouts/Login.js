@@ -33,13 +33,13 @@ const Auth = (props) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function checkStorage() {
+    async function checkPermissions() {
       const isAuthorized = await AuthService.isAuthorized();
       if (isAuthorized) {
         navigate('/admin/index');
       }
     };
-    checkStorage();
+    checkPermissions();
   });
 
   useEffect(() => {
