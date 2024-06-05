@@ -18,7 +18,7 @@ const BuildForm = (record, onChange) => {
           <FormGroup>
             <label
               className="form-control-label"
-              for="input-nome"
+              htmlFor="input-nome"
             >
               Nome
             </label>
