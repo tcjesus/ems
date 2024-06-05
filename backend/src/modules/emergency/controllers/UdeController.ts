@@ -19,7 +19,7 @@ export class UdeController {
   constructor(private readonly udeFacade: UdeFacade) { }
 
   @Get('/')
-  @Roles([Role.ADMIN, Role.USER])
+  @Roles([Role.ADMIN, Role.USER, Role.GUEST])
   @ApiOperation({ summary: 'Lista as UDEs cadastradas no sistema' })
   @ApiOkResponse({ type: UdeResponse, isArray: true })
   list(): Promise<UdeResponse[]> {

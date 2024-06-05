@@ -24,7 +24,7 @@ export class MonitoramentoController {
   constructor(private readonly monitoramentoFacade: MonitoramentoFacade) { }
 
   @Post('/request')
-  @Roles([Role.ADMIN, Role.USER])
+  @Roles([Role.ADMIN, Role.USER, Role.GUEST])
   @ApiQuery({ name: 'tipoEmergencia', description: 'Identificador do Tipo de Emergência a ser fitlrado', required: false, type: Number, example: 1 })
   @ApiQuery({ name: 'grandezas', description: 'Identificadores das grandezas a serem filtradas', required: false, type: [Number], example: [1, 2, 3] })
   @ApiQuery({ name: 'zona', description: 'Identificador da Zona a ser filtrada', required: false, type: Number, example: 1 })
@@ -49,7 +49,7 @@ export class MonitoramentoController {
 
   @Get('/raw-data')
   @UseInterceptors(PaginationInterceptor(10))
-  @Roles([Role.ADMIN, Role.USER])
+  @Roles([Role.ADMIN, Role.USER, Role.GUEST])
   @ApiOperation({ summary: 'Lista os Registros de Monitoramento no sistema' })
   @ApiQuery({ name: 'dataInicial', description: 'Data de início da busca', required: true, type: Date, example: '2024-05-01T00:00:00.000Z' })
   @ApiQuery({ name: 'dataFinal', description: 'Data de fim da busca', required: false, type: Date, example: '2024-05-01T00:00:00.000Z' })
@@ -85,7 +85,7 @@ export class MonitoramentoController {
   }
 
   @Get('/summary')
-  @Roles([Role.ADMIN, Role.USER])
+  @Roles([Role.ADMIN, Role.USER, Role.GUEST])
   @ApiOperation({ summary: 'Lista os Registros de Monitoramento no sistema de maneira sumarizada' })
   @ApiQuery({ name: 'dataInicial', description: 'Data de início da busca', required: true, type: Date, example: '2024-05-01T00:00:00.000Z' })
   @ApiQuery({ name: 'dataFinal', description: 'Data de fim da busca', required: false, type: Date, example: '2024-05-01T00:00:00.000Z' })

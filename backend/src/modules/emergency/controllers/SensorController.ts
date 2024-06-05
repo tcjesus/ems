@@ -18,7 +18,7 @@ export class SensorController {
   constructor(private readonly SensorFacade: SensorFacade) { }
 
   @Get('/')
-  @Roles([Role.ADMIN, Role.USER])
+  @Roles([Role.ADMIN, Role.USER, Role.GUEST])
   @ApiOperation({ summary: 'Lista os Sensores cadastrados no sistema' })
   @ApiOkResponse({ type: SensorResponse, isArray: true })
   list(): Promise<SensorResponse[]> {

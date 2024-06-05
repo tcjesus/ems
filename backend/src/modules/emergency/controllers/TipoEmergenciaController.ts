@@ -18,7 +18,7 @@ export class TipoEmergenciaController {
   constructor(private readonly tipoEmergenciaFacade: TipoEmergenciaFacade) { }
 
   @Get('/')
-  @Roles([Role.ADMIN, Role.USER])
+  @Roles([Role.ADMIN, Role.USER, Role.GUEST])
   @ApiOperation({ summary: 'Lista os Tipos de Emergência cadastrados no sistema' })
   @ApiOkResponse({ type: TipoEmergenciaResponse, isArray: true })
   list(): Promise<TipoEmergenciaResponse[]> {

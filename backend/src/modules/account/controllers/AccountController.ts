@@ -77,7 +77,6 @@ export class AccountController {
   @Post('/sign-in')
   @ApiOperation({ summary: 'Sign in' })
   @ApiOkResponse({ type: SignInResponse })
-  @UseInterceptors(AuditInterceptor('account'))
   signIn(
     @Body() request: SignInRequest
   ): Promise<SignInResponse> {
