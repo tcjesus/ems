@@ -45,7 +45,7 @@ const EspecificacaoComponent = ({ index, id, grandeza, valorMinimo, valorMaximo,
             <FormGroup>
               <label
                 className="form-control-label"
-                for={`input-especificacao-grandeza-${index}`}
+                htmlFor={`input-especificacao-grandeza-${index}`}
               >
                 Grandeza
               </label>
@@ -61,7 +61,7 @@ const EspecificacaoComponent = ({ index, id, grandeza, valorMinimo, valorMaximo,
             <FormGroup>
               <label
                 className="form-control-label"
-                for={`input-especificacao-valor-minimo-${index}`}
+                htmlFor={`input-especificacao-valor-minimo-${index}`}
               >
                 Valor Mínimo
               </label>
@@ -80,7 +80,7 @@ const EspecificacaoComponent = ({ index, id, grandeza, valorMinimo, valorMaximo,
             <FormGroup>
               <label
                 className="form-control-label"
-                for={`input-especificacao-valor-maximo-${index}`}
+                htmlFor={`input-especificacao-valor-maximo-${index}`}
               >
                 Valor Máximo
               </label>
@@ -99,7 +99,7 @@ const EspecificacaoComponent = ({ index, id, grandeza, valorMinimo, valorMaximo,
             <FormGroup>
               <label
                 className="form-control-label"
-                for={`input-especificacao-sinal-${index}`}
+                htmlFor={`input-especificacao-sinal-${index}`}
               >
                 Tipo de Sinal
               </label>
@@ -244,7 +244,7 @@ const SensorForm = () => {
                         <FormGroup>
                           <label
                             className="form-control-label"
-                            for="input-modelo"
+                            htmlFor="input-modelo"
                           >
                             Modelo
                           </label>
@@ -263,7 +263,7 @@ const SensorForm = () => {
                         <FormGroup>
                           <label
                             className="form-control-label"
-                            for="input-descricao"
+                            htmlFor="input-descricao"
                           >
                             Descrição
                           </label>

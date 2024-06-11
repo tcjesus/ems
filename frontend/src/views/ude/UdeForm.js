@@ -71,7 +71,7 @@ const MonitoramentoComponent = ({
             <FormGroup className="mb-0">
               <label
                 className="form-control-label mb-0"
-                for={`input-monitoramento-sensor-${dIndex}-${mIndex}`}
+                htmlFor={`input-monitoramento-sensor-${dIndex}-${mIndex}`}
               >
                 Sensor
               </label>
@@ -94,7 +94,7 @@ const MonitoramentoComponent = ({
             <FormGroup className="mb-0">
               <label
                 className="form-control-label mb-0"
-                for={`input-monitoramento-grandeza-${dIndex}-${mIndex}`}
+                htmlFor={`input-monitoramento-grandeza-${dIndex}-${mIndex}`}
               >
                 Grandeza
               </label>
@@ -111,7 +111,7 @@ const MonitoramentoComponent = ({
             <FormGroup className="mb-0">
               <label
                 className="form-control-label mb-0"
-                for={`input-monitoramento-threshold-minimo-${dIndex}-${mIndex}`}
+                htmlFor={`input-monitoramento-threshold-minimo-${dIndex}-${mIndex}`}
               >
                 Threshold Mínimo
               </label>
@@ -130,7 +130,7 @@ const MonitoramentoComponent = ({
             <FormGroup className="mb-0">
               <label
                 className="form-control-label mb-0"
-                for={`input-monitoramento-threshold-maximo-${dIndex}-${mIndex}`}
+                htmlFor={`input-monitoramento-threshold-maximo-${dIndex}-${mIndex}`}
               >
                 Threshold Máximo
               </label>
@@ -149,7 +149,7 @@ const MonitoramentoComponent = ({
             <FormGroup className="mb-0">
               <label
                 className="form-control-label mb-0"
-                for={`input-monitoramento-intervalo-amostragem-${dIndex}-${mIndex}`}
+                htmlFor={`input-monitoramento-intervalo-amostragem-${dIndex}-${mIndex}`}
               >
                 Intervalo Amostragem
               </label>
@@ -168,7 +168,7 @@ const MonitoramentoComponent = ({
             <FormGroup className="mb-0">
               <label
                 className="form-control-label mb-0"
-                for={`input-monitoramento-taxa-variacao-minima-${dIndex}-${mIndex}`}
+                htmlFor={`input-monitoramento-taxa-variacao-minima-${dIndex}-${mIndex}`}
               >
                 Taxa Variação Mínima (%)
               </label>
@@ -200,7 +200,7 @@ const MonitoramentoComponent = ({
                   check
                   className="ml-2 form-control-label"
                   style={{ fontSize: '1rem' }}
-                  for={`input-monitoramento-ativo-${dIndex}-${mIndex}`}
+                  htmlFor={`input-monitoramento-ativo-${dIndex}-${mIndex}`}
                 >
                   <span className="text-muted">
                     Ativo
@@ -260,7 +260,7 @@ const DeteccaoEmergenciaComponent = ({
               <FormGroup>
                 <label
                   className="form-control-label"
-                  for={`input-deteccao-tipo-emergencia-${index}`}
+                  htmlFor={`input-deteccao-tipo-emergencia-${index}`}
                 >
                   Tipo de Emergência
                 </label>
@@ -309,7 +309,7 @@ const DeteccaoEmergenciaComponent = ({
             {
               monitoramentos?.map((monitoramento, _index) => {
                 return (
-                  <Col lg="4">
+                  <Col lg="4" key={`monitoramento-${_index}`}>
                     <MonitoramentoComponent
                       dIndex={index}
                       mIndex={_index}
@@ -494,7 +494,7 @@ const UdeForm = () => {
                         <FormGroup className="mb-0">
                           <label
                             className="form-control-label"
-                            for="input-tipo"
+                            htmlFor="input-tipo"
                           >
                             Tipo
                           </label>
@@ -517,7 +517,7 @@ const UdeForm = () => {
                         <FormGroup>
                           <label
                             className="form-control-label"
-                            for="input-label"
+                            htmlFor="input-label"
                           >
                             Label
                           </label>
@@ -536,7 +536,7 @@ const UdeForm = () => {
                         <FormGroup>
                           <label
                             className="form-control-label"
-                            for="input-mac"
+                            htmlFor="input-mac"
                           >
                             MAC
                           </label>
@@ -557,7 +557,7 @@ const UdeForm = () => {
                         <FormGroup>
                           <label
                             className="form-control-label"
-                            for="input-zona"
+                            htmlFor="input-zona"
                           >
                             Zona
                           </label>
@@ -574,7 +574,7 @@ const UdeForm = () => {
                         <FormGroup>
                           <label
                             className="form-control-label"
-                            for="input-latitude"
+                            htmlFor="input-latitude"
                           >
                             Latitude
                           </label>
@@ -593,7 +593,7 @@ const UdeForm = () => {
                         <FormGroup>
                           <label
                             className="form-control-label"
-                            for="input-longitude"
+                            htmlFor="input-longitude"
                           >
                             Longitude
                           </label>
@@ -612,7 +612,7 @@ const UdeForm = () => {
                         <FormGroup>
                           <label
                             className="form-control-label"
-                            for="input-operating-range"
+                            htmlFor="input-operating-range"
                           >
                             Alcance (metros)
                           </label>

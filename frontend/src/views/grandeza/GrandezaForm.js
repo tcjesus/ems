@@ -20,7 +20,7 @@ const BuildForm = (record, onChange) => {
           <FormGroup>
             <label
               className="form-control-label"
-              for="input-nome"
+              htmlFor="input-nome"
             >
               Nome
             </label>
@@ -39,7 +39,7 @@ const BuildForm = (record, onChange) => {
           <FormGroup>
             <label
               className="form-control-label"
-              for="input-unidade-medida"
+              htmlFor="input-unidade-medida"
             >
               Unidade de Medida
             </label>
@@ -58,7 +58,7 @@ const BuildForm = (record, onChange) => {
           <FormGroup>
             <label
               className="form-control-label"
-              for="input-sigla"
+              htmlFor="input-sigla"
             >
               Sigla
             </label>

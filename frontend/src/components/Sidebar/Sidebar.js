@@ -16,7 +16,7 @@
 
 */
 /*eslint-disable*/
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, NavLink as NavLinkRRD } from "react-router-dom";
 // nodejs library to set properties for components
 import { PropTypes } from "prop-types";
@@ -38,6 +38,9 @@ import {
   Row,
   UncontrolledDropdown
 } from "reactstrap";
+import Role from "services/Role";
+
+import AuthService from "services/AuthService.js";
 
 var ps;
 
@@ -55,9 +58,28 @@ const Sidebar = (props) => {
   const closeCollapse = () => {
     setCollapseOpen(false);
   };
+
+  const [role, setRole] = useState(Role.PUBLIC);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const r = await AuthService.getRole();
+        setRole(r);
+      } catch (error) {
+        console.error(error);
+        alert('Erro ao dados do usuário');
+      }
+    }
+    if (isLoading) {
+      fetchData();
+    }
+    setIsLoading(false);
+  }, [isLoading]);
+
   // creates the links that appear in the left menu / Sidebar
-  const createLinks = (routes) => {
-    return routes.filter((route) => route.show !== false)
+  const createLinks = () => {
+    return routes.filter((route) => route.show !== false && route.roles.includes(role))
       .map((prop, key) => {
       return (
         <NavItem key={key}>
@@ -216,7 +238,7 @@ const Sidebar = (props) => {
             </InputGroup>
           </Form> */}
           {/* Navigation */}
-          <Nav navbar>{createLinks(routes)}</Nav>
+          {!isLoading && <Nav navbar>{createLinks(routes)}</Nav>}
           {/* Divider */}
           <hr className="my-3" />
           {/* Heading */}

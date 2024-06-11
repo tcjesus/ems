@@ -18,7 +18,7 @@ export class GrandezaController {
   constructor(private readonly grandezaFacade: GrandezaFacade) { }
 
   @Get('/')
-  @Roles([Role.ADMIN, Role.USER])
+  @Roles([Role.ADMIN, Role.USER, Role.GUEST])
   @ApiOperation({ summary: 'Lista as Grandezas cadastradas no sistema' })
   @ApiOkResponse({ type: GrandezaResponse, isArray: true })
   list(): Promise<GrandezaResponse[]> {
