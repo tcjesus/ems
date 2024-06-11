@@ -56,7 +56,7 @@ int size_sensor_lst = sizeof(sensor_lst)/sizeof(sensor_lst[0]); // Quantidade de
 /* ===================================================================
   Configurações do cliente MQTT
   ==================================================================== */
-const char *mqtt_broker     = "broker.hivemq.com";   // Host do broker
+const char *mqtt_broker     = "test.mosquitto.org";   // Host do broker
 const char *mqtt_username   = "";                    // Usuario
 const char *mqtt_password   = "";                    // Senha
 const int mqtt_port         = 1883;                  // Porta
@@ -77,8 +77,8 @@ NTPClient timeClient(ntpUDP, NTP_ADDRESS, NTP_OFFSET, NTP_INTERVAL);
 /*====================================================================
   Parâmetros de conexão do Wifi
   ==================================================================== */
-const char* ssid      = "UEFS_VISITANTES"; // REDE
-const char* password  = ""; // SENHA
+const char* ssid      = "LSNET_BARRETO"; // REDE
+const char* password  = "Tuty7090"; // SENHA
 int timestamp;
 /*========================================== 
   Protótipos das funcoes 

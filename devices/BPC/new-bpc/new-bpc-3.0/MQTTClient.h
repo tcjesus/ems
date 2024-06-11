@@ -15,7 +15,7 @@ private:
     void connectMQTT() {
         while (!client.connected()) {
             Serial.println("\t [MQTT] Attempting MQTT connection...");
-            if (client.connect("ESP8266Client", mqttUser, mqttPassword)) {
+            if (client.connect(device_mac.c_str(), mqttUser, mqttPassword)) {
                 Serial.println("\t [MQTT] Connected!!");
             } else {
                 Serial.print(" \t [MQTT] Failed connection, rc = ");
@@ -26,21 +26,20 @@ private:
         }
         // Subscribes on topics
         Serial.println("\t [MQTT] Subscribing on topics....");
-        subscribe(topic_config);
-        subscribe(topic_subscribe);
+        subscribe(topic_configInfo);
+        subscribe(topic_configSr);
+        subscribe(topic_configEmg);
         subscribe(topic_requisition);
-        subscribe(topic_sensoring);
-        subscribe(topic_required_values);
     }
 
-    static void messageReceived(char *topic, byte * payload, unsigned int length){
+    static void messageReceived(char *topic, byte *payload, unsigned int length){
         Serial.print("\t [MQTT] Message received on topic: ");
         Serial.println(topic);
-        Serial.println((char*)payload);
+        //Serial.println((char*)payload);
         // New Package received
         Package pkg;
-        pkg.payload = payload;
-        pkg.topic   = topic;
+        pkg.payload = String((char*) payload);
+        pkg.topic   = String(topic);
         packages.push(pkg);
     }
 
@@ -74,8 +73,8 @@ public:
     Package getPackage(){
         return packages.pop();
     }
-    void publish(const char* topic, const char* payload) {
-        client.publish(topic, payload);
+    void publish(const char* topic, const char* payload, bool retain) {
+        client.publish(topic, payload, retain);
     }
 
     void subscribe(const char* topic) {

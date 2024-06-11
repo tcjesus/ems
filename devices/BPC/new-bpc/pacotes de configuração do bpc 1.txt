@@ -1,0 +1,23 @@
+Tamanho máximo do pacote: 400 bytes
+
+=========== PROCESSO DE CONFIGURAÇÃO ======================
+
+1ª Pacote: ## informações gerais
+{"type": "BPC", "mac": "A8:48:FA:DC:BC:60", "id": 2, "zone": 1,"latitude": 15.3456,"longitude": -85.8765}
+
+2ª Pacote: ## sensores ativos
+{"mac": "A8:48:FA:DC:BC:60", "s": [{"v": "luminosity","md": "lm393","si": 2,"r": 0.1},{"v": "uv","md": "potenciometer","si": 3,"r": 0.5},{"v": "humidity","md": "DHT11","si": 5,"r": 0.8},{"v": "temperature","md": "DHT11","si": 4,"r": 0.2}]}
+
+3ª Pacote: ## emergências. Uma por vez
+{"mac":"A8:48:FA:DC:BC:60", "emg": {"fire": [{"luminosity": {"min": null,"max": 1},"temperature": {"min": null,"max": 60}},{" temperature": {"min": null,"max": 80},"humidity": {"min": null,"max": 50}}]}}
+
+{"mac":"A8:48:FA:DC:BC:60", "emg": {"flood": [{"humidity": {"min": null,"max": 80},"uv": {"min": 500,"max": 700}}]}}
+============================================================
+
+============ REQUISIÇÃO DE DADOS ENVIADOS PELOS SENSORES =================
+{"id_request": 1, "id": 2, "zone": 1, "sensor": "luminosity"}
+{"id_request": 1, "id": 2, "zone": 1, "sensor": "temperature"}
+{"id_request": 1, "id": 2, "zone": 1, "sensor": "humidity"}
+{"id_request": 1, "id": 2, "zone": 1, "sensor": "uv"}
+{"id_request": 1, "id": 2, "zone": 1, "sensor": "pression"}
+==========================================================================
