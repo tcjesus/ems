@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Input } from "reactstrap";
 
 const DefaultSelect = (recordName, inputName, service, getLabel, placeholder = `Selecione uma ${recordName}`) => {
-  const BuiltSelect = ({ id = 'input-' + inputName, name = inputName, value: record = '', onChange = null }) => {
+  const BuiltSelect = ({ id = 'input-' + inputName, name = inputName, value: record = '', filter = (record) => true, onChange = null }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [options, setOptions] = useState([]);
     const [value, setValue] = useState(record?.id);
@@ -26,9 +26,13 @@ const DefaultSelect = (recordName, inputName, service, getLabel, placeholder = `
       }
       if (isLoading) {
         fetchData();
+        setIsLoading(false);
       }
-      setIsLoading(false);
     }, [isLoading]);
+
+    useEffect(() => {
+      setIsLoading(true);
+    }, [filter]);
 
     useEffect(() => {
       if (!isLoading) {
@@ -48,9 +52,11 @@ const DefaultSelect = (recordName, inputName, service, getLabel, placeholder = `
         >
           <option value="">{placeholder}</option>
           {
-            options.map((record, index) => (
-              <option key={`${id}-${index}`} value={record.id}>{getLabel(record)}</option>
-            ))
+            options
+              .filter(filter)
+              .map((record, index) => (
+                <option key={`${id}-${index}`} value={record.id}>{getLabel(record)}</option>
+              ))
           }
         </Input>
       </>
