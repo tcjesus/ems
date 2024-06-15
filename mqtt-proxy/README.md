@@ -1,6 +1,5 @@
 # Emergency Management System - MQTT Proxy
 ![Node 20.12.2](https://shields.io/badge/Node-20.12.2-339933?logo=Node.js&logoColor=FFF&style=flat-square)
-![nestjs](https://shields.io/badge/NestJS-E0234E?logo=NestJS&logoColor=FFF&style=flat-square)
 
 This project involves the development of a MQTT Proxy which connect to two MQTT brokers and redirect messages between them.
 
