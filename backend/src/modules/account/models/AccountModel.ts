@@ -45,7 +45,7 @@ export class AccountModel extends SoftDeleteBaseModel {
   }
 
   static hashPassword(plainPassword: string): string {
-    const bcrypt = require('bcrypt');
+    const bcrypt = require('bcryptjs');
     const saltRounds = 13;
 
     const salt = bcrypt.genSaltSync(saltRounds);
@@ -53,7 +53,7 @@ export class AccountModel extends SoftDeleteBaseModel {
   }
 
   static checkPassword(plainPassword: string, storedPassword: string): boolean {
-    const bcrypt = require('bcrypt');
+    const bcrypt = require('bcryptjs');
     return bcrypt.compareSync(plainPassword, storedPassword);
   }
 }
