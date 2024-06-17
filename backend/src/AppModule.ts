@@ -10,6 +10,7 @@ import { JwtOptions } from '@/auth/config/JwtOptions'
 import TypeOrmConfig from '@/database/config/TypeOrmConfig'
 import { HealthCheckModule } from '@/health-check/HealthCheckModule'
 import { EmergencyModule } from '@/emergency/EmergencyModule'
+import { LocalityModule } from '@/locality/LocalityModule'
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { EmergencyModule } from '@/emergency/EmergencyModule'
     HealthCheckModule,
     AccountModule,
     EmergencyModule,
+    LocalityModule,
   ],
   providers: [],
 })

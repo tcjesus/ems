@@ -26,6 +26,7 @@
       "@/core/*": ["src/modules/core/*"],
       "@/utils/*": ["src/utils/*"],
       "@/emergency/*": ["src/modules/emergency/*"],
+      "@/locality/*": ["src/modules/locality/*"],
       "@/health-check/*": ["src/modules/health-check/*"],
       "@/*": ["src/*"]
     }
