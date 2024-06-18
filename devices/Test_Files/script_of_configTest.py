@@ -39,8 +39,8 @@ pathFiles     = os.path.join(base_dir, relative_path)
 # MQTT client configuration
 broker      = "broker.hivemq.com"   # MQTT broker address
 port        = 1883                  # MQTT broker port
-configTopic = "update_ude"
-subscrTopic = "subscribe"
+configTopic = "uefs/pgcc/ems/update_device_config"
+subscrTopic = "uefs/pgcc/device/subscribe"
 
 client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 client.on_connect = on_connect
@@ -50,7 +50,7 @@ client.on_publish = on_publish
 client.connect(broker, port, 60)
 
 # List of JSON files to send
-json_configFiles  = [pathFiles + "configBPC_1.json"]
+json_configFiles  = [pathFiles + "configAPC.json", pathFiles + "configBPC_1.json"]
 #json_subFiles     = [pathFiles + "subscrBPC_1.json"]
 for js in json_configFiles:
     sendJsonContent(js, configTopic)

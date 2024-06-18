@@ -2,6 +2,7 @@
 #include "MyQueue.h"
 
 Queue<Package> packages(10);
+Queue<Package> package_status(1);
 
 class MQTTClient {
 private:
@@ -35,12 +36,15 @@ private:
     static void messageReceived(char *topic, byte *payload, unsigned int length){
         Serial.print("\t [MQTT] Message received on topic: ");
         Serial.println(topic);
-        //Serial.println((char*)payload);
-        // New Package received
         Package pkg;
         pkg.payload = String((char*) payload);
         pkg.topic   = String(topic);
-        packages.push(pkg);
+
+        if(strcmp(topic, topic_request_status_response.c_str()) == 0){
+            package_status.push(pkg);
+        }else{ 
+            packages.push(pkg); 
+        }
     }
 
 public:
@@ -70,8 +74,16 @@ public:
         return ( packages.isEmpty() == true ) ? false : true;
     }
 
+    bool have_newStatusPackage(){
+        return ( package_status.isEmpty() == true ) ? false : true;
+    }
+
     Package getPackage(){
         return packages.pop();
+    }
+
+    Package getStatusPackage(){
+        return package_status.pop();
     }
     void publish(const char* topic, const char* payload, bool retain) {
         client.publish(topic, payload, retain);

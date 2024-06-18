@@ -23,30 +23,30 @@
         "fire": [
             {
                 "temperature": {
-                    "thresholdMinimo": null,
-                    "thresholdMaximo": 50
+                    "min": 9999,
+                    "max": 50
                 },
                 "humidity": {
-                    "thresholdMinimo": 10,
-                    "thresholdMaximo": null
+                    "min": 10,
+                    "max": 9999
                 }
             },
             {
                 "temperature": {
-                    "thresholdMinimo": null,
-                    "thresholdMaximo": 45
+                    "min": 9999,
+                    "max": 45
                 },
                 "humidity": {
-                    "thresholdMinimo": null,
-                    "thresholdMaximo": 20
+                    "min": 9999,
+                    "max": 20
                 }
             }
         ],
         "flood": [
             {
                 "humidity": {
-                    "thresholdMinimo": null,
-                    "thresholdMaximo": 85
+                    "min": 9999,
+                    "max": 85
                 }
             }
         ]

@@ -3,17 +3,15 @@
 /*================================================================
   Definition of sensors and their respective pins.
  ================================================================= */
-#define luminosity D5
-#define uv         A0
-#define Temp_Humid D7
+#define PIN_SENSOR_1 D5
+#define PIN_SENSOR_2 A0
+#define PIN_SENSOR_3 D7
+#define PIN_SENSOR_4 D7
+#define PIN_SENSOR_5 D6
 #define INFINIT 9999
 
-#define NTP_OFFSET   60 * 60      // In seconds
-#define NTP_INTERVAL 60 * 1000    // In miliseconds
-#define NTP_ADDRESS  "europe.pool.ntp.org"
-
-const char*    sensorModelInDevice[] = {"lm393", "potentiometer", "DHT11", "DHT11"};
-const char*    sensorInDevice[]      = {"luminosity", "uv", "humidity", "temperature"};      
+const char*    sensorModelInDevice[] = {"lm393", "potentiometer", "DHT11", "DHT11", "lm353"};
+const char*    sensorInDevice[]      = {"luminosity", "uv", "humidity", "temperature", "pression"};      
 int            sizeSensorsInDevice   = sizeof(sensorInDevice)/sizeof(sensorInDevice[0]);
 int            timeSensoring         = 5;
 volatile bool  isSensoring           = false;
@@ -27,8 +25,8 @@ typedef struct{
 /*====================================================================
   Parameters of Wifi Connection
   ==================================================================== */
-const char* ssid      = "UEFS_VISITANTES"; // REDE
-const char* password  = ""; // SENHA
+const char* ssid      = "LSNET_BARRETO"; // REDE
+const char* password  = "Tuty7090"; // SENHA
 int timestamp;
 
 /* ===================================================================
@@ -42,16 +40,18 @@ const char* mqttPassword = "";
 /* ===================================================================
   MQTT Topics
   ==================================================================== */
-const char *topic_configInfo       = "testBPC/config/info";
-const char *topic_configSr         = "testBPC/config/sensors";
-const char *topic_configEmg        = "testBPC/config/emg";
-const char *topic_updateConfigInfo = "testBPC/update/config/info";
-const char *topic_updateConfigSr   = "testBPC/update/config/sensors";
-const char *topic_updateConfigEmg  = "testBPC/update/config/emg";
-const char *topic_subscribe        = "testBPC/subscribe";
-const char *topic_requisition      = "testBPC/request_data";
-const char *topic_sensoring        = "testBPC/sensoring";
-const char *topic_required_values  = "testBPC/required_values";
+const char *topic_configInfo              = "uefs/pgcc/device/config/info";
+const char *topic_configSr                = "uefs/pgcc/device/config/sensors";
+const char *topic_configEmg               = "uefs/pgcc/device/config/emg";
+const char *topic_updateConfigInfo        = "uefs/pgcc/device/update/config/info";
+const char *topic_updateConfigSr          = "uefs/pgcc/device/update/config/sensors";
+const char *topic_updateConfigEmg         = "uefs/pgcc/device/update/config/emg";
+const char *topic_subscribe               = "uefs/pgcc/device/subscribe";
+const char *topic_requisition             = "uefs/pgcc/device/request_data";
+const char *topic_sensoring               = "uefs/pgcc/device/sensoring";
+const char *topic_required_values         = "uefs/pgcc/device/required_values";
+const char *topic_request_status          = "uefs/pgcc/device/status";
+String      topic_request_status_response = "uefs/pgcc/device/status/response/";
 
 /* ===================================================================
   EDU Configurations
@@ -87,8 +87,3 @@ std::vector<Sensor>device_sensors;
 // List of emergencies
 std::vector<Emergency> emergencies;
 /* ================================================================== */
-
-// struct Requisition{
-//   int  id_request;
-//   int id_node;
-// };
