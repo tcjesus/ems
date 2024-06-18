@@ -42,7 +42,12 @@ const Admin = (props) => {
 
       const accountRole = await AuthService.getRole();
 
-      const route = routes.find(route => route.layout + route.path === location.pathname);
+      const route = routes.find(route => {
+        let regexPattern = route.layout + route.path;
+        regexPattern = regexPattern.replace(/:[^/]+/g, '[^/]+');
+        const routeRegex = new RegExp(regexPattern);
+        return routeRegex.test(location.pathname);
+      });
       if (!route?.roles?.includes(accountRole)) {
         navigate('/admin/index');
       }

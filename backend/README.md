@@ -28,8 +28,8 @@ First, you need to create a `.env` file in the root of the project with the foll
 
 ```bash
 # first run
-npm run migration.run
-npm run seed.run
+npm run migration:run
+npm run seed:run
 npm run start:dev
 
 # other run
@@ -43,10 +43,10 @@ npm run start:dev
 npm run migration:generate ./src/database/migrations/MinhaNovaMigration
 
 # run migrations
-npm run migration.run
+npm run migration:run
 
 # revert migrations
-npm run migration.revert
+npm run migration:revert
 ```
 
 ## Working with seeds
@@ -56,8 +56,8 @@ npm run migration.revert
 npm run seed:generate ./src/database/seeds/MinhaNovaSeed
 
 # run seed
-npm run seed.run
+npm run seed:run
 
 # revert seed
-npm run seed.revert
+npm run seed:revert
 ```

@@ -10,11 +10,11 @@ export class CreateAuditTable1717034830799 implements MigrationInterface {
             '  `account_id` int NOT NULL, ' +
             '  `method` varchar(6) NOT NULL, ' +
             '  `resource` varchar(100) NOT NULL, ' +
-            '  "query" text, ' +
-            '  "params" text, ' +
-            '  "request" text, ' +
-            '  "old_record" text, ' +
-            '  "response" text, ' +
+            '  `query` text, ' +
+            '  `params` text, ' +
+            '  `request` text, ' +
+            '  `old_record` text, ' +
+            '  `response` text, ' +
 
             '  `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), ' +
             '  `updated_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), ' +

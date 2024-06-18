@@ -22,6 +22,7 @@ const MonitoramentoComponent = ({
   dIndex,
   mIndex,
   id,
+  tipoEmergencia,
   sensor,
   grandeza,
   thresholdMinimo,
@@ -79,6 +80,9 @@ const MonitoramentoComponent = ({
                 id={`input-monitoramento-sensor-${dIndex}-${mIndex}`}
                 className="form-control-alternative"
                 name="sensor"
+                filter={(sensor) => {
+                  return !tipoEmergencia || sensor.especificacoes?.some(e => tipoEmergencia?.grandezas?.find(g => g.id === e.grandeza.id))
+                }}
                 onChange={(e) => {
                   const sensor = e.target.value;
                   if (sensor) {
@@ -102,6 +106,11 @@ const MonitoramentoComponent = ({
                 id={`input-monitoramento-grandeza-${dIndex}-${mIndex}`}
                 className="form-control-alternative"
                 name="grandeza"
+                filter={(grandeza) => {
+                  return (!sensor && !tipoEmergencia)
+                    || sensor?.especificacoes?.some(e => e.grandeza.id === grandeza.id)
+                    || tipoEmergencia?.grandezas?.some(g => g.id === grandeza.id)
+                }}
                 onChange={_onChange}
                 value={grandeza}
               />
@@ -197,7 +206,6 @@ const MonitoramentoComponent = ({
                   checked={ativo}
                 />
                 <label
-                  check
                   className="ml-2 form-control-label"
                   style={{ fontSize: '1rem' }}
                   htmlFor={`input-monitoramento-ativo-${dIndex}-${mIndex}`}
@@ -314,6 +322,7 @@ const DeteccaoEmergenciaComponent = ({
                       dIndex={index}
                       mIndex={_index}
                       id={monitoramento.id}
+                      tipoEmergencia={tipoEmergencia}
                       sensor={monitoramento.sensor}
                       grandeza={monitoramento.grandeza}
                       thresholdMinimo={monitoramento.thresholdMinimo}
