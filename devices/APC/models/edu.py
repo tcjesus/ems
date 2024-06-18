@@ -16,16 +16,19 @@ class EDU(ABC):
         self.client = self.connect_mqtt()
 
     def initialize_topics(self):
-        self.mqtt_topics['topic_update_ude']        = "update_ude"
-        self.mqtt_topics['topic_config/info']       = "testBPC/config/info"
-        self.mqtt_topics['topic_config/sensors']    = "testBPC/config/sensors"
-        self.mqtt_topics['topic_config/emg']        = "testBPC/config/emg"
-        self.mqtt_topics['topic_config/emgList']    = "config/emgList"
-        self.mqtt_topics['topic_subscribe']         = "testBPC/subscribe"
-        self.mqtt_topics['topic_sensoring']         = "sensoring"
-        self.mqtt_topics['topic_required_values']   = "required_values"
-        self.mqtt_topics['topic_update_node_table'] = "update_node_table"
-        self.mqtt_topics['topic_hazard_data']       = "hazard_data"
+        self.mqtt_topics["topic_update_config/info"]    = "uefs/pgcc/device/update/config/info";
+        self.mqtt_topics["topic_update_config/sensors"] = "uefs/pgcc/device/update/config/sensors";
+        self.mqtt_topics["topic_update_config/emg"]     = "uefs/pgcc/device/update/config/emg";
+        self.mqtt_topics['topic_update_ude']            = "uefs/pgcc/ems/update_device_config"
+        self.mqtt_topics['topic_config/info']           = "uefs/pgcc/device/config/info"
+        self.mqtt_topics['topic_config/sensors']        = "uefs/pgcc/device/config/sensors"
+        self.mqtt_topics['topic_config/emg']            = "uefs/pgcc/device/config/emg"
+        self.mqtt_topics['topic_config/emgList']        = "uefs/pgcc/device/config/emgList"
+        self.mqtt_topics['topic_subscribe']             = "uefs/pgcc/device/subscribe"
+        self.mqtt_topics['topic_sensoring']             = "uefs/pgcc/device/sensoring"
+        self.mqtt_topics['topic_required_values']       = "uefs/pgcc/device/required_values"
+        self.mqtt_topics['topic_update_node_table']     = "uefs/pgcc/device/update_node_table"
+        self.mqtt_topics['topic_hazard_data']           = "uefs/pgcc/device/hazard_data"
 
     def connect_mqtt(self):
         client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)

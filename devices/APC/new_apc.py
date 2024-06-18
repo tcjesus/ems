@@ -111,9 +111,7 @@ class APC(EDU):
 
     def on_message(self, client, userdata, message):
         str_msg = str(message.payload.decode("utf-8"))
-        if message.topic == self.mqtt_topics['topic_update_ude']:
-            print("[INFO] Configuring new device......")
-            print("[INFO] Configuration package of new/update EDU received ***")
+        if message.topic == self.mqtt_topics['topic_update_ude']:   
             msg                             = json.loads(str_msg)
             apcConfigData                   = {}
             try:
@@ -129,6 +127,19 @@ class APC(EDU):
             except KeyError:
                 print("[ERROR] Json package with non-existent key.")
                 return
+            
+            mutex_config.acquire()
+            if not self.isConfig:
+                if apcConfigData["mac"] != self.get_mac_id():
+                    return
+            else:
+                infoAPC = self.active_nodes_Table.getNodeByMac(self.get_mac_id())
+                if apcConfigData["zone"] != infoAPC["zone"]:
+                    return
+            mutex_config.release()
+
+            print("[INFO] Configuring new device......")
+            print("[INFO] Configuration package of new/update EDU received ***")
             for key, value in msg["emergencies"].items():
                 apcConfigData["emergencies"][key] = []
                 for i in range(len(value)):
@@ -146,12 +157,13 @@ class APC(EDU):
                         emgFile_handler.write_to_file({"emg": key, "monitoring": self.emerg[key] })
                         apcConfigData["emergencies"][key].append(len(self.emerg[key]) - 1)
             if(self.active_nodes_Table.isActiveNode(device_mac)):   # Update process
-                print(f"[INFO] Device {device_mac} updated.")
                 line_number = eduFile_handler.get_line_number("mac", device_mac)
                 eduFile_handler.delete_line(line_number)
                 eduFile_handler.write_to_file(apcConfigData)
                 self.active_nodes_Table.updateTable(device_mac, [apcConfigData])
-                self.send_config(device_mac)
+                print(f"[INFO] Device {device_mac} updated.")
+                if(device_mac != self.get_mac_id()):
+                    self.send_config(device_mac, 1)
             else:                                                   # New EDU
                 print(f"[INFO] New device {device_mac} added.")
                 eduFile_handler.write_to_file(apcConfigData)
@@ -160,7 +172,8 @@ class APC(EDU):
                 mutex_config.acquire()
                 self.isConfig = True
                 mutex_config.release()
-            self.send_nodes_to_MPC()
+            else:
+                self.send_nodes_to_MPC()
         elif message.topic == self.mqtt_topics['topic_subscribe']:
             print("[INFO] Enrollment message received")
             msg         = json.loads(str_msg)
@@ -168,7 +181,7 @@ class APC(EDU):
             if not self.active_nodes_Table.isActiveNode(device_mac):
                 print("[WARNING] Device with MAC: " + device_mac + " is not registed.")
             else:
-                self.send_config(device_mac)
+                self.send_config(device_mac, 0)
         elif message.topic == self.mqtt_topics['topic_hazard_data']:
             print(f"***  Sensing message received *** ")
             print(str_msg)
@@ -212,7 +225,7 @@ class APC(EDU):
         print("[INFO] Sending to all MPCs the active nodes table updated.")
         self.client.publish(self.mqtt_topics['topic_update_node_table'], json_msg)
 
-    def send_config(self, device_mac):
+    def send_config(self, device_mac, isUpdate):
         configEDU     = self.active_nodes_Table.getNodeByMac(device_mac)
         aux           = {"emergencies":{}}
         for emg, value in configEDU["emergencies"].items():
@@ -228,6 +241,7 @@ class APC(EDU):
                         "zone":      configEDU["zone"],
                         "latitude":  configEDU["latitude"],
                         "longitude": configEDU["longitude"],
+                        "upd":       isUpdate,
                         "H":         datetime.now().hour,
                         "M":         datetime.now().minute }
         print("[INFO] Sending info config message to device with MAC: " + device_mac)
@@ -235,13 +249,15 @@ class APC(EDU):
         time.sleep(1)
         # Sensors Package
         print("[INFO] Sending sensors config message to device with MAC: " + device_mac)
-        sensorsPackage = { "mac": configEDU["mac"], "s": configEDU["active_sensors"]}
+        sensorsPackage = { "mac": configEDU["mac"], "s": configEDU["active_sensors"], "upd": isUpdate}
         self.client.publish(self.mqtt_topics['topic_config/sensors'], str(sensorsPackage))
         time.sleep(1)
         # Emergency Packages
         print("[INFO] Sending emergency config message to device with MAC: " + device_mac)
+        firstEmg = isUpdate
         for emg, value in configEDU["emergencies"].items():
-            emgPackages = {"mac": configEDU["mac"], "emg":{emg: value}} 
+            emgPackages = {"mac": configEDU["mac"], "emg":{emg: value}, "upd": firstEmg}
+            firstEmg    = False
             self.client.publish(self.mqtt_topics['topic_config/emg'], str(emgPackages))
             time.sleep(1)
         # Checks the type 
@@ -249,7 +265,7 @@ class APC(EDU):
             print("[INFO] Sending emergency list to device with MAC: " + device_mac)
             # Include the list of emergencies registered by APC
             for emg, value in self.emerg.items():
-                emgList = {"mac": configEDU["mac"], "emg_list":{emg : value}}
+                emgList = {"mac": configEDU["mac"], "emg_list":{emg : value}, "upd": isUpdate}
                 self.client.publish(self.mqtt_topics['topic_config/emgList'], str(emgList))
                 time.sleep(1)
         print("[INFO] Config process finished.")
