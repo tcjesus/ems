@@ -17,8 +17,11 @@ class EDU(ABC):
 
     def initialize_topics(self):
         self.mqtt_topics['topic_update_ude']        = "update_ude"
-        self.mqtt_topics['topic_config']            = "config"
-        self.mqtt_topics['topic_subscribe']         = "subscribe"
+        self.mqtt_topics['topic_config/info']       = "testBPC/config/info"
+        self.mqtt_topics['topic_config/sensors']    = "testBPC/config/sensors"
+        self.mqtt_topics['topic_config/emg']        = "testBPC/config/emg"
+        self.mqtt_topics['topic_config/emgList']    = "config/emgList"
+        self.mqtt_topics['topic_subscribe']         = "testBPC/subscribe"
         self.mqtt_topics['topic_sensoring']         = "sensoring"
         self.mqtt_topics['topic_required_values']   = "required_values"
         self.mqtt_topics['topic_update_node_table'] = "update_node_table"

@@ -9,16 +9,16 @@
         {
             "variable": "humidity",
             "model": "humd1",
-            "sample_interval": null,
-            "min_variation_rate": 0
+            "sample_interval": 4,
+            "min_variation_rate": 0.2
         }
     ],
     "emergencies": {
         "flood": [
             {
                 "humidity": {
-                    "thresholdMinimo": null,
-                    "thresholdMaximo": 93
+                    "min": 9999,
+                    "max": 93
                 }
             }
         ]

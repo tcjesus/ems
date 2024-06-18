@@ -1,6 +1,6 @@
 Tamanho máximo do pacote: 400 bytes
 
-=========== PROCESSO DE CONFIGURAÇÃO ======================
+=========== PROCESSO DE CONFIGURAÇÃO (BPC) ======================
 
 1ª Pacote: ## informações gerais
 {"type": "BPC", "mac": "A8:48:FA:DC:BC:60", "id": 2, "zone": 1,"latitude": 15.3456,"longitude": -85.8765}

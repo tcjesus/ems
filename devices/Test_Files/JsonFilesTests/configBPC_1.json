@@ -5,36 +5,74 @@
     "zone": 1,
     "latitude": 15.3456,
     "longitude": -85.8765,
-    "active_sensors": [
+    "active_sensors":
+    [
         {
             "variable": "luminosity",
             "model": "lm393",
-            "sample_interval": null,
-            "min_variation_rate": 0
+            "sample_interval": 2,
+            "min_variation_rate": 0.1
         },
         {
-            "variable": "infra-red",
-            "model": "lm393",
-            "sample_interval": null,
-            "min_variation_rate": 0
-        },
-        {
-            "variable": "vibration",
+            "variable": "uv",
             "model": "potentiometer",
-            "sample_interval": null,
-            "min_variation_rate": 0
+            "sample_interval": 3,
+            "min_variation_rate": 0.5
+        },
+        {
+            "variable": "humidity",
+            "model": "DHT11",
+            "sample_interval": 5,
+            "min_variation_rate": 0.8
+        },
+        {
+            "variable": "temperature",
+            "model": "DHT11",
+            "sample_interval": 4,
+            "min_variation_rate": 0.2
         }
     ],
-    "emergencies": {
-        "fire": [
+    "emergencies":
+    {
+        "fire":
+        [
             {
-                "luminosity": {
-                    "thresholdMinimo": null,
-                    "thresholdMaximo": 80
+                "luminosity":
+                {
+                    "min": 9999,
+                    "max": 1
                 },
-                "infra-red": {
-                    "thresholdMinimo": null,
-                    "thresholdMaximo": 0
+                "temperature":
+                {
+                    "min": 9999,
+                    "max": 60
+                }
+            },
+            {
+                " temperature":
+                {
+                    "min": 9999,
+                    "max": 80
+                },
+                "humidity":
+                {
+                    "min": 9999,
+                    "max": 50
+                }
+            }
+        ],
+        "flood":
+        [
+            {
+                "humidity":
+                {
+                    "min": 9999,
+                    "max": 80
+                },
+                "uv":
+                {
+                    "min": 500,
+                    "max": 700
                 }
             }
         ]

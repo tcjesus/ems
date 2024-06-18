@@ -102,8 +102,8 @@ void configEmg(DynamicJsonDocument pkg){
           for (JsonPair sensorKeyValue : sensor) {
               String sensorType      = sensorKeyValue.key().c_str();
               JsonObject thresholds  = sensorKeyValue.value().as<JsonObject>();
-              float thresholdMinimo  = thresholds["min"].isNull() ? INFINIT : thresholds["min"];
-              float thresholdMaximo  = thresholds["max"].isNull() ? INFINIT : thresholds["max"];
+              float thresholdMinimo  = ((int) thresholds["min"] == 9999) ? INFINIT : thresholds["min"];
+              float thresholdMaximo  = ((int) thresholds["max"] == 9999) ? INFINIT : thresholds["max"];
 
               emg_sensing.sensor_variable.push_back(sensorType);
               emg_sensing.min_threshold.push_back(thresholdMinimo);
@@ -170,7 +170,7 @@ void setup() {
   is_config = false;
 
   Serial.print("\t [SETUP] Periodic time(seconds) to sensoring: ");
-  Serial.println(isSensoring);
+  Serial.println(timeSensoring);
   sensoringHandler.attach(timeSensoring, [](){ if(flag_sensoring) {isSensoring = true;}});
 
   Serial.println("\t [WIFI] Trying connection");
@@ -251,14 +251,16 @@ void loop() {
                         Serial.println("\t [CONFIG] Processing config package.");
                         configEmg(pkg_received);
                         have_configEmg = true;
-                        Serial.println("\t [INFO] Device is configurated.");
-                        log_config();
                         is_config  = true;
                         Serial.println("[STATE PROCESS PACKAGES]");
-                        next_state = STATE_PROCESS_PACKAGES;
-                        break;
                   }
                 }
+            }
+            if(have_configInfo && have_configSensors && have_configEmg){
+                Serial.println("\t [INFO] Device is configurated.");
+                log_config();
+                next_state = STATE_PROCESS_PACKAGES; 
+                break;
             }
         }
         next_state = STATE_WAIT_CONFIG;

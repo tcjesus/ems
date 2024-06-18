@@ -12,7 +12,7 @@
 #define NTP_INTERVAL 60 * 1000    // In miliseconds
 #define NTP_ADDRESS  "europe.pool.ntp.org"
 
-const char*    sensorModelInDevice[] = {"lm393", "potenciometer", "DHT11", "DHT11"};
+const char*    sensorModelInDevice[] = {"lm393", "potentiometer", "DHT11", "DHT11"};
 const char*    sensorInDevice[]      = {"luminosity", "uv", "humidity", "temperature"};      
 int            sizeSensorsInDevice   = sizeof(sensorInDevice)/sizeof(sensorInDevice[0]);
 int            timeSensoring         = 5;
@@ -27,8 +27,8 @@ typedef struct{
 /*====================================================================
   Parameters of Wifi Connection
   ==================================================================== */
-const char* ssid      = "LSNET_BARRETO"; // REDE
-const char* password  = "Tuty7090"; // SENHA
+const char* ssid      = "UEFS_VISITANTES"; // REDE
+const char* password  = ""; // SENHA
 int timestamp;
 
 /* ===================================================================
@@ -42,15 +42,16 @@ const char* mqttPassword = "";
 /* ===================================================================
   MQTT Topics
   ==================================================================== */
-const char *topic_configInfo      = "testBPC/config/info";
-const char *topic_configSr        = "testBPC/config/sensors";
-const char *topic_configEmg       = "testBPC/config/emg";
-const char *topic_subscribe       = "testBPC/subscribe";
-const char *topic_requisition     = "testBPC/request_data";
-const char *topic_sensoring       = "testBPC/sensoring";
-const char *topic_required_values = "testBPC/required_values";
-const char *topic_get_req_qtde    = "testBPC/get_number_req";
-const char *topic_send_req_qtde   = "testBPC/send_number_req";
+const char *topic_configInfo       = "testBPC/config/info";
+const char *topic_configSr         = "testBPC/config/sensors";
+const char *topic_configEmg        = "testBPC/config/emg";
+const char *topic_updateConfigInfo = "testBPC/update/config/info";
+const char *topic_updateConfigSr   = "testBPC/update/config/sensors";
+const char *topic_updateConfigEmg  = "testBPC/update/config/emg";
+const char *topic_subscribe        = "testBPC/subscribe";
+const char *topic_requisition      = "testBPC/request_data";
+const char *topic_sensoring        = "testBPC/sensoring";
+const char *topic_required_values  = "testBPC/required_values";
 
 /* ===================================================================
   EDU Configurations

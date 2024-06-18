@@ -1,14 +1,16 @@
-from argparse import ArgumentParser
+from argparse   import ArgumentParser
 from models.edu import EDU
 from models.ActiveSensorsTable import ActiveSensorsTable
 from jsonFileHandler.JsonFileHandler import JsonFileHandler
-from getmac import get_mac_address as gma
+from getmac   import get_mac_address as gma
+from datetime import datetime
 import threading
 import numpy as np
 import json
 import re,uuid
 import os.path
 import signal
+import time
 
 eduFile_path = "./config_files/edus.json"
 emgFile_path = "./config_files/emgs.json"
@@ -51,6 +53,22 @@ def load_edus():
         line = eduFile_handler.get_line(n)
         edus.append(line)
     return edus
+
+def rename_keys(array_of_dicts):
+    # Mapeamento das chaves antigas para as novas chaves
+    key_mapping = {
+        "variable": "v",
+        "model": "md",
+        "sample_interval": "si",
+        "min_variation_rate": "r"
+    }
+
+    # Função auxiliar para renomear as chaves em um único dicionário
+    def rename_dict_keys(d):
+        return {key_mapping.get(k, k): v for k, v in d.items()}
+
+    # Aplica a renomeação de chaves para cada dicionário no array
+    return [rename_dict_keys(d) for d in array_of_dicts]
 
 class APC(EDU):
 
@@ -106,7 +124,7 @@ class APC(EDU):
                 apcConfigData["zone"]           = msg["zone"]
                 apcConfigData["latitude"]       = msg["latitude"]
                 apcConfigData["longitude"]      = msg["longitude"]
-                apcConfigData["active_sensors"] = msg["active_sensors"] 
+                apcConfigData["active_sensors"] = rename_keys(msg["active_sensors"])
                 apcConfigData["emergencies"]    = {}
             except KeyError:
                 print("[ERROR] Json package with non-existent key.")
@@ -203,12 +221,39 @@ class APC(EDU):
                 eduEmg_config .append( self.emerg[emg][index] )
             aux["emergencies"][emg] = eduEmg_config.copy()
         configEDU["emergencies"] = aux["emergencies"]
+        # Info package
+        infoPackage = { "type":      configEDU["type"], 
+                        "mac":       configEDU["mac"], 
+                        "id":        configEDU["id"],
+                        "zone":      configEDU["zone"],
+                        "latitude":  configEDU["latitude"],
+                        "longitude": configEDU["longitude"],
+                        "H":         datetime.now().hour,
+                        "M":         datetime.now().minute }
+        print("[INFO] Sending info config message to device with MAC: " + device_mac)
+        self.client.publish(self.mqtt_topics['topic_config/info'], str(infoPackage))
+        time.sleep(1)
+        # Sensors Package
+        print("[INFO] Sending sensors config message to device with MAC: " + device_mac)
+        sensorsPackage = { "mac": configEDU["mac"], "s": configEDU["active_sensors"]}
+        self.client.publish(self.mqtt_topics['topic_config/sensors'], str(sensorsPackage))
+        time.sleep(1)
+        # Emergency Packages
+        print("[INFO] Sending emergency config message to device with MAC: " + device_mac)
+        for emg, value in configEDU["emergencies"].items():
+            emgPackages = {"mac": configEDU["mac"], "emg":{emg: value}} 
+            self.client.publish(self.mqtt_topics['topic_config/emg'], str(emgPackages))
+            time.sleep(1)
+        # Checks the type 
         if(configEDU["type"] == "MPC"):
+            print("[INFO] Sending emergency list to device with MAC: " + device_mac)
             # Include the list of emergencies registered by APC
-            configEDU["emg_list"] = self.emerg
-        print("[INFO] Sending Config Message to device with MAC: " + device_mac)
-        self.client.publish(self.mqtt_topics['topic_config'], str(configEDU))
-        print("[INFO] Config Messsage sent.")
+            for emg, value in self.emerg.items():
+                emgList = {"mac": configEDU["mac"], "emg_list":{emg : value}}
+                self.client.publish(self.mqtt_topics['topic_config/emgList'], str(emgList))
+                time.sleep(1)
+        print("[INFO] Config process finished.")
+
     def sensoring(self):
         return super().sensoring()
     
