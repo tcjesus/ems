@@ -1,6 +1,7 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 
 import { SoftDeleteBaseModel } from '@/core/models/SoftDeleteBaseModel'
+import { LocalidadeModel } from '@/locality/models/LocalidadeModel'
 import { EstadoModel } from '@/modules/locality/models/EstadoModel'
 
 @Entity('cidade')
@@ -22,11 +23,10 @@ export class CidadeModel extends SoftDeleteBaseModel {
   @Column({ name: 'estado_id' })
   estadoId: number
 
-  @ManyToOne(() => EstadoModel, (model) => model.cidades, {
-    onDelete: 'CASCADE',
-    onUpdate: 'CASCADE',
-    orphanedRowAction: "delete"
-  })
+  @ManyToOne(() => EstadoModel, (model) => model.cidades)
   @JoinColumn({ name: 'estado_id' })
   estado?: EstadoModel
+
+  @OneToMany(() => LocalidadeModel, (model) => model.cidade)
+  localidades?: LocalidadeModel[]
 }

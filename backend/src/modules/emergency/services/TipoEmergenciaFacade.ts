@@ -5,6 +5,7 @@ import { DeleteTipoEmergenciaUseCase } from '@/emergency/usecases/tipo-emergenci
 import { FindTipoEmergenciaByIdUseCase } from '@/emergency/usecases/tipo-emergencia/FindTipoEmergenciaByIdUseCase'
 import { ListTiposEmergenciaUseCase } from '@/emergency/usecases/tipo-emergencia/ListTiposEmergenciaUseCase'
 import { UpdateTipoEmergenciaUseCase } from '@/emergency/usecases/tipo-emergencia/UpdateTipoEmergenciaUseCase'
+import { Localidade } from '@/locality/structures/Localidade'
 import { Injectable } from '@nestjs/common'
 
 @Injectable()
@@ -17,23 +18,23 @@ export class TipoEmergenciaFacade {
     private readonly deleteTipoEmergenciaUseCase: DeleteTipoEmergenciaUseCase,
   ) { }
 
-  list(): Promise<TipoEmergenciaResponse[]> {
-    return this.listTiposEmergenciaUseCase.execute()
+  list(localidade: Localidade): Promise<TipoEmergenciaResponse[]> {
+    return this.listTiposEmergenciaUseCase.execute(localidade)
   }
 
-  findById(id: number): Promise<TipoEmergenciaResponse> {
-    return this.findTipoEmergenciaByIdUseCase.execute(id)
+  findById(localidade: Localidade, id: number): Promise<TipoEmergenciaResponse> {
+    return this.findTipoEmergenciaByIdUseCase.execute(localidade, id)
   }
 
-  create(input: CreateTipoEmergenciaRequest): Promise<TipoEmergenciaResponse> {
-    return this.createTipoEmergenciaUseCase.execute(input)
+  create(localidade: Localidade, input: CreateTipoEmergenciaRequest): Promise<TipoEmergenciaResponse> {
+    return this.createTipoEmergenciaUseCase.execute(localidade, input)
   }
 
-  update(id: number, input: CreateTipoEmergenciaRequest): Promise<TipoEmergenciaResponse> {
-    return this.updateTipoEmergenciaUseCase.execute(id, input)
+  update(localidade: Localidade, id: number, input: CreateTipoEmergenciaRequest): Promise<TipoEmergenciaResponse> {
+    return this.updateTipoEmergenciaUseCase.execute(localidade, id, input)
   }
 
-  async delete(id: number): Promise<void> {
-    await this.deleteTipoEmergenciaUseCase.execute(id)
+  async delete(localidade: Localidade, id: number): Promise<void> {
+    await this.deleteTipoEmergenciaUseCase.execute(localidade, id)
   }
 }

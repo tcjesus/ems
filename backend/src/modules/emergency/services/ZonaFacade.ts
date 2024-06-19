@@ -5,6 +5,7 @@ import { DeleteZonaUseCase } from '@/emergency/usecases/zona/DeleteZonaUseCase'
 import { FindZonaByIdUseCase } from '@/emergency/usecases/zona/FindZonaByIdUseCase'
 import { ListZonasUseCase } from '@/emergency/usecases/zona/ListZonasUseCase'
 import { UpdateZonaUseCase } from '@/emergency/usecases/zona/UpdateZonaUseCase'
+import { Localidade } from '@/locality/structures/Localidade'
 import { Injectable } from '@nestjs/common'
 
 @Injectable()
@@ -17,23 +18,23 @@ export class ZonaFacade {
     private readonly deleteZonaUseCase: DeleteZonaUseCase,
   ) { }
 
-  list(): Promise<ZonaResponse[]> {
-    return this.listZonasUseCase.execute()
+  list(localidade: Localidade): Promise<ZonaResponse[]> {
+    return this.listZonasUseCase.execute(localidade)
   }
 
-  findById(id: number): Promise<ZonaResponse> {
-    return this.findZonaByIdUseCase.execute(id)
+  findById(localidade: Localidade, id: number): Promise<ZonaResponse> {
+    return this.findZonaByIdUseCase.execute(localidade, id)
   }
 
-  create(input: CreateZonaRequest): Promise<ZonaResponse> {
-    return this.createZonaUseCase.execute(input)
+  create(localidade: Localidade, input: CreateZonaRequest): Promise<ZonaResponse> {
+    return this.createZonaUseCase.execute(localidade, input)
   }
 
-  update(id: number, input: CreateZonaRequest): Promise<ZonaResponse> {
-    return this.updateZonaUseCase.execute(id, input)
+  update(localidade: Localidade, id: number, input: CreateZonaRequest): Promise<ZonaResponse> {
+    return this.updateZonaUseCase.execute(localidade, id, input)
   }
 
-  async delete(id: number): Promise<void> {
-    await this.deleteZonaUseCase.execute(id)
+  async delete(localidade: Localidade, id: number): Promise<void> {
+    await this.deleteZonaUseCase.execute(localidade, id)
   }
 }

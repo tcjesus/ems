@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 
+import { AccountRepository } from '@/account/repositories/AccountRepository'
 import { AccountResponse } from '@/account/structures/responses/AccountResponse'
 import { ErrorMessages } from '@/core/helpers/ErrorMessages'
-import { AccountRepository } from '@/account/repositories/AccountRepository'
 
 @Injectable()
 export class FindAccountByIdUseCase {

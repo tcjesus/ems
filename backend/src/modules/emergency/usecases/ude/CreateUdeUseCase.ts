@@ -13,6 +13,7 @@ import { DeteccaoEmergenciaRequest } from '@/emergency/structures/requests/Detec
 import { MonitoramentoGrandezaRequest } from '@/emergency/structures/requests/MonitoramentoGrandezaRequest'
 import { UdeResponse } from '@/emergency/structures/responses/UdeResponse'
 import { NotifyUdeUpdatedUseCase } from '@/emergency/usecases/ude/NotifyUdeUpdatedUseCase'
+import { Localidade } from '@/locality/structures/Localidade'
 import { IsolationLevel, Transactional } from 'typeorm-transactional'
 
 @Injectable()
@@ -24,6 +25,7 @@ export class CreateUdeUseCase {
 
   @Transactional({ isolationLevel: IsolationLevel.READ_UNCOMMITTED })
   async execute(
+    localidade: Localidade,
     {
       tipo,
       label,
@@ -77,12 +79,13 @@ export class CreateUdeUseCase {
       operatingRange,
       zona,
       deteccoesEmergencia,
+      localidadeId: localidade.id,
     })
 
     const createdModel = await this.udeRepository.save(model)
 
     try {
-      await this.notifyUdeUpdatedUseCase.execute(createdModel.id)
+      await this.notifyUdeUpdatedUseCase.execute(localidade, createdModel.id)
     } catch (error) {
       console.error(error)
     }

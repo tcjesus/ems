@@ -10,14 +10,14 @@ import { ErrorMessages } from '@/core/helpers/ErrorMessages'
 
 @Injectable()
 export class SignInUseCase {
-  constructor (
+  constructor(
     private readonly accountRepository: AccountRepository,
     private readonly defaultAuthService: RoleAuthService,
-  ) {}
+  ) { }
 
-  async execute (request: SignInRequest): Promise<SignInResponse> {
+  async execute(request: SignInRequest): Promise<SignInResponse> {
     const account = await this.accountRepository.findOneBy({ email: request.email })
-    if(!account) {
+    if (!account) {
       throw new UnauthorizedException(ErrorMessages.account.notFound)
     }
 
@@ -31,7 +31,15 @@ export class SignInUseCase {
         id: account.id,
         nome: account.nome,
         email: account.email,
-        role: account.role,
+        isSuperAdmin: account.isSuperAdmin,
+        permissions: account.permissions
+          .map((permission) => ({
+            role: permission.role,
+            localidade: {
+              id: permission.localidade!!.id,
+              cidadeId: permission.localidade!!.cidade!!.id,
+            }
+          })),
         createdAt: account.createdAt,
         updatedAt: account.updatedAt,
       }

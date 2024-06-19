@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UseIntercep
 import { ApiBearerAuth, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger'
 
 import { Role } from '@/account/structures/enum/Role'
-import { Roles } from '@/auth/decorators/Roles'
+import { RoleGuardParams } from '@/auth/decorators/RolesGuardParams'
 import { RoleGuard } from '@/auth/guards/RoleGuard'
 import { GrandezaFacade } from '@/emergency/services/GrandezaFacade'
 import { CreateGrandezaRequest } from '@/emergency/structures/requests/CreateGrandezaRequest'
@@ -18,7 +18,7 @@ export class GrandezaController {
   constructor(private readonly grandezaFacade: GrandezaFacade) { }
 
   @Get('/')
-  @Roles([Role.ADMIN, Role.USER, Role.GUEST])
+  @RoleGuardParams({ roles: [Role.ADMIN, Role.USER, Role.GUEST], requireLocalidade: false })
   @ApiOperation({ summary: 'Lista as Grandezas cadastradas no sistema' })
   @ApiOkResponse({ type: GrandezaResponse, isArray: true })
   list(): Promise<GrandezaResponse[]> {
@@ -26,7 +26,7 @@ export class GrandezaController {
   }
 
   @Get('/:id')
-  @Roles([Role.ADMIN, Role.USER])
+  @RoleGuardParams({ roles: [Role.ADMIN, Role.USER], requireLocalidade: false })
   @ApiOperation({ summary: 'Busca uma Grandeza pelo seu ID' })
   @ApiParam({ name: 'id', description: 'Identificador da Grandeza', type: Number, example: 1 })
   @ApiOkResponse({ type: GrandezaResponse })
@@ -38,7 +38,7 @@ export class GrandezaController {
   }
 
   @Post('/')
-  @Roles([Role.ADMIN, Role.USER])
+  @RoleGuardParams({ roles: [Role.ADMIN, Role.USER], requireLocalidade: false })
   @ApiOperation({ summary: 'Cria uma nova Grandeza' })
   @ApiCreatedResponse({ type: GrandezaResponse })
   @UseInterceptors(AuditInterceptor('grandeza'))
@@ -49,7 +49,7 @@ export class GrandezaController {
   }
 
   @Put('/:id')
-  @Roles([Role.ADMIN, Role.USER])
+  @RoleGuardParams({ roles: [Role.ADMIN, Role.USER], requireLocalidade: false })
   @ApiOperation({ summary: 'Atualiza uma Grandeza' })
   @ApiParam({ name: 'id', description: 'Identificador da Grandeza', type: Number, example: 1 })
   @ApiOkResponse({ type: GrandezaResponse })
@@ -63,7 +63,7 @@ export class GrandezaController {
   }
 
   @Delete('/:id')
-  @Roles([Role.ADMIN, Role.USER])
+  @RoleGuardParams({ roles: [Role.ADMIN, Role.USER], requireLocalidade: false })
   @ApiOperation({ summary: 'Deleta uma Grandeza' })
   @ApiParam({ name: 'id', description: 'Identificador da Grandeza', type: Number, example: 1 })
   @ApiOkResponse()

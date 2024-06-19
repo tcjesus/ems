@@ -17,6 +17,8 @@ import { ZonaModel } from '@/emergency/models/ZonaModel'
 import DatabaseConfig from '@/database/config/DatabaseConfig'
 import { CidadeModel } from '@/locality/models/CidadeModel'
 import { EstadoModel } from '@/locality/models/EstadoModel'
+import { LocalidadeModel } from '@/locality/models/LocalidadeModel'
+import { PermissionModel } from '@/account/models/PermissionModel'
 
 export default {
   ...DatabaseConfig,
@@ -30,6 +32,7 @@ export default {
   entities: [
     // Account Module
     AccountModel,
+    PermissionModel,
     AuditModel,
 
     // Emergency Module
@@ -47,6 +50,7 @@ export default {
     // Locality Module
     EstadoModel,
     CidadeModel,
+    LocalidadeModel,
   ],
   bigNumberStrings: false,
   timezone: '+00:00',
