@@ -10,6 +10,7 @@ const initalRecord = {
   nome: '',
   email: '',
   role: ''
+  // TODO(permissions)
 }
 
 const BuildForm = (record, onChange) => {

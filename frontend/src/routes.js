@@ -33,12 +33,12 @@ import Monitoramento from "views/Monitoramento.js";
 import Role from "services/Role";
 
 const resources = [
-  { name: "usuarios", roles: [Role.ADMIN], listComponent: <Usuarios />, formComponent: <UsuarioForm />, label: "Usuários", icon: 'ni-single-02', color: "text-gray" },
-  { name: "grandezas", roles: [Role.ADMIN, Role.USER], listComponent: <Grandezas />, formComponent: <GrandezaForm />, label: "Grandezas", icon: 'ni-atom', color: "text-green" },
-  { name: "tipos-emergencia", roles: [Role.ADMIN, Role.USER], listComponent: <TiposEmergencia />, formComponent: <TipoEmergenciaForm />, label: "Tipos de Emergência", icon: 'ni-bell-55', color: "text-red" },
-  { name: "sensores", roles: [Role.ADMIN, Role.USER], listComponent: <Sensores />, formComponent: <SensorForm />, label: "Sensores", icon: 'ni-sound-wave', color: "text-orange" },
-  { name: "zonas", roles: [Role.ADMIN, Role.USER], listComponent: <Zonas />, formComponent: <ZonaForm />, label: "Zonas", icon: 'ni-square-pin', color: "text-brown" },
-  { name: "udes", roles: [Role.ADMIN, Role.USER], listComponent: <Udes />, formComponent: <UdeForm />, label: "Udes", icon: 'ni-app', color: "text-blue" },
+  { name: "usuarios", roles: [Role.SUPER_ADMIN, Role.ADMIN], listComponent: <Usuarios />, formComponent: <UsuarioForm />, label: "Usuários", icon: 'ni-single-02', color: "text-gray" },
+  { name: "grandezas", roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.USER], listComponent: <Grandezas />, formComponent: <GrandezaForm />, label: "Grandezas", icon: 'ni-atom', color: "text-green" },
+  { name: "tipos-emergencia", roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.USER], listComponent: <TiposEmergencia />, formComponent: <TipoEmergenciaForm />, label: "Tipos de Emergência", icon: 'ni-bell-55', color: "text-red" },
+  { name: "sensores", roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.USER], listComponent: <Sensores />, formComponent: <SensorForm />, label: "Sensores", icon: 'ni-sound-wave', color: "text-orange" },
+  { name: "zonas", roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.USER], listComponent: <Zonas />, formComponent: <ZonaForm />, label: "Zonas", icon: 'ni-square-pin', color: "text-brown" },
+  { name: "udes", roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.USER], listComponent: <Udes />, formComponent: <UdeForm />, label: "Udes", icon: 'ni-app', color: "text-blue" },
 ];
 
 const routes = [
@@ -53,7 +53,7 @@ const routes = [
   {
     path: "/index",
     name: "Dashboard",
-    roles: [Role.ADMIN, Role.USER, Role.GUEST],
+    roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.USER, Role.GUEST],
     icon: "ni ni-tv-2 text-primary",
     component: <Index />,
     layout: "/admin",
@@ -64,7 +64,7 @@ const routes = [
     show: false,
     path: `/${resource.name}/edit`,
     name: resource.label,
-    roles: [Role.ADMIN, Role.USER],
+    roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.USER],
     component: resource.formComponent,
     layout: "/admin",
   })),
@@ -72,7 +72,7 @@ const routes = [
     show: false,
     path: `/${resource.name}/edit/:id`,
     name: resource.label,
-    roles: [Role.ADMIN, Role.USER],
+    roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.USER],
     component: resource.formComponent,
     layout: "/admin",
   })),
@@ -90,7 +90,7 @@ const routes = [
     // Data visualization
     path: "/monitoramento",
     name: "Monitoramento",
-    roles: [Role.ADMIN, Role.USER, Role.GUEST],
+    roles: [Role.SUPER_ADMIN, Role.ADMIN, Role.USER, Role.GUEST],
     icon: "ni ni-chart-bar-32 text-yellow",
     component: <Monitoramento />,
     layout: "/admin",

@@ -1,12 +1,14 @@
 import envs from "environment";
 import handleResponse from "./handleResponse";
 import AuthService from "./AuthService";
+import LocalidadeService from "./LocalidadeService";
 
 const baseUrl = `${envs.backendUrl}/monitoramento`
 
 const buildHeaders = async () => ({
   'Content-Type': 'application/json',
   Authorization: await AuthService.getAuthorizationHeader(),
+  'x-localidade': JSON.stringify(await LocalidadeService.getLocalidade()),
 });
 
 const buildQueryParams = (filters) => {

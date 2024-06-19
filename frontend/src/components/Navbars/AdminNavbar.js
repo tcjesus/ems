@@ -15,6 +15,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
+import LocalidadeSelect from "components/Selects/LocalidadeSelect";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // reactstrap components
@@ -30,12 +31,14 @@ import {
 } from "reactstrap";
 
 import AuthService from 'services/AuthService.js';
+import LocalidadeService from 'services/LocalidadeService.js';
 import UsuarioService from "services/UsuarioService";
 
 const AdminNavbar = (props) => {
   const navigate = useNavigate();
 
   const [account, setAccount] = useState({});
+  const [localidade, setLocalidade] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -50,6 +53,9 @@ const AdminNavbar = (props) => {
         }
         setAccount(response || account);
       }
+
+      const localidade = await LocalidadeService.getLocalidade();
+      setLocalidade(localidade);
     }
     if (isLoading) {
       fetchData();
@@ -66,6 +72,16 @@ const AdminNavbar = (props) => {
       console.error(error);
       alert('Erro ao sair');
     }
+  }
+
+  const handleLocalidadeChange = async (e) => {
+    const localidade = e.target.value;
+    setLocalidade(localidade)
+    await LocalidadeService.setLocalidade(localidade);
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
   }
 
   return (
@@ -91,33 +107,40 @@ const AdminNavbar = (props) => {
             </FormGroup>
           </Form> */}
           <Nav className="align-items-center d-none d-md-flex" navbar>
+            <LocalidadeSelect
+              id="input-localidade"
+              className="form-control-alternative"
+              name="localidade"
+              onChange={handleLocalidadeChange}
+              value={localidade}
+            />
             {account.id && (
               <UncontrolledDropdown nav>
-              <DropdownToggle className="pr-0" nav>
-                <Media className="align-items-center">
-                  <span className="avatar avatar-sm rounded-circle">
-                    <img
-                      alt="..."
+                <DropdownToggle className="pr-0" nav>
+                  <Media className="align-items-center">
+                    <span className="avatar avatar-sm rounded-circle">
+                      <img
+                        alt="..."
                         src={require("../../assets/img/theme/profile.png")}
-                    />
-                  </span>
-                  <Media className="ml-2 d-none d-lg-block">
-                    <span className="mb-0 text-sm font-weight-bold">
-                        {account.nome}
+                      />
                     </span>
+                    <Media className="ml-2 d-none d-lg-block">
+                      <span className="mb-0 text-sm font-weight-bold">
+                        {account.nome}
+                      </span>
+                    </Media>
                   </Media>
-                </Media>
-              </DropdownToggle>
-              <DropdownMenu className="dropdown-menu-arrow" right>
-                <DropdownItem className="noti-title" header tag="div">
+                </DropdownToggle>
+                <DropdownMenu className="dropdown-menu-arrow" right>
+                  <DropdownItem className="noti-title" header tag="div">
                     <h6 className="text-overflow m-0">Bem Vindo!</h6>
-                </DropdownItem>
+                  </DropdownItem>
                   <DropdownItem href="#pablo" onClick={logout}>
-                  <i className="ni ni-user-run" />
-                  <span>Logout</span>
-                </DropdownItem>
-              </DropdownMenu>
-            </UncontrolledDropdown>
+                    <i className="ni ni-user-run" />
+                    <span>Logout</span>
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
             )}
           </Nav>
         </Container>

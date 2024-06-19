@@ -19,6 +19,7 @@ const DefaultSelect = (recordName, inputName, service, getLabel, placeholder = `
         try {
           const response = await service.list();
           setOptions(response);
+          setValue(record?.id);
         } catch (error) {
           console.error(error);
           alert('Erro ao carregar opções');
@@ -28,7 +29,7 @@ const DefaultSelect = (recordName, inputName, service, getLabel, placeholder = `
         fetchData();
         setIsLoading(false);
       }
-    }, [isLoading]);
+    }, [isLoading, record]);
 
     useEffect(() => {
       setIsLoading(true);

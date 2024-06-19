@@ -27,6 +27,7 @@ import Sidebar from "components/Sidebar/Sidebar.js";
 import routes from "routes.js";
 
 import AuthService from 'services/AuthService.js';
+import LocalidadeService from 'services/LocalidadeService.js';
 
 const Admin = (props) => {
   const mainContent = React.useRef(null);
@@ -40,7 +41,7 @@ const Admin = (props) => {
         navigate('/login');
       }
 
-      const accountRole = await AuthService.getRole();
+      const accountRole = await LocalidadeService.getRole();
 
       const route = routes.find(route => {
         let regexPattern = route.layout + route.path;
@@ -49,7 +50,7 @@ const Admin = (props) => {
         return routeRegex.test(location.pathname);
       });
       if (!route?.roles?.includes(accountRole)) {
-        navigate('/admin/index');
+        // navigate('/admin/index'); // TODO(permissions)
       }
     };
     checkPermissions();

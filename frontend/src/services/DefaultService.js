@@ -1,10 +1,12 @@
 import handleResponse from "./handleResponse";
 import AuthService from "./AuthService";
+import LocalidadeService from "./LocalidadeService";
 
 const DefaultService = (baseUrl) => {
   const buildHeaders = async () => ({
     'Content-Type': 'application/json',
     Authorization: await AuthService.getAuthorizationHeader(),
+    'x-localidade': JSON.stringify(await LocalidadeService.getLocalidade()),
   });
 
   return {
