@@ -9,13 +9,29 @@ const DefaultService = (baseUrl) => {
     'x-localidade': JSON.stringify(await LocalidadeService.getLocalidade()),
   });
 
+  const buildQueryParams = (filters) => {
+    let queryParams = []
+
+    Object.keys(filters).forEach((key) => {
+      if (Array.isArray(filters[key])) {
+        queryParams.push(filters[key].map(v => `${key}[]=${encodeURI(v)}`).join('&'))
+      } else {
+        queryParams.push(`${key}=${encodeURI(filters[key])}`)
+      }
+    })
+
+    return queryParams.join('&')
+  }
+
   return {
-    async list() {
+    async list(filters = {}) {
+      const queryParams = buildQueryParams(filters);
+
       const response = await fetch(
-        baseUrl,
+        `${baseUrl}?${queryParams}`,
         { headers: await buildHeaders() }
       );
-      return handleResponse(response, () => this.list());
+      return handleResponse(response, () => this.list(filters));
     },
 
     async get(id) {
