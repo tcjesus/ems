@@ -16,13 +16,14 @@ export class CreateAccountUseCase {
 
   async execute({ nome, email, password, isSuperAdmin, permissions: permissionsInput }: CreateAccountRequest): Promise<AccountResponse> {
     const permissoesPromise = (permissionsInput || []).map(async (permission: PermissionRequest) => {
-      const { role, cidade: cidadeId } = permission
+      const { role, localidade } = permission
+      const { cidade: cidadeId } = localidade
 
-      const localidade = await this.localidadeFacade.createIfNotExists({ cidade: { id: cidadeId.id } })
+      const localidadeModel = await this.localidadeFacade.createIfNotExists({ cidade: { id: cidadeId.id } })
 
       return new PermissionModel({
         role,
-        localidade
+        localidade: localidadeModel
       })
     })
 

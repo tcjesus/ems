@@ -5,6 +5,17 @@ import { Type } from 'class-transformer'
 
 import { IsArray, IsBoolean, IsDefined, IsOptional, IsString, MaxLength, ValidateNested } from 'class-validator'
 
+export class LocalidadeRequest {
+  @IsDefined()
+  @ValidateNested()
+  @Type(() => CidadeIdRequest)
+  @ApiProperty({
+    description: 'Cidade',
+    type: CidadeIdRequest,
+  })
+  cidade: CidadeIdRequest
+}
+
 export class PermissionRequest {
   @IsDefined()
   @IsString()
@@ -14,12 +25,12 @@ export class PermissionRequest {
 
   @IsDefined()
   @ValidateNested()
-  @Type(() => CidadeIdRequest)
+  @Type(() => LocalidadeRequest)
   @ApiProperty({
-    description: 'Cidade',
-    type: CidadeIdRequest,
+    description: 'Localidade',
+    type: LocalidadeRequest,
   })
-  cidade: CidadeIdRequest
+  localidade: LocalidadeRequest
 }
 
 export class CreateAccountRequest {

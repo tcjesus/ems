@@ -63,7 +63,7 @@ export class AccountResponse {
       isSuperAdmin: model.isSuperAdmin,
       createdAt: model.createdAt,
       updatedAt: model.updatedAt,
-      permissions: model.permissions.map((permission) => PermissionResponse.toResponse(permission)),
+      permissions: model.permissions?.map((permission) => PermissionResponse.toResponse(permission)) || [], 
     }
   }
 }

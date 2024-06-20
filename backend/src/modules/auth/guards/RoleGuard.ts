@@ -22,8 +22,10 @@ export class RoleGuard extends JwtGuard<AuthPayload> {
     if (!authorized) return false
 
     const roleGuardParams = this.reflector.get(RoleGuardParams, context.getHandler())
-    const { roles, requireLocalidade } = roleGuardParams || {}
+    const { roles, requireLocalidade: _requireLocalidade } = roleGuardParams || {}
     if (!roles?.length) return true
+
+    const requireLocalidade = _requireLocalidade ?? true
 
     const req = context.switchToHttp().getRequest()
 
@@ -38,8 +40,8 @@ export class RoleGuard extends JwtGuard<AuthPayload> {
     if (requireLocalidade && !localidade?.cidade?.id) return false
 
     let accountRoles = requireLocalidade
-      ? permissions.find(p => p.cidadeId === localidade.cidade?.id)?.roles || []
-      : permissions.reduce((acc, p) => acc.concat(p.roles), [])
+      ? [permissions.find(p => p.localidade?.cidadeId === localidade.cidade?.id)?.role]
+      : permissions.reduce((acc, p) => acc.concat(p.role), [])
     accountRoles.push(Role.GUEST)
     accountRoles = [...new Set(accountRoles)]
 

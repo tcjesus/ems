@@ -11,8 +11,9 @@ export class AccountRepository extends DatabaseRepository<AccountModel, number> 
   public constructor(@InjectRepository(AccountModel) repository: Repository<AccountModel>) {
     super(repository, 'account', [
       { field: 'account.permissions', alias: 'p' },
-      { field: 'p.localidade', alias: 'l' },
+      { field: 'p.localidade', alias: 'l', join: 'LEFT' },
       { field: 'l.cidade', alias: 'c', join: 'LEFT' },
+      { field: 'c.estado', alias: 'e', join: 'LEFT' },
     ])
   }
 }
