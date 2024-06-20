@@ -63,7 +63,6 @@ export class ZonaController {
     return this.zonaFacade.create(localidade, input)
   }
 
-  // TODO(permissions)
   @Put('/:id')
   @RoleGuardParams({ roles: [Role.ADMIN, Role.USER] })
   @ApiOperation({ summary: 'Atualiza uma Zona' })

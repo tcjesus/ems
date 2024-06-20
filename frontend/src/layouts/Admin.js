@@ -39,6 +39,13 @@ const Admin = (props) => {
       const isNotAuthorized = !await AuthService.isAuthorized();
       if (isNotAuthorized) {
         navigate('/login');
+        return
+      }
+
+      const localidade = await LocalidadeService.getLocalidade();
+      if (!localidade) {
+        navigate('/localidade');
+        return
       }
 
       const accountRole = await LocalidadeService.getRole();
@@ -50,7 +57,8 @@ const Admin = (props) => {
         return routeRegex.test(location.pathname);
       });
       if (!route?.roles?.includes(accountRole)) {
-        // navigate('/admin/index'); // TODO(permissions)
+        navigate('/admin/index');
+        return
       }
     };
     checkPermissions();

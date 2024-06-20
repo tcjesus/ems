@@ -15,8 +15,11 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
+import Role from "services/Role";
 import Index from "views/Index.js";
+import Localidade from "views/Localidade";
 import Login from "views/Login.js";
+import Monitoramento from "views/Monitoramento.js";
 import GrandezaForm from "views/grandeza/GrandezaForm.js";
 import Grandezas from "views/grandeza/GrandezasList.js";
 import SensorForm from "views/sensor/SensorForm.js";
@@ -29,8 +32,6 @@ import UsuarioForm from "views/usuario/UsuarioForm.js";
 import Usuarios from "views/usuario/UsuarioList.js";
 import ZonaForm from "views/zona/ZonaForm.js";
 import Zonas from "views/zona/ZonaList.js";
-import Monitoramento from "views/Monitoramento.js";
-import Role from "services/Role";
 
 const resources = [
   { name: "usuarios", roles: [Role.SUPER_ADMIN, Role.ADMIN], listComponent: <Usuarios />, formComponent: <UsuarioForm />, label: "Usuários", icon: 'ni-single-02', color: "text-gray" },
@@ -48,6 +49,14 @@ const routes = [
     icon: "ni ni-key-25 text-info",
     component: <Login />,
     layout: "/login",
+    show: false,
+  },
+  {
+    path: "/*",
+    name: "Localidade",
+    icon: "ni ni-key-25 text-info",
+    component: <Localidade />,
+    layout: "/localidade",
     show: false,
   },
   {
