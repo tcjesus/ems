@@ -6,22 +6,27 @@ import { TipoUdeEnum } from '@/emergency/structures/enum/TipoUdeEnum'
 import { MathUtils } from '@/utils/MathUtils'
 import normalizeStr from '@/utils/normalizeStr'
 
+const INFINITY_16_BITS = 32767
+const MIN_THRESHOLD_PLACEHOLDER = -INFINITY_16_BITS
+const MAX_THRESHOLD_PLACEHOLDER = INFINITY_16_BITS
+const SAMPLE_INTERVAL_PLACEHOLDER = 5
+
 class SensorAtivoPayload {
   model: string
   variable: string
-  sample_interval: number | null
+  sample_interval: number
+  min_variation_rate: number
 }
 
-class EmergenciaPayload {
+class MonitoramentosPayload {
   [key: string]: {
-    min_threshold: number | null
-    max_threshold: number | null
-    min_variation_rate: number
+    min: number
+    max: number
   }
 }
 
 class EmergenciasPayload {
-  [key: string]: EmergenciaPayload
+  [key: string]: MonitoramentosPayload[]
 }
 
 export class NotifyUdeUpdatedPayload {
@@ -55,7 +60,7 @@ export class NotifyUdeUpdatedPayload {
     })
 
     const sensoresAtivos = model.deteccoesEmergencia
-      ?.reduce((result: any, deteccao: DeteccaoEmergenciaModel) => {
+      ?.reduce((result: SensorAtivoPayload[], deteccao: DeteccaoEmergenciaModel) => {
         deteccao.monitoramentosGrandeza
           ?.filter(m => m.ativo)
           // Remove duplicates by sensor id
@@ -63,30 +68,30 @@ export class NotifyUdeUpdatedPayload {
           .forEach(monitoramento => result.push({
             model: monitoramento.sensor!!.modelo,
             variable: normalizeStr(monitoramento.grandeza?.nome || 'grandeza'),
-            sample_interval: sensoresMDC[monitoramento.sensorId]?.mdc || null,
+            sample_interval: sensoresMDC[monitoramento.sensorId]?.mdc || SAMPLE_INTERVAL_PLACEHOLDER,
+            min_variation_rate: monitoramento.taxaVariacaoMinima,
           }))
         return result
       }, [] as SensorAtivoPayload[])
 
     const emergencias = model.deteccoesEmergencia
-      ?.reduce((result: any, d: DeteccaoEmergenciaModel, dIndex: number) => {
-        const grandezas = d.monitoramentosGrandeza
-          ?.reduce((mAcc: any, monitoramento, mIndex: number) => {
+      ?.reduce((result: EmergenciasPayload, d: DeteccaoEmergenciaModel, dIndex: number) => {
+        const monitoramentos = d.monitoramentosGrandeza
+          ?.reduce((mAcc: MonitoramentosPayload, monitoramento, mIndex: number) => {
             let mKey = normalizeStr(monitoramento.grandeza?.nome) || `grandeza_${mIndex}`
             mAcc[mKey] = {
-              min_threshold: monitoramento.thresholdMinimo || null,
-              max_threshold: monitoramento.thresholdMaximo || null,
-              min_variation_rate: monitoramento.taxaVariacaoMinima,
+              min: monitoramento.thresholdMinimo || MIN_THRESHOLD_PLACEHOLDER,
+              max: monitoramento.thresholdMaximo || MAX_THRESHOLD_PLACEHOLDER,
             }
             return mAcc
-          }, {} as EmergenciaPayload)
+          }, {} as MonitoramentosPayload)
 
         let eKey = normalizeStr(d.tipoEmergencia?.nome) || `emergencia_${dIndex}`
 
         if (!result[eKey]) {
           result[eKey] = []
         }
-        result[eKey].push(grandezas)
+        result[eKey].push(monitoramentos)
 
         return result
       }, {} as EmergenciasPayload)
