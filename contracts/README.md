@@ -14,16 +14,16 @@
     {
       "model": "CM18-2008A",
       "variable": "temperature",
-      "sample_interval": 1
+      "sample_interval": 1,
+      "min_variation_rate": 0.01
     }
   ],
   "emergencies": {
     "incendio": [
       {
         "temperatura": {
-          "min_threshold": 20,
-          "max_threshold": 60,
-          "min_variation_rate": 0.01
+          "min": 20,
+          "max": 60
         }
       }
     ]
