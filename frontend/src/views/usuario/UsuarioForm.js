@@ -43,9 +43,9 @@ const PermissionComponent = ({ index, id, localidade, role, onChange, enableRemo
         value={id}
         onChange={_onChange}
       />
-      <div>
+      <div className="d-flex justify-content-flex-start align-items-center">
         <Row>
-          <Col sm="6" lg="4" xl="3">
+          <Col sm="6" lg="4">
             <FormGroup>
               <label
                 className="form-control-label"
@@ -61,7 +61,7 @@ const PermissionComponent = ({ index, id, localidade, role, onChange, enableRemo
               />
             </FormGroup>
           </Col>
-          <Col sm="6" lg="4" xl="3">
+          <Col sm="6" lg="4">
             <FormGroup>
               <label
                 className="form-control-label"
@@ -78,7 +78,7 @@ const PermissionComponent = ({ index, id, localidade, role, onChange, enableRemo
               />
             </FormGroup>
           </Col>
-          <Col sm="6" lg="4" xl="3">
+          <Col sm="6" lg="4">
             <FormGroup>
               <label
                 className="form-control-label"
