@@ -1,6 +1,7 @@
 Tamanho máximo do pacote: 400 bytes
 
 =========== PROCESSO DE CONFIGURAÇÃO ======================
+Mesmo do BPC
 
 1ª Pacote: ## informações gerais
 {"type": "BPC", "mac": "A8:48:FA:DC:BC:60", "id": 2, "zone": 1,"latitude": 15.3456,"longitude": -85.8765}
@@ -14,10 +15,11 @@ Tamanho máximo do pacote: 400 bytes
 {"mac":"A8:48:FA:DC:BC:60", "emg": {"flood": [{"humidity": {"min": null,"max": 80},"uv": {"min": 500,"max": 700}}]}}
 ============================================================
 
+======== PROCESSO DE CONFIGURAÇÃO DOS DEVICES===============
+Um por vez:
+
+{"id": 2, "zone": 1, "s": [{"md": "MODELO-XZYZ", "v": "temperature"}]}
+
 ============ REQUISIÇÃO DE DADOS ENVIADOS PELOS SENSORES =================
 {"id_request": 1, "id": 2, "zone": 1, "sensor": "luminosity"}
-{"id_request": 1, "id": 2, "zone": 1, "sensor": "temperature"}
-{"id_request": 1, "id": 2, "zone": 1, "sensor": "humidity"}
-{"id_request": 1, "id": 2, "zone": 1, "sensor": "uv"}
-{"id_request": 1, "id": 2, "zone": 1, "sensor": "pression"}
 ==========================================================================
