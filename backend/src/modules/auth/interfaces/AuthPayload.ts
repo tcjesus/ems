@@ -1,10 +1,19 @@
 import { Role } from "@/account/structures/enum/Role"
 
+export interface Permission {
+  role: Role
+  localidade: {
+    id: number
+    cidadeId: number
+  }
+}
+
 export interface Account {
   id: number
   nome: string
   email: string
-  role?: Role
+  isSuperAdmin: boolean
+  permissions: Permission[]
   createdAt?: Date
   updatedAt?: Date
 }

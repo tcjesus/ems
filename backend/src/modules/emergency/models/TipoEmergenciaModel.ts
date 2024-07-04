@@ -1,7 +1,8 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 
 import { SoftDeleteBaseModel } from '@/core/models/SoftDeleteBaseModel'
 import { GrandezaModel } from '@/emergency/models/GrandezaModel'
+import { LocalidadeModel } from '@/locality/models/LocalidadeModel'
 
 @Entity('tipo_emergencia')
 export class TipoEmergenciaModel extends SoftDeleteBaseModel {
@@ -23,4 +24,11 @@ export class TipoEmergenciaModel extends SoftDeleteBaseModel {
     inverseJoinColumn: { name: 'grandeza_id' }
   })
   grandezas: GrandezaModel[]
+
+  @Column({ name: 'localidade_id' })
+  localidadeId: number
+
+  @ManyToOne(() => LocalidadeModel, (model) => model.id)
+  @JoinColumn({ name: 'localidade_id' })
+  localidade?: LocalidadeModel
 }

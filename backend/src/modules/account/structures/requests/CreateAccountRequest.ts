@@ -1,7 +1,37 @@
 import { Role } from '@/account/structures/enum/Role'
+import { CidadeIdRequest } from '@/locality/structures/requests/CidadeIdRequest'
 import { ApiProperty } from '@nestjs/swagger'
+import { Type } from 'class-transformer'
 
-import { IsDefined, IsString, MaxLength } from 'class-validator'
+import { IsArray, IsBoolean, IsDefined, IsOptional, IsString, MaxLength, ValidateNested } from 'class-validator'
+
+export class LocalidadeRequest {
+  @IsDefined()
+  @ValidateNested()
+  @Type(() => CidadeIdRequest)
+  @ApiProperty({
+    description: 'Cidade',
+    type: CidadeIdRequest,
+  })
+  cidade: CidadeIdRequest
+}
+
+export class PermissionRequest {
+  @IsDefined()
+  @IsString()
+  @MaxLength(15)
+  @ApiProperty({ description: 'Role de Usuário', maxLength: 15, example: Role.ADMIN })
+  role: Role
+
+  @IsDefined()
+  @ValidateNested()
+  @Type(() => LocalidadeRequest)
+  @ApiProperty({
+    description: 'Localidade',
+    type: LocalidadeRequest,
+  })
+  localidade: LocalidadeRequest
+}
 
 export class CreateAccountRequest {
   @IsDefined()
@@ -22,9 +52,15 @@ export class CreateAccountRequest {
   @ApiProperty({ description: 'Senha do Usuário', maxLength: 64, example: '123456' })
   password: string
 
-  @IsDefined()
-  @IsString()
-  @MaxLength(15)
-  @ApiProperty({ description: 'Role de Usuário', maxLength: 15, example: 'ADMIN' })
-  role: Role
+  @IsOptional()
+  @ApiProperty({ description: 'É Super Admin', required: false, example: false })
+  @IsBoolean()
+  isSuperAdmin?: boolean
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => PermissionRequest)
+  @ApiProperty({ description: 'Permissões', type: [PermissionRequest], required: false })
+  permissions: PermissionRequest[]
 }

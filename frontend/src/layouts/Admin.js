@@ -27,6 +27,7 @@ import Sidebar from "components/Sidebar/Sidebar.js";
 import routes from "routes.js";
 
 import AuthService from 'services/AuthService.js';
+import LocalidadeService from 'services/LocalidadeService.js';
 
 const Admin = (props) => {
   const mainContent = React.useRef(null);
@@ -38,9 +39,16 @@ const Admin = (props) => {
       const isNotAuthorized = !await AuthService.isAuthorized();
       if (isNotAuthorized) {
         navigate('/login');
+        return
       }
 
-      const accountRole = await AuthService.getRole();
+      const localidade = await LocalidadeService.getLocalidade();
+      if (!localidade) {
+        navigate('/localidade');
+        return
+      }
+
+      const accountRole = await LocalidadeService.getRole();
 
       const route = routes.find(route => {
         let regexPattern = route.layout + route.path;
@@ -50,6 +58,7 @@ const Admin = (props) => {
       });
       if (!route?.roles?.includes(accountRole)) {
         navigate('/admin/index');
+        return
       }
     };
     checkPermissions();

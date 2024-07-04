@@ -4,7 +4,7 @@ import fs from 'fs'
 import path from 'path'
 import { EstadoModel } from "@/locality/models/EstadoModel";
 
-export class InsertCidades1718629020123 implements MigrationInterface {
+export class InsertCidades1714329020123 implements MigrationInterface {
 
   private readCsv(csvFileName: string): string[][] {
     const csv = fs.readFileSync(path.resolve(__dirname, csvFileName), 'utf8')

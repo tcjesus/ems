@@ -9,6 +9,10 @@ import { TipoEmergenciaModel } from '@/emergency/models/TipoEmergenciaModel'
 @Injectable()
 export class TipoEmergenciaRepository extends DatabaseRepository<TipoEmergenciaModel, number> {
   public constructor(@InjectRepository(TipoEmergenciaModel) repository: Repository<TipoEmergenciaModel>) {
-    super(repository, 'tipo_emergencia', ['grandezas'])
+    super(repository, 'tipo_emergencia', [
+      'grandezas',
+      { field: 'tipo_emergencia.localidade', alias: 'l', join: 'LEFT' },
+      { field: 'l.cidade', alias: 'c', join: 'LEFT' },
+    ])
   }
 }

@@ -1,43 +1,42 @@
 import { AccountModel } from '@/account/models/AccountModel';
-import { Role } from '@/account/structures/enum/Role';
-import { MigrationInterface, QueryRunner } from 'typeorm'
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
-const accounts: { nome: string; email: string; password: string, role: Role }[] = [
+const accounts: { nome: string; email: string; password: string, isSuperAdmin: boolean }[] = [
   {
     nome: 'Matheus Borges',
     email: 'matob@live.com',
     password: 'uefspgcc2024',
-    role: Role.ADMIN,
+    isSuperAdmin: true,
   },
   {
     nome: 'Inácio Borges',
     email: 'inacioob@gmail.com',
     password: 'uefspgcc2024',
-    role: Role.ADMIN,
+    isSuperAdmin: true,
   },
   {
     nome: 'Darlan Oliveira',
     email: 'darlandbo@hotmail.com',
     password: 'uefspgcc2024',
-    role: Role.ADMIN,
+    isSuperAdmin: true,
   },
   {
     nome: 'Pedro Martins',
     email: 'pedromartins.eng@hotmail.com',
     password: 'uefspgcc2024',
-    role: Role.ADMIN,
+    isSuperAdmin: true,
   },
   {
     nome: 'Gabriel Alves',
     email: 'gabrielalves@ecomp.uefs.br',
     password: 'uefspgcc2024',
-    role: Role.ADMIN,
+    isSuperAdmin: true,
   },
   {
     nome: 'Thiago Jesus',
     email: 'thiagocj@gmail.com',
     password: 'uefspgcc2024',
-    role: Role.ADMIN,
+    isSuperAdmin: true,
   },
 ]
 
@@ -46,8 +45,8 @@ export class InsertAccounts1714343577159 implements MigrationInterface {
     for (const account of accounts) {
       const passwordHash = AccountModel.hashPassword(account.password)
       await queryRunner.manager.query(
-        `INSERT INTO account (nome, email, role, password) VALUES (?, ?, ?, ?)`,
-        [account.nome, account.email, account.role, passwordHash],
+        `INSERT INTO account (nome, email, password, isSuperAdmin) VALUES (?, ?, ?, ?)`,
+        [account.nome, account.email, passwordHash, account.isSuperAdmin],
       )
     }
   }

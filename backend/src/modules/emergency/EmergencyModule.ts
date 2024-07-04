@@ -61,6 +61,7 @@ import { DeleteZonaUseCase } from '@/emergency/usecases/zona/DeleteZonaUseCase'
 import { FindZonaByIdUseCase } from '@/emergency/usecases/zona/FindZonaByIdUseCase'
 import { ListZonasUseCase } from '@/emergency/usecases/zona/ListZonasUseCase'
 import { UpdateZonaUseCase } from '@/emergency/usecases/zona/UpdateZonaUseCase'
+import { LocalityModule } from '@/locality/LocalityModule'
 
 @Module({
   imports: [
@@ -77,6 +78,7 @@ import { UpdateZonaUseCase } from '@/emergency/usecases/zona/UpdateZonaUseCase'
       RegistroMonitoramentoModel,
     ]),
     forwardRef(() => AccountModule),
+    forwardRef(() => LocalityModule),
   ],
   controllers: [
     GrandezaController,

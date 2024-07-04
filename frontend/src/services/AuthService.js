@@ -1,6 +1,5 @@
 import envs from "environment";
 import handleResponse from "./handleResponse";
-import Role from "./Role";
 
 const baseUrl = `${envs.backendUrl}/usuarios`
 
@@ -12,6 +11,11 @@ const Service = {
     return `Bearer ${await this.getAccessToken()}`
   },
 
+  async isSuperAdmin() {
+    const account = await this.getAccount();
+    return account?.isSuperAdmin;
+  },
+
   async getRefreshToken() { return localStorage.getItem('refreshToken') },
 
   async getRefreshTokenHeader() {
@@ -21,11 +25,6 @@ const Service = {
   async getAccount() {
     const account = JSON.parse(await localStorage.getItem('account'))
     return account
-  },
-
-  async getRole() {
-    const account = await this.getAccount();
-    return account?.role || Role.PUBLIC;
   },
 
   async isAuthorized() {
@@ -53,7 +52,8 @@ const Service = {
     await Promise.all([
       localStorage.removeItem('account'),
       localStorage.removeItem('accessToken'),
-      localStorage.removeItem('refreshToken')
+      localStorage.removeItem('refreshToken'),
+      localStorage.clear()
     ]);
   },
 

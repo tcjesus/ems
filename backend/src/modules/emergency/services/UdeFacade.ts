@@ -7,6 +7,7 @@ import { FindUdeByIdUseCase } from '@/emergency/usecases/ude/FindUdeByIdUseCase'
 import { ListUdesUseCase } from '@/emergency/usecases/ude/ListUdesUseCase'
 import { NotifyUdeUpdatedUseCase } from '@/emergency/usecases/ude/NotifyUdeUpdatedUseCase'
 import { UpdateUdeUseCase } from '@/emergency/usecases/ude/UpdateUdeUseCase'
+import { Localidade } from '@/locality/structures/Localidade'
 import { Injectable } from '@nestjs/common'
 
 @Injectable()
@@ -20,27 +21,27 @@ export class UdeFacade {
     private readonly notifyUdeUpdatedUseCase: NotifyUdeUpdatedUseCase,
   ) { }
 
-  list(): Promise<UdeResponse[]> {
-    return this.listUdesUseCase.execute()
+  list(localidade: Localidade): Promise<UdeResponse[]> {
+    return this.listUdesUseCase.execute(localidade)
   }
 
-  findById(id: number): Promise<UdeResponse> {
-    return this.findUdeByIdUseCase.execute(id)
+  findById(localidade: Localidade, id: number): Promise<UdeResponse> {
+    return this.findUdeByIdUseCase.execute(localidade, id)
   }
 
-  create(input: CreateUdeRequest): Promise<UdeResponse> {
-    return this.createUdeUseCase.execute(input)
+  create(localidade: Localidade, input: CreateUdeRequest): Promise<UdeResponse> {
+    return this.createUdeUseCase.execute(localidade, input)
   }
 
-  update(id: number, input: CreateUdeRequest): Promise<UdeResponse> {
-    return this.updateUdeUseCase.execute(id, input)
+  update(localidade: Localidade, id: number, input: CreateUdeRequest): Promise<UdeResponse> {
+    return this.updateUdeUseCase.execute(localidade, id, input)
   }
 
-  async delete(id: number): Promise<void> {
-    await this.deleteUdeUseCase.execute(id)
+  async delete(localidade: Localidade, id: number): Promise<void> {
+    await this.deleteUdeUseCase.execute(localidade, id)
   }
 
-  notifyUpdate(id: number): Promise<NotifyUdeUpdatedPayload> {
-    return this.notifyUdeUpdatedUseCase.execute(id)
+  notifyUpdate(localidade: Localidade, id: number): Promise<NotifyUdeUpdatedPayload> {
+    return this.notifyUdeUpdatedUseCase.execute(localidade, id)
   }
 }

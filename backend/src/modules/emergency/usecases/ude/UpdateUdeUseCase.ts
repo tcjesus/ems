@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 
 import { ErrorMessages } from '@/core/helpers/ErrorMessages'
 import { DeteccaoEmergenciaModel } from '@/emergency/models/DeteccaoEmergenciaModel'
@@ -13,6 +13,7 @@ import { MonitoramentoGrandezaRequest } from '@/emergency/structures/requests/Mo
 import { UpdateUdeRequest } from '@/emergency/structures/requests/UpdateUdeRequest'
 import { UdeResponse } from '@/emergency/structures/responses/UdeResponse'
 import { NotifyUdeUpdatedUseCase } from '@/emergency/usecases/ude/NotifyUdeUpdatedUseCase'
+import { Localidade } from '@/locality/structures/Localidade'
 
 @Injectable()
 export class UpdateUdeUseCase {
@@ -22,6 +23,7 @@ export class UpdateUdeUseCase {
   ) { }
 
   async execute(
+    localidade: Localidade,
     id: number,
     {
       tipo,
@@ -37,6 +39,10 @@ export class UpdateUdeUseCase {
     const model = await this.udeRepository.findById(id)
     if (!model) {
       throw new NotFoundException(ErrorMessages.emergency.ude.notFound)
+    }
+
+    if (localidade.id !== model.localidadeId) {
+      throw new ForbiddenException(ErrorMessages.emergency.localidade.notAllowed)
     }
 
     const zona = new ZonaModel({ id: zonaId?.id })
@@ -92,7 +98,7 @@ export class UpdateUdeUseCase {
     const updatedModel = await this.udeRepository.save(model)
 
     try {
-      await this.notifyUdeUpdatedUseCase.execute(id)
+      await this.notifyUdeUpdatedUseCase.execute(localidade, id)
     } catch (error) {
       console.error(error)
     }

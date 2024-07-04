@@ -14,12 +14,14 @@ export class CreateUdeTable1714742820043 implements MigrationInterface {
       '  "longitude" decimal(10,7) NOT NULL, ' +
       '  "operating_range" decimal(8,2), ' +
       '  "zona_id" integer NOT NULL, ' +
+      '  "localidade_id" integer NOT NULL, ' +
 
       '  "created_at" datetime NOT NULL DEFAULT (datetime(\'now\')), ' +
       '  "updated_at" datetime NOT NULL DEFAULT (datetime(\'now\')), ' +
       '  "deleted_at" datetime, ' +
 
-      '  CONSTRAINT "FK_dcfe97e2ec3c8e44049421d448b" FOREIGN KEY ("zona_id") REFERENCES "zona" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION' +
+      '  CONSTRAINT "FK_dcfe97e2ec3c8e44049421d448b" FOREIGN KEY ("zona_id") REFERENCES "zona" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION, ' +
+      '  CONSTRAINT "FK_18f54bcc5d94c2764a289ac9c6b" FOREIGN KEY ("localidade_id") REFERENCES "localidade" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION' +
       ')'
     );
     await queryRunner.query('CREATE INDEX "IDX_b65f2fd9b2430f508243533fb1" ON "ude" ("deleted_at") ');

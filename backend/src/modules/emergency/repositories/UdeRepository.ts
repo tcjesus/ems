@@ -17,6 +17,8 @@ export class UdeRepository extends DatabaseRepository<UdeModel, number> {
       { field: 'd.monitoramentosGrandeza', alias: 'm' },
       { field: 'm.sensor' },
       { field: 'm.grandeza' },
+      { field: 'ude.localidade', alias: 'l', join: 'LEFT' },
+      { field: 'l.cidade', alias: 'c', join: 'LEFT' },
     ])
   }
 }

@@ -5,6 +5,7 @@ import { DeteccaoEmergenciaModel } from '@/emergency/models/DeteccaoEmergenciaMo
 import { ZonaModel } from '@/emergency/models/ZonaModel'
 import { TipoUdeEnum } from '@/emergency/structures/enum/TipoUdeEnum'
 import { ColumnNumericTransformer } from '@/core/repositories/ColumnNumericTransformer'
+import { LocalidadeModel } from '@/locality/models/LocalidadeModel'
 
 @Entity('ude')
 export class UdeModel extends SoftDeleteBaseModel {
@@ -61,4 +62,11 @@ export class UdeModel extends SoftDeleteBaseModel {
 
   @OneToMany(() => DeteccaoEmergenciaModel, (model) => model.ude, { cascade: true })
   deteccoesEmergencia: DeteccaoEmergenciaModel[]
+
+  @Column({ name: 'localidade_id' })
+  localidadeId: number
+
+  @ManyToOne(() => LocalidadeModel, (model) => model.id)
+  @JoinColumn({ name: 'localidade_id' })
+  localidade?: LocalidadeModel
 }

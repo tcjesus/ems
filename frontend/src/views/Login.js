@@ -32,6 +32,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 import AuthService from 'services/AuthService.js';
+import LocalidadeService from 'services/LocalidadeService.js';
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -45,6 +46,11 @@ const Login = () => {
     e.preventDefault();
     try {
       await AuthService.signIn(credentials);
+      const localidade = await LocalidadeService.getLocalidade();
+      if (!localidade) {
+        navigate('/localidade');
+        return
+      }
       navigate('/admin/index');
     } catch (error) {
       console.error(error);

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 
-import { AccountResponse } from '@/account/structures/responses/AccountResponse'
 import { AccountRepository } from '@/account/repositories/AccountRepository'
+import { AccountResponse } from '@/account/structures/responses/AccountResponse'
 
 @Injectable()
 export class ListAccountsUseCase {

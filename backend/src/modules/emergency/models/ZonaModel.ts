@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 
 import { SoftDeleteBaseModel } from '@/core/models/SoftDeleteBaseModel'
+import { LocalidadeModel } from '@/locality/models/LocalidadeModel'
 
 @Entity('zona')
 export class ZonaModel extends SoftDeleteBaseModel {
@@ -14,4 +15,11 @@ export class ZonaModel extends SoftDeleteBaseModel {
 
   @Column({ length: 50 })
   nome: string
+
+  @Column({ name: 'localidade_id' })
+  localidadeId: number
+
+  @ManyToOne(() => LocalidadeModel, (model) => model.id)
+  @JoinColumn({ name: 'localidade_id' })
+  localidade?: LocalidadeModel
 }

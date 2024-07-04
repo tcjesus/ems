@@ -40,7 +40,7 @@ import {
 } from "reactstrap";
 import Role from "services/Role";
 
-import AuthService from "services/AuthService.js";
+import LocalidadeService from "services/LocalidadeService.js";
 
 var ps;
 
@@ -64,7 +64,7 @@ const Sidebar = (props) => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const r = await AuthService.getRole();
+        const r = await LocalidadeService.getRole();
         setRole(r);
       } catch (error) {
         console.error(error);

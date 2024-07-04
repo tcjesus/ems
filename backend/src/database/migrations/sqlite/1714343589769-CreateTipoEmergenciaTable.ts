@@ -8,10 +8,13 @@ export class CreateTipoEmergenciaTable1714343589769 implements MigrationInterfac
       'CREATE TABLE "tipo_emergencia" (' +
       '  "id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, ' +
       '  "nome" varchar(50) NOT NULL, ' +
+      '  "localidade_id" integer NOT NULL, ' +
 
       '  "created_at" datetime NOT NULL DEFAULT (datetime(\'now\')), ' +
       '  "updated_at" datetime NOT NULL DEFAULT (datetime(\'now\')), ' +
-      '  "deleted_at" datetime ' +
+      '  "deleted_at" datetime, ' +
+
+      '  CONSTRAINT "FK_6ac82bdf3e09daac7fed8a51c8d" FOREIGN KEY ("localidade_id") REFERENCES "localidade" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION' +
       ')'
     );
     await queryRunner.query('CREATE INDEX "IDX_79afa0ffaf72f96ddd5aa4a1d4" ON "tipo_emergencia" ("deleted_at") ');

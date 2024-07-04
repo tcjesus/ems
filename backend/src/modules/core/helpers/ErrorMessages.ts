@@ -31,5 +31,9 @@ export class ErrorMessages {
       static get notFound() { return 'UDE não encontrada.' }
       static alreadyExists(nome: string) { return `UDE '${nome}' já cadastrada.` }
     }
+
+    static localidade = class {
+      static get notAllowed() { return 'Usuário não tem permissão para acessar os recursos desta localidade.' }
+    }
   }
 }

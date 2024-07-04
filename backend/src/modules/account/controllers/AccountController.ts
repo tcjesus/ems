@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Response, UseGuards, U
 import { ApiBearerAuth, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger'
 
 import { AccountParam } from '@/account/helpers/AccountParam'
+import { AuditInterceptor } from '@/account/interceptors/AuditInterceptor'
 import { AccountFacade } from '@/account/services/AccountFacade'
 import { Role } from '@/account/structures/enum/Role'
 import { CreateAccountRequest } from '@/account/structures/requests/CreateAccountRequest'
@@ -10,11 +11,10 @@ import { UpdateAccountRequest } from '@/account/structures/requests/UpdateAccoun
 import { AccountResponse } from '@/account/structures/responses/AccountResponse'
 import { MyAccountResponse } from '@/account/structures/responses/MyAccountResponse'
 import { SignInResponse } from '@/account/structures/responses/SignInResponse'
-import { Roles } from '@/auth/decorators/Roles'
+import { RoleGuardParams } from '@/auth/decorators/RolesGuardParams'
 import { RoleGuard } from '@/auth/guards/RoleGuard'
 import { Account } from '@/auth/interfaces/AuthPayload'
 import { Response as Res } from 'express'
-import { AuditInterceptor } from '@/account/interceptors/AuditInterceptor'
 
 @Controller({ version: '1', path: 'usuarios' })
 @ApiTags('usuarios')
@@ -26,7 +26,6 @@ export class AccountController {
 
   @Get('/')
   @UseGuards(RoleGuard)
-  @Roles([Role.ADMIN])
   @ApiOperation({ summary: 'Lista os Usuários cadastrados no sistema' })
   @ApiOkResponse({ type: AccountResponse, isArray: true })
   list(): Promise<AccountResponse[]> {
@@ -35,7 +34,7 @@ export class AccountController {
 
   @Post('/')
   @UseGuards(RoleGuard)
-  @Roles([Role.ADMIN])
+  @RoleGuardParams({ roles: [Role.SUPER_ADMIN], requireLocalidade: false })
   @ApiOperation({ summary: 'Cria um novo Usuário' })
   @ApiCreatedResponse({ type: AccountResponse })
   @UseInterceptors(AuditInterceptor('account'))
@@ -47,7 +46,7 @@ export class AccountController {
 
   @Put('/:id')
   @UseGuards(RoleGuard)
-  @Roles([Role.ADMIN])
+  @RoleGuardParams({ roles: [Role.SUPER_ADMIN], requireLocalidade: false })
   @ApiOperation({ summary: 'Atualiza um Usuário' })
   @ApiParam({ name: 'id', description: 'Identificador do Usuário', type: Number, example: 1 })
   @ApiOkResponse({ type: AccountResponse })
@@ -62,7 +61,7 @@ export class AccountController {
 
   @Delete('/:id')
   @UseGuards(RoleGuard)
-  @Roles([Role.ADMIN])
+  @RoleGuardParams({ roles: [Role.SUPER_ADMIN], requireLocalidade: false })
   @ApiOperation({ summary: 'Deleta um Usuário' })
   @ApiParam({ name: 'id', description: 'Identificador do Usuário', type: Number, example: 1 })
   @ApiOkResponse()
@@ -85,7 +84,7 @@ export class AccountController {
 
   @Post('/refresh-token')
   @UseGuards(RoleGuard)
-  @Roles([Role.ADMIN, Role.USER, Role.GUEST])
+  @RoleGuardParams({ requireLocalidade: false })
   @ApiOperation({ summary: 'Refresh Token' })
   @ApiOkResponse({ type: SignInResponse })
   refreshToken(
@@ -103,7 +102,7 @@ export class AccountController {
 
   @Get('/me')
   @UseGuards(RoleGuard)
-  @Roles([Role.ADMIN, Role.USER, Role.GUEST])
+  @RoleGuardParams({ requireLocalidade: false })
   @ApiBearerAuth('Role Access Token')
   @ApiOperation({ summary: 'Get current Account info' })
   @ApiOkResponse({ status: 200, type: MyAccountResponse })
@@ -115,7 +114,7 @@ export class AccountController {
 
   @Get('/:id')
   @UseGuards(RoleGuard)
-  @Roles([Role.ADMIN, Role.USER, Role.GUEST])
+  @RoleGuardParams({ roles: [Role.ADMIN, Role.USER, Role.GUEST], requireLocalidade: false })
   @ApiOperation({ summary: 'Busca um Usuário pelo seu ID' })
   @ApiParam({ name: 'id', description: 'Identificador do Usuário', type: Number, example: 1 })
   @ApiOkResponse({ type: AccountResponse })

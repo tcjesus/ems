@@ -19,6 +19,6 @@ export class EstadoModel extends SoftDeleteBaseModel {
   @Column({ length: 2 })
   sigla: string
 
-  @OneToMany(() => CidadeModel, (model) => model.estado, { cascade: true })
+  @OneToMany(() => CidadeModel, (model) => model.estado)
   cidades?: CidadeModel[]
 }

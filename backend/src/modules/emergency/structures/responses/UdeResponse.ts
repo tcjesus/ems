@@ -6,6 +6,7 @@ import { UdeModel } from '@/emergency/models/UdeModel'
 import { DeteccaoEmergenciaResponse } from '@/emergency/structures/responses/DeteccaoEmergenciaResponse'
 import { ZonaResponse } from '@/emergency/structures/responses/ZonaResponse'
 import { TipoUdeEnum } from '@/emergency/structures/enum/TipoUdeEnum'
+import { LocalidadeResponse } from '@/locality/structures/responses/LocalidadeResponse'
 
 export class UdeResponse {
   @IsDefined()
@@ -54,6 +55,10 @@ export class UdeResponse {
   @ApiProperty({ description: 'Lista dos Configurações de Detecção de Emergências', type: [DeteccaoEmergenciaResponse] })
   deteccoesEmergencia: DeteccaoEmergenciaResponse[]
 
+  @IsDefined()
+  @ApiProperty({ description: 'Localidade', type: LocalidadeResponse })
+  localidade?: LocalidadeResponse
+
   static toResponse(model: UdeModel): UdeResponse {
     return {
       id: model.id,
@@ -65,6 +70,7 @@ export class UdeResponse {
       operatingRange: model.operatingRange,
       zona: model.zona && ZonaResponse.toResponse(model.zona),
       deteccoesEmergencia: model.deteccoesEmergencia?.map(DeteccaoEmergenciaResponse.toResponse),
+      localidade: model.localidade && LocalidadeResponse.toResponse(model.localidade),
     }
   }
 }

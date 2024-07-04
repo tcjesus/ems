@@ -4,6 +4,7 @@ import { IsArray, IsDefined, IsNumber, IsString, MaxLength } from 'class-validat
 
 import { TipoEmergenciaModel } from '@/emergency/models/TipoEmergenciaModel'
 import { GrandezaResponse } from '@/emergency/structures/responses/GrandezaResponse'
+import { LocalidadeResponse } from '@/locality/structures/responses/LocalidadeResponse'
 
 export class TipoEmergenciaResponse {
   @IsDefined()
@@ -25,11 +26,16 @@ export class TipoEmergenciaResponse {
   })
   grandezas: GrandezaResponse[]
 
+  @IsDefined()
+  @ApiProperty({ description: 'Localidade', type: LocalidadeResponse })
+  localidade?: LocalidadeResponse
+
   static toResponse(model: TipoEmergenciaModel): TipoEmergenciaResponse {
     return {
       id: model.id,
       nome: model.nome,
       grandezas: (model.grandezas || []).map((grandeza) => GrandezaResponse.toResponse(grandeza)),
+      localidade: model.localidade && LocalidadeResponse.toResponse(model.localidade),
     }
   }
 }
