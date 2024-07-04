@@ -25,8 +25,8 @@ typedef struct{
 /*====================================================================
   Parameters of Wifi Connection
   ==================================================================== */
-const char* ssid      = "LSNET_BARRETO"; // REDE
-const char* password  = "Tuty7090"; // SENHA
+const char* ssid      = "UEFS_VISITANTES"; // REDE
+const char* password  = ""; // SENHA
 int timestamp;
 
 /* ===================================================================
