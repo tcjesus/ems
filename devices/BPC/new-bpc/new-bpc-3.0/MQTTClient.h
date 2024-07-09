@@ -31,6 +31,7 @@ private:
         subscribe(topic_configSr);
         subscribe(topic_configEmg);
         subscribe(topic_requisition);
+        subscribe(topic_request_realtime_data);
     }
 
     static void messageReceived(char *topic, byte *payload, unsigned int length){

@@ -1,2 +1,2 @@
 {"emg": "fire", "monitoring": [{"temperature": {"min": 9999, "max": 50}, "humidity": {"min": 10, "max": 9999}}, {"temperature": {"min": 9999, "max": 45}, "humidity": {"min": 9999, "max": 20}}, {"luminosity": {"min": 9999, "max": 1}, "temperature": {"min": 9999, "max": 60}}, {" temperature": {"min": 9999, "max": 80}, "humidity": {"min": 9999, "max": 50}}]}
-{"emg": "flood", "monitoring": [{"humidity": {"min": 9999, "max": 85}}, {"humidity": {"min": 9999, "max": 80}, "uv": {"min": 500, "max": 700}}]}
+{"emg": "flood", "monitoring": [{"humidity": {"min": 9999, "max": 85}}, {"humidity": {"min": 9999, "max": 80}, "uv": {"min": 500, "max": 700}}, {"humidity": {"min": 9999, "max": 80}, "uv": {"min": 100, "max": 900}}]}

@@ -17,7 +17,7 @@
             "variable": "uv",
             "model": "potentiometer",
             "sample_interval": 3,
-            "min_variation_rate": 0.5
+            "min_variation_rate": 0.2
         },
         {
             "variable": "humidity",
@@ -71,8 +71,8 @@
                 },
                 "uv":
                 {
-                    "min": 500,
-                    "max": 700
+                    "min": 100,
+                    "max": 900
                 }
             }
         ]
