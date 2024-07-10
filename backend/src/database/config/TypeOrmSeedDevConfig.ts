@@ -13,6 +13,6 @@ export default new DataSource({
   ...(TypeOrmConfig as DataSourceOptions),
   migrationsTableName: 'Seed',
   migrations: [
-    join(__dirname, '..', 'seedsDev', DatabaseConfig.type, '*{.ts,.js}')
+    join(__dirname, '..', 'seeds-dev', DatabaseConfig.type, '*{.ts,.js}')
   ],
 })

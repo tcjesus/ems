@@ -66,5 +66,12 @@ seed.run:
 seed.revert:
 	npm run seed:revert
 
+seed.dev.generate:
+	npm run seed:dev:generate ./src/database/seeds-dev/$(name)
+seed.dev.run:
+	npm run seed:dev:run
+seed.dev.revert:
+	npm run seed:dev:revert
+
 bash:
 	docker exec -it ${CONTAINER_BACKEND} /bin/bash

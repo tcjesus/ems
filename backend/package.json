@@ -16,7 +16,10 @@
     "migration:revert": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --dataSource src/database/config/TypeOrmMigrationConfig.ts migration:revert",
     "seed:generate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create",
     "seed:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --dataSource src/database/config/TypeOrmSeedConfig.ts migration:run",
-    "seed:revert": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --dataSource src/database/config/TypeOrmSeedConfig.ts migration:revert"
+    "seed:revert": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --dataSource src/database/config/TypeOrmSeedConfig.ts migration:revert",
+    "seed:dev:generate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create",
+    "seed:dev:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --dataSource src/database/config/TypeOrmSeedDevConfig.ts migration:run",
+    "seed:dev:revert": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js --dataSource src/database/config/TypeOrmSeedDevConfig.ts migration:revert"
   },
   "dependencies": {
     "@nestjs/common": "^10.3.8",
