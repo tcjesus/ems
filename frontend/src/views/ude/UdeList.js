@@ -1,7 +1,7 @@
 import UdeService from "services/UdeService";
 import DefaultList from "views/DefaultList";
 
-const headers = ['Código', 'Tipo', 'Label', 'MAC', 'Zona', 'Emergências']
+const headers = ['Code', 'Type', 'Label', 'MAC', 'Zone', 'Emergencies']
 const attributes = [
   'id',
   'tipo',
@@ -11,4 +11,4 @@ const attributes = [
   (record) => record.deteccoesEmergencia.map((e) => e.tipoEmergencia.nome).join(', ')
 ]
 
-export default DefaultList(UdeService, 'udes', 'Un. Detec. de Emergência', headers, attributes);
+export default DefaultList(UdeService, 'edus', 'Emergency Detection Unit', headers, attributes);

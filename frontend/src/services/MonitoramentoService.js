@@ -84,7 +84,6 @@ const Service = {
       `${baseUrl}/summary?${queryParams}`,
       {
         headers: await buildHeaders(),
-        body: JSON.stringify(filters),
       }
     );
     return handleResponse(response, () => this.getSummary());

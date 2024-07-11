@@ -1,7 +1,7 @@
 import GrandezaService from 'services/GrandezaService';
 import DefaultSelect from "./DefaultSelect";
 
-const recordName = 'Grandeza'
+const recordName = 'Variable'
 const inputName = 'grandeza';
 const getLabel = (record) => `${record.nome} (${record.sigla})`;
 const service = GrandezaService;

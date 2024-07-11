@@ -14,8 +14,8 @@ import GrandezaSelect from "components/Selects/GrandezaSelect";
 import SensorSelect from "components/Selects/SensorSelect";
 import TipoEmergenciaSelect from "components/Selects/TipoEmergenciaSelect";
 
-const target = '/admin/udes'
-const resource = 'Unidade de Detecção de Emergência'
+const target = '/admin/edus'
+const resource = 'Emergency Detection Unit'
 const service = UdeService
 
 const MonitoramentoComponent = ({
@@ -100,7 +100,7 @@ const MonitoramentoComponent = ({
                 className="form-control-label mb-0"
                 htmlFor={`input-monitoramento-grandeza-${dIndex}-${mIndex}`}
               >
-                Grandeza
+                Variable
               </label>
               <GrandezaSelect
                 id={`input-monitoramento-grandeza-${dIndex}-${mIndex}`}
@@ -122,13 +122,13 @@ const MonitoramentoComponent = ({
                 className="form-control-label mb-0"
                 htmlFor={`input-monitoramento-threshold-minimo-${dIndex}-${mIndex}`}
               >
-                Threshold Mínimo
+                Min. Threshold
               </label>
               <Input
                 id={`input-monitoramento-threshold-minimo-${dIndex}-${mIndex}`}
                 className="form-control-alternative"
                 type="number"
-                placeholder="Threshold Mínimo"
+                placeholder="Min. Threshold"
                 name="thresholdMinimo"
                 onChange={onChangeNumber}
                 value={thresholdMinimo}
@@ -141,13 +141,13 @@ const MonitoramentoComponent = ({
                 className="form-control-label mb-0"
                 htmlFor={`input-monitoramento-threshold-maximo-${dIndex}-${mIndex}`}
               >
-                Threshold Máximo
+                Max. Threshold
               </label>
               <Input
                 id={`input-monitoramento-threshold-maximo-${dIndex}-${mIndex}`}
                 className="form-control-alternative"
                 type="number"
-                placeholder="Threshold Máximo"
+                placeholder="Max. Threshold"
                 name="thresholdMaximo"
                 onChange={onChangeNumber}
                 value={thresholdMaximo}
@@ -160,13 +160,13 @@ const MonitoramentoComponent = ({
                 className="form-control-label mb-0"
                 htmlFor={`input-monitoramento-intervalo-amostragem-${dIndex}-${mIndex}`}
               >
-                Intervalo Amostragem
+                Sampling Interval
               </label>
               <Input
                 id={`input-monitoramento-intervalo-amostragem-${dIndex}-${mIndex}`}
                 className="form-control-alternative"
                 type="number"
-                placeholder="Em segundos"
+                placeholder="In seconds"
                 name="intervaloAmostragem"
                 onChange={onChangeNumber}
                 value={intervaloAmostragem}
@@ -179,7 +179,7 @@ const MonitoramentoComponent = ({
                 className="form-control-label mb-0"
                 htmlFor={`input-monitoramento-taxa-variacao-minima-${dIndex}-${mIndex}`}
               >
-                Taxa Variação Mínima (%)
+                Min Variation Rate (%)
               </label>
               <Input
                 id={`input-monitoramento-taxa-variacao-minima-${dIndex}-${mIndex}`}
@@ -211,7 +211,7 @@ const MonitoramentoComponent = ({
                   htmlFor={`input-monitoramento-ativo-${dIndex}-${mIndex}`}
                 >
                   <span className="text-muted">
-                    Ativo
+                    Enabled
                   </span>
                 </label>
               </FormGroup>
@@ -270,7 +270,7 @@ const DeteccaoEmergenciaComponent = ({
                   className="form-control-label"
                   htmlFor={`input-deteccao-tipo-emergencia-${index}`}
                 >
-                  Tipo de Emergência
+                  Emergency Types
                 </label>
                 <TipoEmergenciaSelect
                   id={`input-deteccao-tipo-emergencia-${index}`}
@@ -296,7 +296,7 @@ const DeteccaoEmergenciaComponent = ({
           <Row>
             <Col lg="12">
               <div className="d-flex align-items-center">
-                <h5 className="mb-0 text-white">Monitoramentos</h5>
+                <h5 className="mb-0 text-white">Monitoring</h5>
                 <Button
                   className="ml-3 rounded-circle shadow"
                   color="primary"
@@ -487,7 +487,7 @@ const UdeForm = () => {
           <div className="col">
             <Card className="bg-default shadow">
               <CardHeader className="bg-transparent border-0">
-                <h3 className="text-white mb-0">{id ? `Editar ${resource}` : `Adicionar ${resource}`}</h3>
+                <h3 className="text-white mb-0">{id ? `Edit ${resource}` : `Add ${resource}`}</h3>
               </CardHeader>
               <CardBody>
                 <Form>
@@ -505,7 +505,7 @@ const UdeForm = () => {
                             className="form-control-label"
                             htmlFor="input-tipo"
                           >
-                            Tipo
+                            Type
                           </label>
                           <Input
                             id="input-tipo"
@@ -516,9 +516,9 @@ const UdeForm = () => {
                             value={record.tipo}
                           >
                             <option value="">Selecione um Tipo</option>
-                            <option value="APC">APC</option>
+                            <option value="APC">HPC</option>
                             <option value="MBC">MBC</option>
-                            <option value="BPC">BPC</option>
+                            <option value="BPC">LPC</option>
                           </Input>
                         </FormGroup>
                       </Col>
@@ -568,7 +568,7 @@ const UdeForm = () => {
                             className="form-control-label"
                             htmlFor="input-zona"
                           >
-                            Zona
+                            Zone
                           </label>
                           <ZonaSelect
                             id="input-zona"
@@ -623,13 +623,13 @@ const UdeForm = () => {
                             className="form-control-label"
                             htmlFor="input-operating-range"
                           >
-                            Alcance (metros)
+                            Op. Range (meters)
                           </label>
                           <Input
                             id="input-operating-range"
                             className="form-control-alternative"
                             type="number"
-                            placeholder="Alcance"
+                            placeholder="Op. Range"
                             name="operatingRange"
                             onChange={onChangeNumber}
                             value={record.operatingRange}
@@ -640,7 +640,7 @@ const UdeForm = () => {
                     <Row>
                       <Col lg="12">
                         <div className="d-flex align-items-center">
-                          <h4 className="mb-0 text-white">Detecções</h4>
+                          <h4 className="mb-0 text-white">Detections</h4>
                           <Button
                             className="ml-3 rounded-circle shadow"
                             color="primary"
@@ -686,14 +686,14 @@ const UdeForm = () => {
                           navigate(target);
                         }}
                       >
-                        Cancelar
+                        Cancel
                       </Button>
 
                       <Button
                         color="success"
                         onClick={save}
                       >
-                        Salvar
+                        Save
                       </Button>
                     </div>
                   </div>

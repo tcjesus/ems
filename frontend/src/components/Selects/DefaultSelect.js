@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Input } from "reactstrap";
 
-const DefaultSelect = (recordName, inputName, service, getLabel, placeholder = `Selecione uma ${recordName}`) => {
+const DefaultSelect = (recordName, inputName, service, getLabel, placeholder = `Select a ${recordName}`) => {
   const BuiltSelect = ({ id = 'input-' + inputName, name = inputName, value: record = '', filter = (record) => true, onChange = null }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [options, setOptions] = useState([]);

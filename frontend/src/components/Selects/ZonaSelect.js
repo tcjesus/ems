@@ -1,7 +1,7 @@
 import ZonaService from 'services/ZonaService';
 import DefaultSelect from "./DefaultSelect";
 
-const recordName = 'Zona'
+const recordName = 'Zone'
 const inputName = 'zona';
 const getLabel = (record) => record.nome;
 const service = ZonaService;

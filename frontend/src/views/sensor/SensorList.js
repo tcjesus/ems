@@ -8,4 +8,4 @@ const attributes = [
   (record) => record.especificacoes.map((e) => e.grandeza.nome).join(', ')
 ]
 
-export default DefaultList(SensorService, 'sensores', 'Sensores', headers, attributes);
+export default DefaultList(SensorService, 'sensors', 'Sensores', headers, attributes);

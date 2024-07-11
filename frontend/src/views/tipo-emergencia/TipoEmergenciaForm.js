@@ -5,8 +5,8 @@ import GrandezaService from "services/GrandezaService";
 import TipoEmergenciaService from "services/TipoEmergenciaService";
 import DefaultForm from "views/DefaultForm";
 
-const target = '/admin/tipos-emergencia'
-const resource = 'Tipo de Emergência'
+const target = '/admin/emergency-types'
+const resource = 'Emergency Types'
 const service = TipoEmergenciaService
 const initalRecord = {
   id: '',

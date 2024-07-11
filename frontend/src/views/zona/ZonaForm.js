@@ -2,7 +2,7 @@ import { Col, FormGroup, Input, Row } from "reactstrap";
 import ZonaService from "services/ZonaService";
 import DefaultForm from "views/DefaultForm";
 
-const target = '/admin/zonas'
+const target = '/admin/zones'
 const resource = 'Zona'
 const service = ZonaService
 const initalRecord = {

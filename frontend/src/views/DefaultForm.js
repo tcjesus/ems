@@ -62,7 +62,7 @@ const DefaultForm = (target, resource, service, initialRecord, buildForm) => {
             <div className="col">
               <Card className="bg-default shadow">
                 <CardHeader className="bg-transparent border-0">
-                  <h3 className="text-white mb-0">{id ? `Editar ${resource}` : `Adicionar ${resource}`}</h3>
+                  <h3 className="text-white mb-0">{id ? `Edit ${resource}` : `Add ${resource}`}</h3>
                 </CardHeader>
                 <CardBody>
                   <Form>
@@ -81,14 +81,14 @@ const DefaultForm = (target, resource, service, initialRecord, buildForm) => {
                             navigate(target);
                           }}
                         >
-                          Cancelar
+                          Cancel
                         </Button>
 
                         <Button
                           color="success"
                           onClick={save}
                         >
-                          Salvar
+                          Save
                         </Button>
                       </div>
                     </div>

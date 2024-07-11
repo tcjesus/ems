@@ -10,8 +10,8 @@ import GrandezaSelect from "components/Selects/GrandezaSelect";
 import { Col, FormGroup } from "reactstrap";
 import SensorService from "services/SensorService";
 
-const target = '/admin/sensores'
-const resource = 'Zona'
+const target = '/admin/sensors'
+const resource = 'Zone'
 const service = SensorService
 
 const EspecificacaoComponent = ({ index, id, grandeza, valorMinimo, valorMaximo, sinal, onChange, enableRemove, onRemove }) => {
@@ -228,7 +228,7 @@ const SensorForm = () => {
           <div className="col">
             <Card className="bg-default shadow">
               <CardHeader className="bg-transparent border-0">
-                <h3 className="text-white mb-0">{id ? `Editar ${resource}` : `Adicionar ${resource}`}</h3>
+                <h3 className="text-white mb-0">{id ? `Edit ${resource}` : `Add ${resource}`}</h3>
               </CardHeader>
               <CardBody>
                 <Form>

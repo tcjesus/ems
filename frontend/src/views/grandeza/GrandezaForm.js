@@ -2,8 +2,8 @@ import { Col, FormGroup, Input, Row } from "reactstrap";
 import GrandezaService from "services/GrandezaService";
 import DefaultForm from "views/DefaultForm";
 
-const target = '/admin/grandezas'
-const resource = 'Grandeza'
+const target = '/admin/variables'
+const resource = 'Variable'
 const service = GrandezaService
 const initalRecord = {
   id: '',

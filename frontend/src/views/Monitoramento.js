@@ -1,13 +1,16 @@
+import { Chart } from 'chart.js';
 import Header from 'components/Headers/Header';
 import TipoEmergenciaSelect from 'components/Selects/TipoEmergenciaSelect';
 import UdeSelect from 'components/Selects/UdeSelect';
 import ZonaSelect from 'components/Selects/ZonaSelect';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
+import { Line } from 'react-chartjs-2';
 import ReactSelect, { components } from "react-select";
 import { Button, Card, CardBody, CardFooter, CardHeader, Col, Container, FormGroup, Input, Pagination, PaginationItem, PaginationLink, Row, Table } from 'reactstrap';
 import GrandezaService from 'services/GrandezaService';
 import MonitoramentoService from 'services/MonitoramentoService';
+import { chartOptions, parseOptions } from 'variables/charts';
 
 const Option = (props) => {
   return (
@@ -43,64 +46,83 @@ const Monitoramento = () => {
   const [rawDataPagination, setRawDataPagination] = useState([]);
   const [rawDataPages, setRawDataPages] = useState(1);
   const [isLoadingRawData, setIsLoadingRawData] = useState(true);
-  const [rawDataTimer, setRawDataTimer] = useState()
+  const [rawDataTimer, setRawDataTimer] = useState();
+  const [realTimeData, setRealTimeData] = useState({});
+  const [isLoadingRealTimeData, setIsLoadingRealTimeData] = useState(true);
+  const [isLoadingGrandezas, setIsLoadingGrandezas] = useState(true);
+  const [grandezas, setGrandezas] = useState([]);
+  const [grandezasSelected, setGrandezasSelected] = useState([]);
+
+  if (window.Chart) {
+    parseOptions(Chart, chartOptions());
+  }
 
   useEffect(() => {
     async function fetchData() {
       try {
 
-        let parsed = {}
+        let parsed = { ...filters };
 
-        if (filters.dataInicial) { parsed.dataInicial = filters.dataInicial }
-        if (filters.dataFinal) { parsed.dataFinal = filters.dataFinal }
-        if (filters.tipoEmergencia) { parsed.tipoEmergencia = filters.tipoEmergencia.id }
-        if (filters.grandezas?.length) { parsed.grandezas = filters.grandezas.map((g) => g.id) }
-        if (filters.zona) { parsed.zona = filters.zona.id }
-        if (filters.ude) { parsed.ude = filters.ude.id }
-        if (filters.limit) { parsed.limit = filters.limit }
-        if (filters.page) { parsed.page = filters.page }
+        if (parsed.dataInicial) { parsed.dataInicial = filters.dataInicial; }
+        if (parsed.dataFinal) { parsed.dataFinal = filters.dataFinal; }
+        if (parsed.tipoEmergencia) { parsed.tipoEmergencia = filters.tipoEmergencia.id; }
+        if (parsed.grandezas?.length) { parsed.grandezas = filters.grandezas.map((g) => g.id); }
+        if (parsed.zona) { parsed.zona = filters.zona.id; }
+        if (parsed.ude) { parsed.ude = filters.ude.id; }
 
         const response = await MonitoramentoService.listRawData(parsed);
         setRawDataPagination(response);
-        setRawDataPages(Math.ceil(response.total / response.limit))
+        setRawDataPages(Math.ceil(response.total / response.limit));
 
-        MonitoramentoService.request(parsed)
+        const summary = await MonitoramentoService.getSummary(parsed);
+        setRealTimeData(summary);
+
+        MonitoramentoService.request(parsed);
         if (rawDataTimer) {
-          clearTimeout(rawDataTimer)
+          clearTimeout(rawDataTimer);
         }
         const timer = setTimeout(() => {
-          setIsLoadingRawData(true)
+          setIsLoadingRawData(true);
+          setIsLoadingRealTimeData(true);
         }, filters.refreshRate * 1000);
-        setRawDataTimer(timer)
+        setRawDataTimer(timer);
       } catch (error) {
         console.error(error);
-        alert('Erro ao carregar dados brutos!');
+        alert("Erro ao carregar dados de monitoramento!");
       }
     }
-    if (isLoadingRawData) {
+    if (isLoadingRawData || isLoadingRealTimeData) {
       fetchData();
       setIsLoadingRawData(false);
+      setIsLoadingRealTimeData(false);
     }
-  }, [isLoadingRawData, filters, rawDataPagination, rawDataTimer]);
 
-  const [isLoadingGrandezas, setIsLoadingGrandezas] = useState(true);
-  const [grandezas, setGrandezas] = useState([]);
-  const [grandezasSelected, setGrandezasSelected] = useState();
+    return () => {
+      if (rawDataTimer) {
+        clearTimeout(rawDataTimer)
+      }
+    }
+  }, [
+    isLoadingRawData,
+    isLoadingRealTimeData,
+    filters,
+    rawDataPagination,
+    rawDataTimer,
+  ]);
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchGrandezas() {
       try {
         const response = await GrandezaService.list();
         setGrandezas(response);
-        setGrandezasSelected([])
+        setIsLoadingGrandezas(false);
       } catch (error) {
         console.error(error);
         alert('Erro ao carregar grandezas!');
       }
     }
     if (isLoadingGrandezas) {
-      fetchData();
-      setIsLoadingGrandezas(false);
+      fetchGrandezas();
     }
   }, [isLoadingGrandezas]);
 
@@ -108,111 +130,111 @@ const Monitoramento = () => {
     setGrandezasSelected(selected);
     setFilters((prevDados) => ({
       ...prevDados,
-      grandezas: selected.map(s => s.value)
+      grandezas: selected,
     }))
   };
 
-  // Estado para armazenar as informações em tempo real sobre temperatura e pressão
-  const [infoTempoReal] = useState({
-    temperatura: '',
-    pressao: ''
-  });
-
-  // Função para lidar com a mudança nos inputs de monitoramento
   const onChange = (event) => {
     const { name, value } = event.target;
     setFilters((prevDados) => ({
       ...prevDados,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const updatePage = (page) => {
     if (filters.page === page) {
-      return
+      return;
     }
 
     setFilters((prevDados) => ({
       ...prevDados,
-      page
+      page,
     }))
-    setIsLoadingRawData(true)
+    setIsLoadingRawData(true);
+    setIsLoadingRealTimeData(true);
   }
 
-  // Função para renderizar os dados brutos em uma tabela
   const renderDadosBrutos = () => {
     return (
-      <>
-        <Card className="bg-default shadow">
-          <CardHeader className="bg-transparent border-0">
-            <h3 className="text-white mb-0">Dados Brutos</h3>
-          </CardHeader>
-          <Table
-            className="align-items-center table-dark table-flush"
-            responsive
-          >
-            <thead className="thead-dark">
-              <tr>
-                <th scope="col">UDE</th>
-                <th scope="col">Sensor</th>
-                <th scope="col">Grandeza</th>
-                <th scope="col">Valor</th>
-                <th scope="col">Data Inicial</th>
-                <th scope="col">Data Final</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                (!rawDataPagination?.results?.length) ? <tr><td colSpan="6">Nenhum registro encontrado</td></tr>
-                  : (rawDataPagination?.results?.map((item, index) => {
-                    return <tr key={`raw-data-record-${index}`}>
-                      <td>{item.ude.label}</td>
-                      <td>{item.sensor.modelo}</td>
-                      <td>{`${item.grandeza.nome} (${item.grandeza.sigla})`}</td>
-                      <td>{item.valor}</td>
-                      <td>{item.dataInicial}</td>
-                      <td>{item.dataFinal}</td>
+      <Row className="mt-5">
+        <Col>
+          <Card className="bg-default shadow">
+            <CardHeader className="bg-transparent border-0">
+              <h3 className="text-white mb-0">Raw Data</h3>
+            </CardHeader>
+            <Table
+              className="align-items-center table-dark table-flush"
+              responsive
+            >
+              <thead className="thead-dark">
+                <tr>
+                  <th scope="col">EDU</th>
+                  <th scope="col">Sensor</th>
+                  <th scope="col">Variable</th>
+                  <th scope="col">Value</th>
+                  <th scope="col">Start Date</th>
+                  <th scope="col">End Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  !rawDataPagination?.results?.length ? (
+                    <tr>
+                      <td colSpan="6">Records not found</td>
                     </tr>
-                  }))
-              }
-            </tbody>
-          </Table>
-          <CardFooter className="bg-default shadow">
-            <nav aria-label="...">
-              <Pagination
-                className="pagination justify-content-end mb-0"
-                listClassName="justify-content-end mb-0"
-              >
-                <PaginationItem>
-                  <PaginationLink
-                    onClick={() => updatePage(filters.page > 1 ? filters.page - 1 : 1)}
-                  >
-                    <i className="fas fa-angle-left" />
-                    <span className="sr-only">Previous</span>
-                  </PaginationLink>
-                </PaginationItem>
-                {filters.page > 1 && (<PaginationItem>
-                  <PaginationLink onClick={() => updatePage(filters.page > 1 ? filters.page - 1 : 1)}>{filters.page - 1}</PaginationLink>
-                </PaginationItem>)}
-                <PaginationItem className="active">
-                  <PaginationLink onClick={(e) => e.preventDefault()}>{filters.page}</PaginationLink>
-                </PaginationItem>
-                {rawDataPages && filters.page < rawDataPages && (<PaginationItem>
-                  <PaginationLink onClick={() => updatePage(filters.page < rawDataPages ? filters.page + 1 : rawDataPages)}>{filters.page + 1}</PaginationLink>
-                </PaginationItem>)}
-                <PaginationItem>
-                  <PaginationLink
-                    onClick={() => updatePage(filters.page < rawDataPages ? filters.page + 1 : rawDataPages)}
-                  >
-                    <i className="fas fa-angle-right" />
-                    <span className="sr-only">Next</span>
-                  </PaginationLink>
-                </PaginationItem>
-              </Pagination>
-            </nav>
-          </CardFooter>
-        </Card>
-      </>
+                  ) : (
+                    rawDataPagination?.results?.map((item, index) => {
+                      return <tr key={`raw-data-record-${index}`}>
+                        <td>{item.ude.label}</td>
+                        <td>{item.sensor.modelo}</td>
+                        <td>{`${item.grandeza.nome} (${item.grandeza.sigla})`}</td>
+                        <td>{item.valor}</td>
+                        <td>{item.dataInicial}</td>
+                        <td>{item.dataFinal}</td>
+                      </tr>
+                    })
+                  )
+                }
+              </tbody>
+            </Table>
+            <CardFooter className="bg-default shadow">
+              <nav aria-label="...">
+                <Pagination
+                  className="pagination justify-content-end mb-0"
+                  listClassName="justify-content-end mb-0"
+                >
+                  <PaginationItem>
+                    <PaginationLink
+                      onClick={() => updatePage(filters.page > 1 ? filters.page - 1 : 1)}
+                    >
+                      <i className="fas fa-angle-left" />
+                      <span className="sr-only">Previous</span>
+                    </PaginationLink>
+                  </PaginationItem>
+                  {filters.page > 1 && (<PaginationItem>
+                    <PaginationLink onClick={() => updatePage(filters.page > 1 ? filters.page - 1 : 1)}>{filters.page - 1}</PaginationLink>
+                  </PaginationItem>)}
+                  <PaginationItem className="active">
+                    <PaginationLink onClick={(e) => e.preventDefault()}>{filters.page}</PaginationLink>
+                  </PaginationItem>
+                  {rawDataPages && filters.page < rawDataPages ? (<PaginationItem>
+                    <PaginationLink onClick={() => updatePage(filters.page < rawDataPages ? filters.page + 1 : rawDataPages)}>{filters.page + 1}</PaginationLink>
+                  </PaginationItem>) : <></>}
+                  <PaginationItem>
+                    <PaginationLink
+                      onClick={() => updatePage(filters.page < rawDataPages ? filters.page + 1 : rawDataPages || 1)}
+                    >
+                      <i className="fas fa-angle-right" />
+                      <span className="sr-only">Next</span>
+                    </PaginationLink>
+                  </PaginationItem>
+                </Pagination>
+              </nav>
+            </CardFooter>
+          </Card>
+        </Col>
+      </Row>
     );
   };
 
@@ -222,9 +244,9 @@ const Monitoramento = () => {
       <Container className="mt--7" fluid>
         <Row className="mt-5">
           <Col>
-            <Card className="bg-default shadow">
+            <Card className="bg-default shadow mb-4">
               <CardHeader className="bg-transparent border-0">
-                <h3 className="text-white mb-0">Monitoramento</h3>
+                <h3 className="text-white mb-0">Monitoring</h3>
               </CardHeader>
               <CardBody>
                 <div className="pl-lg-4">
@@ -233,9 +255,9 @@ const Monitoramento = () => {
                       <FormGroup className="mb-0">
                         <label
                           className="form-control-label mb-0"
-                          for={`input-data-inicial`}
+                          htmlFor={`input-data-inicial`}
                         >
-                          Data Inicial
+                          Start Date
                         </label>
                         <Input
                           id="input-data-inicial"
@@ -249,9 +271,9 @@ const Monitoramento = () => {
                       <FormGroup className="mb-0">
                         <label
                           className="form-control-label mb-0"
-                          for={`input-data-final`}
+                          htmlFor={`input-data-final`}
                         >
-                          Data Final
+                          End Date
                         </label>
                         <Input
                           id="input-data-final"
@@ -265,9 +287,9 @@ const Monitoramento = () => {
                       <FormGroup className="mb-0">
                         <label
                           className="form-control-label mb-0"
-                          for={`input-tipo-emergencia`}
+                          htmlFor={`input-tipo-emergencia`}
                         >
-                          Tipo de Emergência
+                          Emergency Type
                         </label>
                         <TipoEmergenciaSelect
                           id={`input-tipo-emergencia`}
@@ -284,9 +306,9 @@ const Monitoramento = () => {
                       <FormGroup className="mb-0">
                         <label
                           className="form-control-label mb-0"
-                          for={`input-zona`}
+                          htmlFor={`input-zona`}
                         >
-                          Zona
+                          Zone
                         </label>
                         <ZonaSelect
                           id="input-zona"
@@ -301,9 +323,9 @@ const Monitoramento = () => {
                       <FormGroup className="mb-0">
                         <label
                           className="form-control-label mb-0"
-                          for={`input-ude`}
+                          htmlFor={`input-ude`}
                         >
-                          UDE
+                          EDU
                         </label>
                         <UdeSelect
                           id="input-ude"
@@ -319,17 +341,20 @@ const Monitoramento = () => {
                         <label
                           className="form-control-label"
                         >
-                          Grandezas
+                          Variables
                         </label>
                         <ReactSelect
                           id="input-grandezas"
                           className="form-control-alternative form-control-partial"
-                          options={grandezas.map((g) => ({ value: g, label: `${g.nome} (${g.sigla})` }))}
+                          options={grandezas.map((g) => ({
+                            value: g,
+                            label: `${g.nome} (${g.sigla})`
+                          }))}
                           isMulti
                           closeMenuOnSelect={false}
                           hideSelectedOptions={false}
                           components={{
-                            Option
+                            Option,
                           }}
                           onChange={grandezasOnChange}
                           allowSelectAll={true}
@@ -344,31 +369,35 @@ const Monitoramento = () => {
                       <FormGroup className="mb-0">
                         <label
                           className="form-control-label mb-0"
-                          for="input-refresh-rate"
+                          htmlFor="input-refresh-rate"
                         >
-                          Taxa de Atualização
+                          Update Rate
                         </label>
                         <Input
                           id="input-refresh-rate"
                           className="form-control-alternative"
                           type="number"
-                          placeholder="(Em segundos)"
+                          placeholder="(In seconds)"
                           name="refreshRate"
                           onChange={(e) => {
-                            onChange(e)
-                            setIsLoadingRawData(true)
+                            onChange(e);
+                            setIsLoadingRawData(true);
+                            setIsLoadingRealTimeData(true);
                           }}
                           value={filters.refreshRate}
                         />
                       </FormGroup>
                     </Col>
                   </Row>
-                  <div className="text-right">
+                  <div className="text-right mt-2">
                     <Button
                       color="primary"
-                      onClick={() => setIsLoadingRawData(true)}
+                      onClick={() => {
+                        setIsLoadingRawData(true);
+                        setIsLoadingRealTimeData(true);
+                      }}
                     >
-                      Buscar
+                      Search
                     </Button>
                   </div>
                 </div>
@@ -376,32 +405,87 @@ const Monitoramento = () => {
             </Card>
           </Col>
         </Row>
+        {renderDadosBrutos()}
         <Row className="mt-5">
-          <Col>
-            {renderDadosBrutos()}
-          </Col>
-        </Row>
-        <Row className="mt-5">
-          <Col md="6">
-            <Card className="bg-default shadow">
-              <CardHeader className="bg-transparent border-0">
-                <h3 className="text-white mb-0">Temperatura</h3>
+          {Object.keys(realTimeData).map((key, index) => (
+            <Col md="12" key={index}>
+              <Card className="bg-default shadow mb-4" style={{ height: "400px" }}>
+                <CardHeader className="bg-transparent border-0">
+                  <h3 className="text-white mb-0">{key}</h3>
               </CardHeader>
               <CardBody>
-                <p>{infoTempoReal.temperatura}</p>
+                  {realTimeData[key] &&
+                    realTimeData[key].x &&
+                    realTimeData[key].y && (
+                      <Line
+                        data={{
+                          labels: realTimeData[key].x.map((d) => moment(d).format("DD/MM/YYYY HH:mm:ss")),
+                          datasets: [
+                            {
+                              label: "Valor",
+                              data: realTimeData[key].y,
+                              units: realTimeData[key].units,
+                              borderColor: "rgba(94, 114, 228)",
+                              backgroundColor: "rgba(94, 114, 228, 0.2)",
+                              borderWidth: 2,
+                              lineTension: 0.4,
+                            },
+                          ],
+                        }}
+                        options={{
+                          scales: {
+                            yAxes: [
+                              {
+                                gridLines: {
+                                  color: "#505050",
+                                  zeroLineColor: "#505050",
+                                },
+                                ticks: {
+                                  callback: (value) => {
+                                    const units = value.units ? ` ${value.units}` : "";
+                                    return `${value}${units}`;
+                                  },
+                                  fontColor: "#ffffff",
+                                },
+                              },
+                            ],
+                            xAxes: [
+                              {
+                                ticks: {
+                                  fontColor: "#ffffff",
+                                },
+                              },
+                            ],
+                          },
+                          tooltips: {
+                            callbacks: {
+                              label: (item, data) => {
+                                let label = data.datasets[item.datasetIndex].label || "";
+                                let yLabel = item.yLabel;
+                                let content = "";
+
+                                if (data.datasets.length > 1) {
+                                  content += label;
+                                }
+
+                                const units = yLabel.units ? ` ${yLabel.units}` : "";
+
+                                content += `${yLabel}${units}`;
+                                return content;
+                              },
+                            },
+                            backgroundColor: "#ffffff",
+                            titleFontColor: "#212529",
+                            bodyFontColor: "#212529",
+                          },
+                        }}
+                        getDatasetAtEvent={(e) => console.log(e)}
+                      />
+                    )}
               </CardBody>
             </Card>
           </Col>
-          <Col md="6">
-            <Card className="bg-default shadow">
-              <CardHeader className="bg-transparent border-0">
-                <h3 className="text-white mb-0">Pressão</h3>
-              </CardHeader>
-              <CardBody>
-                <p>{infoTempoReal.pressao}</p>
-              </CardBody>
-            </Card>
-          </Col>
+          ))}
         </Row>
       </Container>
     </>

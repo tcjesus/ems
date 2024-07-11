@@ -5,7 +5,7 @@ import CidadeService from 'services/CidadeService';
 const getLabel = (record) => `${record.nome}`;
 const service = CidadeService;
 
-const BuiltSelect = ({ id = 'input-cidade', name = 'cidade', value: record = '', estado = null, onChange = null, placeholder = `Selecione uma Cidade` }) => {
+const BuiltSelect = ({ id = 'input-cidade', name = 'cidade', value: record = '', estado = null, onChange = null, placeholder = `Select a City` }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [options, setOptions] = useState([]);
   const [value, setValue] = useState(record?.id);

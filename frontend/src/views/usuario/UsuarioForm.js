@@ -11,8 +11,8 @@ import { Button, Card, CardBody, CardHeader, Container, Form, Input, Row } from 
 import { Col, FormGroup } from "reactstrap";
 import UsuarioService from "services/UsuarioService";
 
-const target = '/admin/usuarios'
-const resource = 'Usuário'
+const target = '/admin/users'
+const resource = 'User'
 const service = UsuarioService
 
 const PermissionComponent = ({ index, id, localidade, role, onChange, enableRemove, onRemove }) => {
@@ -51,7 +51,7 @@ const PermissionComponent = ({ index, id, localidade, role, onChange, enableRemo
                 className="form-control-label"
                 htmlFor={`input-permission-estado-${index}`}
               >
-                Estado
+                State
               </label>
               <EstadoSelect
                 id={`input-permission-estado-${index}`}
@@ -67,7 +67,7 @@ const PermissionComponent = ({ index, id, localidade, role, onChange, enableRemo
                 className="form-control-label"
                 htmlFor={`input-permission-cidade-${index}`}
               >
-                Cidade
+                City
               </label>
               <CidadeSelect
                 id={`input-permission-cidade-${index}`}
@@ -96,9 +96,9 @@ const PermissionComponent = ({ index, id, localidade, role, onChange, enableRemo
                 value={role}
               >
                 <option value="">Selecione uma Role</option>
-                <option value="ADMIN">Administrador</option>
-                <option value="USER">Usuário</option>
-                <option value="GUEST">Convidado</option>
+                <option value="ADMIN">Admin</option>
+                <option value="USER">User</option>
+                <option value="GUEST">Guest</option>
               </Input>
             </FormGroup>
           </Col>
@@ -215,7 +215,7 @@ const UsuarioForm = () => {
           <div className="col">
             <Card className="bg-default shadow">
               <CardHeader className="bg-transparent border-0">
-                <h3 className="text-white mb-0">{id ? `Editar ${resource}` : `Adicionar ${resource}`}</h3>
+                <h3 className="text-white mb-0">{id ? `Edit ${resource}` : `Add ${resource}`}</h3>
               </CardHeader>
               <CardBody>
                 <Form>
@@ -233,7 +233,7 @@ const UsuarioForm = () => {
                             className="form-control-label"
                             htmlFor="input-nome"
                           >
-                            Nome
+                            Name
                           </label>
                           <Input
                             id="input-nome"
@@ -272,7 +272,7 @@ const UsuarioForm = () => {
                             className="form-control-label"
                             htmlFor="input-password"
                           >
-                            Senha
+                            Password
                           </label>
                           <Input
                             id="input-password"
@@ -303,7 +303,7 @@ const UsuarioForm = () => {
                             htmlFor={`input-is-super-admin`}
                           >
                             <span className="text-muted">
-                              É um SUPER ADMIN?
+                              Is SUPER ADMIN?
                             </span>
                           </label>
                         </FormGroup>
@@ -313,7 +313,7 @@ const UsuarioForm = () => {
                       <Col lg="12">
                         <FormGroup>
                           <div className="d-flex align-items-center">
-                            <h4 className="mb-0 text-white">Permissões</h4>
+                            <h4 className="mb-0 text-white">Permissions</h4>
                             <Button
                               className="ml-3 rounded-circle shadow"
                               color="primary"
@@ -359,14 +359,14 @@ const UsuarioForm = () => {
                           navigate(target);
                         }}
                       >
-                        Cancelar
+                        Cancel
                       </Button>
 
                       <Button
                         color="success"
                         onClick={save}
                       >
-                        Salvar
+                        Save
                       </Button>
                     </div>
                   </div>

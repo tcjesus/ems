@@ -84,12 +84,12 @@ const DefaultList = (service, resource, recordsName, headers, attributes) => {
                     navigate(`/admin/${resource}/edit/${record.id}`);
                   }}
                 >
-                  Editar
+                  Edit
                 </DropdownItem>
                 <DropdownItem
                   onClick={() => deleteRecord(record.id)}
                 >
-                  Remover
+                  Remove
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
@@ -107,7 +107,7 @@ const DefaultList = (service, resource, recordsName, headers, attributes) => {
               <Card className="bg-default shadow">
                 <CardHeader className="bg-transparent border-0">
                   <div className="d-flex justify-content-between">
-                    <h3 className="text-white mb-0">Gerenciamento de {recordsName}</h3>
+                    <h3 className="text-white mb-0">{recordsName} Management</h3>
                     <Button
                       color="primary"
                       size="sm"
@@ -115,7 +115,7 @@ const DefaultList = (service, resource, recordsName, headers, attributes) => {
                         navigate(`/admin/${resource}/edit`);
                       }}
                     >
-                      Adicionar
+                      Add
                     </Button>
                   </div>
                 </CardHeader>
@@ -135,7 +135,7 @@ const DefaultList = (service, resource, recordsName, headers, attributes) => {
                   </thead>
                   <tbody>
                     {
-                      (results.length === 0) ? <tr><td colSpan="5">Nenhum registro encontrado</td></tr>
+                      (results.length === 0) ? <tr><td colSpan="5">Records not found</td></tr>
                         : results?.map((record) => {
                           return <RecordRow key={record.id} {...record} />
                         })

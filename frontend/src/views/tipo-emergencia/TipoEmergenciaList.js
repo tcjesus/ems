@@ -8,4 +8,4 @@ const attributes = [
   (record) => record.grandezas.map((g) => g.nome).join(', ')
 ]
 
-export default DefaultList(TipoEmergenciaService, 'tipos-emergencia', 'Tipos de Emergência', headers, attributes);
+export default DefaultList(TipoEmergenciaService, 'emergency-types', 'Tipos de Emergência', headers, attributes);
