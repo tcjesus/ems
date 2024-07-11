@@ -19,54 +19,54 @@ import { MigrationInterface, QueryRunner } from "typeorm";
 */
 const sensors = [
   {
-    modelo: 'Sensor de Temperatura',
-    descricao: 'Sensor de temperatura genérico',
+    modelo: 'Generic MD-0123',
+    descricao: 'Generic temperature sensor',
     especificacoes: [
-      { grandeza: 'Temperatura', valorMinimo: 0, valorMaximo: 100, sinal: 'DIGITAL' },
+      { grandeza: 'Temperature', valorMinimo: 0, valorMaximo: 100, sinal: 'DIGITAL' },
     ],
   },
   {
-    modelo: 'Sensor de Fumaça',
-    descricao: 'Sensor de fumaça genérico',
+    modelo: 'Generic MD-4567',
+    descricao: 'Generic smoke sensor',
     especificacoes: [
-      { grandeza: 'Fumaça', valorMinimo: 0, valorMaximo: 50, sinal: 'DIGITAL' },
+      { grandeza: 'Smoke', valorMinimo: 0, valorMaximo: 50, sinal: 'DIGITAL' },
     ],
   },
   {
-    modelo: 'Sensor de Gás',
-    descricao: 'Sensor de gás genérico',
+    modelo: 'Generic MD-6789',
+    descricao: 'Generic gas sensor',
     especificacoes: [
-      { grandeza: 'Gás', valorMinimo: 0, valorMaximo: 200, sinal: 'DIGITAL' },
+      { grandeza: 'Gas', valorMinimo: 0, valorMaximo: 200, sinal: 'DIGITAL' },
     ],
   },
   {
-    modelo: 'Sensor de Umidade',
-    descricao: 'Sensor de umidade genérico',
+    modelo: 'Generic MD-9876',
+    descricao: 'Generic humidity sensor',
     especificacoes: [
-      { grandeza: 'Umidade', valorMinimo: 0, valorMaximo: 100, sinal: 'ANALOGICO' },
+      { grandeza: 'Humidity', valorMinimo: 0, valorMaximo: 100, sinal: 'ANALOGICO' },
     ],
   },
   {
-    modelo: 'Sensor de Pressão',
-    descricao: 'Sensor de pressão genérico',
+    modelo: 'Generic MD-4321',
+    descricao: 'Generic pression sensor',
     especificacoes: [
-      { grandeza: 'Pressão', valorMinimo: 0, valorMaximo: 10, sinal: 'DIGITAL' },
+      { grandeza: 'Pression', valorMinimo: 0, valorMaximo: 10, sinal: 'DIGITAL' },
     ],
   },
   {
-    modelo: 'Sensor de Temperatura e Pressão',
-    descricao: 'Sensor de temperatura e pressão genérico',
+    modelo: 'Generic MD-3241',
+    descricao: 'Generic temperature and pression sensor',
     especificacoes: [
-      { grandeza: 'Temperatura', valorMinimo: 0, valorMaximo: 100, sinal: 'DIGITAL' },
-      { grandeza: 'Pressão', valorMinimo: 0, valorMaximo: 10, sinal: 'DIGITAL' },
+      { grandeza: 'Temperature', valorMinimo: 0, valorMaximo: 100, sinal: 'DIGITAL' },
+      { grandeza: 'Pression', valorMinimo: 0, valorMaximo: 10, sinal: 'DIGITAL' },
     ],
   },
   {
-    modelo: 'Sensor de Temperatura e Umidade',
-    descricao: 'Sensor de temperatura e umidade genérico',
+    modelo: 'Generic MD-5432',
+    descricao: 'Generic temperature and humidity sensor',
     especificacoes: [
-      { grandeza: 'Temperatura', valorMinimo: 0, valorMaximo: 100, sinal: 'DIGITAL' },
-      { grandeza: 'Umidade', valorMinimo: 0, valorMaximo: 100, sinal: 'ANALOGICO' },
+      { grandeza: 'Temperature', valorMinimo: 0, valorMaximo: 100, sinal: 'DIGITAL' },
+      { grandeza: 'Humidity', valorMinimo: 0, valorMaximo: 100, sinal: 'ANALOGICO' },
     ],
   },
 ]

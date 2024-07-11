@@ -2,33 +2,33 @@ import { MigrationInterface, QueryRunner } from "typeorm";
 
 const grandezas: { nome: string; unidadeMedida: string; sigla: string }[] = [
   {
-    nome: 'Temperatura',
+    nome: 'Temperature',
     unidadeMedida: 'Celsius',
     sigla: '°C',
   },
   {
-    nome: 'Pressão',
-    unidadeMedida: 'Atmosfera',
+    nome: 'Pression',
+    unidadeMedida: 'Atmosphere',
     sigla: 'atm',
   },
   {
-    nome: 'Umidade',
-    unidadeMedida: 'Porcentagem',
+    nome: 'Humidity',
+    unidadeMedida: '`Percentage`',
     sigla: '%',
   },
   {
-    nome: 'Luminosidade',
+    nome: 'Luminosity',
     unidadeMedida: 'Lux',
     sigla: 'lx',
   },
   {
-    nome: 'Fumaça',
-    unidadeMedida: 'Partículas por milhão',
+    nome: 'Smoke',
+    unidadeMedida: 'Particles per million',
     sigla: 'ppm',
   },
   {
-    nome: 'Gás',
-    unidadeMedida: 'Partículas por milhão',
+    nome: 'Gas',
+    unidadeMedida: 'Particles per million',
     sigla: 'ppm',
   }
 ]

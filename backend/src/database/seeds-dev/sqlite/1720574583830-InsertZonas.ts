@@ -4,11 +4,11 @@ import { CidadeModel } from "@/locality/models/CidadeModel";
 import { LocalidadeModel } from "@/locality/models/LocalidadeModel";
 
 const zonas = [
-  { nome: 'Zona 1 (UEFS)', localidade: 'Feira de Santana' },
-  { nome: 'Zona 2 (Centro)', localidade: 'Feira de Santana' },
-  { nome: 'Zona 3 (SIM)', localidade: 'Feira de Santana' },
-  { nome: 'Zona 4 (Tomba)', localidade: 'Feira de Santana' },
-  { nome: 'Zona 5 (Vila Olimpia)', localidade: 'Feira de Santana' },
+  { nome: 'Zone 1 (UEFS)', localidade: 'Feira de Santana' },
+  { nome: 'Zone 2 (Centro)', localidade: 'Feira de Santana' },
+  { nome: 'Zone 3 (SIM)', localidade: 'Feira de Santana' },
+  { nome: 'Zone 4 (Tomba)', localidade: 'Feira de Santana' },
+  { nome: 'Zone 5 (Vila Olimpia)', localidade: 'Feira de Santana' },
 ]
 
 export class InsertZonas1720574583830 implements MigrationInterface {

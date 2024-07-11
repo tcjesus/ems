@@ -5,23 +5,23 @@ import { LocalidadeModel } from "@/locality/models/LocalidadeModel";
 
 const tiposEmergencia = [
   {
-    nome: 'Incêndio',
-    grandezas: ['Temperatura', 'Fumaça', 'Gás'],
+    nome: 'Fire',
+    grandezas: ['Temperature', 'Smoke', 'Gas'],
     localidade: 'Feira de Santana',
   },
   {
-    nome: 'Inundação',
-    grandezas: ['Temperatura', 'Umidade'],
+    nome: 'Flood',
+    grandezas: ['Temperature', 'Humidity'],
     localidade: 'Feira de Santana',
   },
   {
-    nome: 'Deslizamento',
-    grandezas: ['Temperatura', 'Umidade'],
+    nome: 'Landslide',
+    grandezas: ['Temperature', 'Humidity'],
     localidade: 'Feira de Santana',
   },
   {
-    nome: 'Explosão',
-    grandezas: ['Temperatura', 'Gás', 'Pressão'],
+    nome: 'Explosion',
+    grandezas: ['Temperature', 'Gas', 'Pression'],
     localidade: 'Feira de Santana',
   },
 ]

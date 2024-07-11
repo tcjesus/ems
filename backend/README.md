@@ -36,6 +36,12 @@ npm run start:dev
 npm run start:dev
 ```
 
+For development prupose, you can run following command to seed database with fake data:
+
+```bash
+npm run seed:dev:run
+```
+
 ## Working with migrations
 
 ```bash
