@@ -1,0 +1,26 @@
+{
+    "type": "MPC",
+    "mac": "45:f9:c2:c5:40:79",
+    "id": 4,
+    "zone": 1,
+    "latitude": 15.3456,
+    "longitude": -85.8765,
+    "active_sensors": [
+        {
+            "variable": "humidity",
+            "model": "DHT11",
+            "sample_interval": 4,
+            "min_variation_rate": 0.2
+        }
+    ],
+    "emergencies": {
+        "flood": [
+            {
+                "humidity": {
+                    "min": -9999,
+                    "max": 93
+                }
+            }
+        ]
+    }
+}

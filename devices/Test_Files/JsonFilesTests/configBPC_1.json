@@ -1,0 +1,80 @@
+{
+    "type": "BPC",
+    "mac": "A8:48:FA:DC:BC:60",
+    "id": 2,
+    "zone": 1,
+    "latitude": 15.3456,
+    "longitude": -85.8765,
+    "active_sensors":
+    [
+        {
+            "variable": "luminosity",
+            "model": "lm393",
+            "sample_interval": 2,
+            "min_variation_rate": 0.1
+        },
+        {
+            "variable": "uv",
+            "model": "potentiometer",
+            "sample_interval": 3,
+            "min_variation_rate": 0.2
+        },
+        {
+            "variable": "humidity",
+            "model": "DHT11",
+            "sample_interval": 5,
+            "min_variation_rate": 0.8
+        },
+        {
+            "variable": "temperature",
+            "model": "DHT11",
+            "sample_interval": 4,
+            "min_variation_rate": 0.2
+        }
+    ],
+    "emergencies":
+    {
+        "fire":
+        [
+            {
+                "luminosity":
+                {
+                    "min": -9999,
+                    "max": 1
+                },
+                "temperature":
+                {
+                    "min": -9999,
+                    "max": 60
+                }
+            },
+            {
+                " temperature":
+                {
+                    "min": -9999,
+                    "max": 80
+                },
+                "humidity":
+                {
+                    "min": -9999,
+                    "max": 50
+                }
+            }
+        ],
+        "flood":
+        [
+            {
+                "humidity":
+                {
+                    "min": -9999,
+                    "max": 80
+                },
+                "uv":
+                {
+                    "min": 100,
+                    "max": 900
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,54 @@
+{
+    "type": "APC",
+    "mac": "4c:82:a9:81:de:63",
+    "id": 1,
+    "zone": 1,
+    "latitude": 12.3456,
+    "longitude": -73.8765,
+    "active_sensors": [
+        {
+            "variable": "temperature",
+            "model": "temp1",
+            "sample_interval": 1,
+            "min_variation_rate": 0
+        },
+        {
+            "variable": "humidity",
+            "model": "humid1",
+            "sample_interval": 1,
+            "min_variation_rate": 0
+        }
+    ],
+    "emergencies": {
+        "fire": [
+            {
+                "temperature": {
+                    "min": -9999,
+                    "max": 50
+                },
+                "humidity": {
+                    "min": 10,
+                    "max": 9999
+                }
+            },
+            {
+                "temperature": {
+                    "min": -9999,
+                    "max": 45
+                },
+                "humidity": {
+                    "min": -9999,
+                    "max": 20
+                }
+            }
+        ],
+        "flood": [
+            {
+                "humidity": {
+                    "min": -9999,
+                    "max": 85
+                }
+            }
+        ]
+    }
+}

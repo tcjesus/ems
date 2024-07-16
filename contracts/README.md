@@ -30,7 +30,6 @@
   }
 }
 ```
-
 ### Request Monitoring Data
 #### Request:
 **Topics:**
@@ -66,6 +65,118 @@
   ]
 }
 ```
+## Communication between devices in the Sensor Network
+### Configuration process between HPC and Nodes
+#### Node Request:
+**Topic:** `uefs/pgcc/device/subscribe`
+```json
+{ "mac": "00:00:00:00:00:00" }
+```
+#### APC Response:
+**Topic (to BPC and MPC):** `uefs/pgcc/device/config/info`
+```json
+{"mac": "00:00:00:00:00:00", "type": "XXX", "id": 0, "zone": 0,"latitude": 00.000,"longitude": 00.000}
+```
+**Topic (to BPC and MPC):** `uefs/pgcc/device/config/sensors`
+```json
+{
+   "mac":"00:00:00:00:00:00",
+   "s":[{"v":"xxxxxx", "md":"xxxxx", "si":0, "r":0.5}]
+}
+```
+**Topic (to BPC and MPC):** `uefs/pgcc/device/config/emg`
+```json
+{
+   "mac":"00:00:00:00:00:00",
+   "emg":{
+      "fire": [{ "humidity":{ "min":-9999, "max": 9999 }, "temperature":{ "min":-9999, "max": 9999 } } ]
+    }
+}
 
+{
+   "mac":"00:00:00:00:00:00",
+   "emg":{
+      "flood":[{ "humidity":{ "min":-9999, "max": 9999 }, "vibration":{ "min":-9999, "max": 9999 } } ]
+   }
+}
+```
+**Topic (only MPC):** `uefs/pgcc/device/config/emgList`
+```json
+{ 
+    "mac": "00:00:00:00:00:00",
+    "emg_list": { "fire": [{ "humidity":{ "min":-9999, "max": 9999 }, "temperature":{ "min":-9999, "max": 9999 } } ] }
+}
 
-## Integrations between devices
+{ 
+    "mac": "00:00:00:00:00:00",
+    "emg_list": { "flood":[{ "humidity":{ "min":-9999, "max": 9999 }, "vibration":{ "min":-9999, "max": 9999 } } ] }
+}
+```
+**Topic (only MPC):** `uefs/pgcc/device/update_node_table`
+```json
+{
+    "id":      0,
+    "id_node": 0,
+    "zone":    0,
+    "s": [
+        {"v": "temperature", "md": "modelo_xxx"},
+        {"v": "humidity"   , "md": "modelo_xxx"},
+        {"v": "pression"   , "md": "modelo_xxx"},
+        {"v": "gas"        , "md": "modelo_xxx"},
+        {"v": "uv"         , "md": "modelo_xxx"}
+    ]
+}
+```
+### Sensoring and alert Process
+#### Node Package
+**Topic:** `uefs/pgcc/device/status`
+```json
+{
+    "type": "MPC",
+    "id":   0,
+    "zone": 0,
+    "timestamp": 121546456
+}
+```
+#### MPC Response
+**Topic:** `uefs/pgcc/device/status/response/:device_id`
+```json
+{
+    "type": "MPC",
+    "dev_id": 0,
+    "timestamp": 121546456
+}
+```
+#### Node Package
+**Topic:** `uefs/pgcc/device/sensoring`
+```json
+{
+    "mpcId": 0,
+    "id":    0,
+    "zone":  0,
+    "timestamp": 12315465,
+    "emergency": {"fire":{"sensor": ["temperature"], "value": [70]}}
+}
+```
+## Data request process by MPCs
+#### MPC Request
+**Topic:** `uefs/pgcc/device/request_data`
+```json
+{
+    "id_request": 0,
+    "id_node":    0,
+    "zone":       0,
+    "sensor":     "xxxxxx"
+}
+```
+#### Node response
+**Topic:** `uefs/pgcc/device/required_values`
+```json
+{
+    "id_request":  0,
+    "id_node":     0,
+    "id_node_req": 0,
+    "sensor":      "xxxxxx",
+    "value":       0.0
+}
+```
