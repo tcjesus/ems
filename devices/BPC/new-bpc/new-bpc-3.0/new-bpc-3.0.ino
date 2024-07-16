@@ -120,8 +120,8 @@ void configEmg(DynamicJsonDocument pkg){
           for (JsonPair sensorKeyValue : sensor) {
               String sensorType      = sensorKeyValue.key().c_str();
               JsonObject thresholds  = sensorKeyValue.value().as<JsonObject>();
-              float thresholdMinimo  = ((int) thresholds["min"] == 9999) ? INFINIT : thresholds["min"];
-              float thresholdMaximo  = ((int) thresholds["max"] == 9999) ? INFINIT : thresholds["max"];
+              float thresholdMinimo  = (int) thresholds["min"];
+              float thresholdMaximo  = (int) thresholds["max"];
 
               emg_sensing.sensor_variable.push_back(sensorType);
               emg_sensing.min_threshold.push_back(thresholdMinimo);
@@ -385,6 +385,9 @@ void loop() {
             }else if(strcmp(pkg_received["topic"], topic_request_realtime_data_device.c_str()) == 0){
                 Serial.println("[INFO] STATE SEND REALTIME DATA");
                 next_state = STATE_CHOOSE_SENSOR;
+            }else if(flag_FS_isFull){
+                Serial.println("[INFO] STATE SEND REALTIME DATA");
+                next_state = STATE_CHOOSE_SENSOR;
             }
         }else if(isSensoring){
             Serial.println("[INFO] SENSORING PROCESS");
@@ -420,17 +423,9 @@ void loop() {
                                     // Don't exist reading for this sensor.
                                     if(sensorValue == INFINIT){ continue; }
                                     // Checks thresholds of sensor according to emergency
-                                    if(s.min_threshold[i] == INFINIT){
-                                        // Uses only max threshold
-                                        if(sensorValue >= s.max_threshold[i]){ alert = true; isAnomalous = true; }
-                                    }
-                                    else if(s.max_threshold[i] == INFINIT){
-                                        // Uses only min threshold
-                                        if(sensorValue <= s.min_threshold[i]){ alert = true; isAnomalous = true; }
-                                    }
-                                    else{
-                                        // Uses interval threshold
-                                        if( (sensorValue <= s.min_threshold[i]) || ((sensorValue >= s.max_threshold[i])) ){ alert = true; isAnomalous = true; }
+                                    if(sensorValue < s.min_threshold[i] || sensorValue > s.max_threshold[i]){
+                                          alert       = true;
+                                          isAnomalous = true;
                                     }
                                 }
 
@@ -482,54 +477,55 @@ void loop() {
             flag_sensoring = true; // Enables the sensoring flag
         }
         break;
-        case(STATE_READ_SENSOR_REQUESTED):
-            flag = false;   // Disables the sensor reading;
-            if( (int) pkg_received["zone"] == edu_Zone ) {
-                msg_json["id_request"]  = (int) pkg_received["id_request"];
-                msg_json["id_node"]     = edu_ID;
-                msg_json["sensor"]      = pkg_received["sensor"];
-                for(Sensor sr : device_sensors){
-                    if(sr.isActive){
-                      if(strcmp(sr.variable.c_str(), pkg_received["sensor"]) == 0){
-                          msg_json["value"] = getSensorValue(sr.variable);
-                          Serial.print("\t [INFO] Sending sensor data requested: ");
-                          Serial.println((const char*) pkg_received["sensor"]);
-                          serializeJson(msg_json, payload);
-                          mqttClient.publish(topic_required_values, payload, false);
-                      } 
-                    }
-                } 
-            }
-            pkg_received.clear();
-            flag       = true;   // Enables the sensor reading;
-            Serial.println("[STATE PROCESS PACKAGES]");
-            next_state = STATE_PROCESS_PACKAGES;
-            break;
-        case(STATE_PROCESS_ANOMALY):
-            {
-                //Waits five seconds by a response, if no one response, go back to normal process.
-                unsigned long countDuration  = 10 * 1000;
-                unsigned long currentMillis  = millis();
-                if( (currentMillis - currentTimestamp) < countDuration){
-                    if(mqttClient.have_newStatusPackage()){
-                        pkg_received = formatMqttMessage( mqttClient.getStatusPackage() );
-                        if(pkg_received["timestamp"] == anomalyEventTimeStamp){
-                            memset(payload, '\0', sizeof(payload));
-                            pkg_anomaly["mpcId"] = pkg_received["dev_id"];
-                            serializeJson(pkg_anomaly, payload);
-                            Serial.print("\t [Process Anomaly] Sending Alert Message: ");
-                            Serial.println(payload);
-                            mqttClient.publish(topic_sensoring, payload, false);
-                            Serial.println("[STATE PROCESS PACKAGES]");
-                            next_state = STATE_PROCESS_PACKAGES;
-                        }
-                    }
-                }else{ 
-                    Serial.println("[STATE PROCESS PACKAGES]");
-                    next_state = STATE_PROCESS_PACKAGES;
+    case(STATE_READ_SENSOR_REQUESTED):
+        flag = false;   // Disables the sensor reading;
+        if( (int) pkg_received["zone"] == edu_Zone ) {
+            msg_json["id_request"]  = (int) pkg_received["id_request"];
+            msg_json["id_node"]     = edu_ID;
+            msg_json["sensor"]      = pkg_received["sensor"];
+            msg_json["id_node_req"] = pkg_received["id_node"];
+            for(Sensor sr : device_sensors){
+                if(sr.isActive){
+                    if(strcmp(sr.variable.c_str(), pkg_received["sensor"]) == 0){
+                        msg_json["value"] = getSensorValue(sr.variable);
+                        Serial.print("\t [INFO] Sending sensor data requested: ");
+                        Serial.println((const char*) pkg_received["sensor"]);
+                        serializeJson(msg_json, payload);
+                        mqttClient.publish(topic_required_values, payload, false);
+                    } 
                 }
+            } 
+        }
+        pkg_received.clear();
+        flag       = true;   // Enables the sensor reading;
+        Serial.println("[STATE PROCESS PACKAGES]");
+        next_state = STATE_PROCESS_PACKAGES;
+        break;
+    case(STATE_PROCESS_ANOMALY):
+        {
+            //Waits five seconds by a response, if no one response, go back to normal process.
+            unsigned long countDuration  = 10 * 1000;
+            unsigned long currentMillis  = millis();
+            if( (currentMillis - currentTimestamp) < countDuration){
+                if(mqttClient.have_newStatusPackage()){
+                    pkg_received = formatMqttMessage( mqttClient.getStatusPackage() );
+                    if(pkg_received["timestamp"] == anomalyEventTimeStamp){
+                        memset(payload, '\0', sizeof(payload));
+                        pkg_anomaly["mpcId"] = pkg_received["dev_id"];
+                        serializeJson(pkg_anomaly, payload);
+                        Serial.print("\t [Process Anomaly] Sending Alert Message: ");
+                        Serial.println(payload);
+                        mqttClient.publish(topic_sensoring, payload, false);
+                        Serial.println("[STATE PROCESS PACKAGES]");
+                        next_state = STATE_PROCESS_PACKAGES;
+                    }
+                }
+            }else{ 
+                Serial.println("[STATE PROCESS PACKAGES]");
+                next_state = STATE_PROCESS_PACKAGES;
             }
-            break;
+        }
+        break;
     case(STATE_MONITORING):
         {
             // Mount the json package to store.
@@ -648,7 +644,8 @@ void loop() {
     case(STATE_SEND_REALTIME_DATA):
         {
             if(realTime_Sensor.isEmpty() && !realTime_send_isRunning){
-                next_state = STATE_PROCESS_PACKAGES;
+                next_state     = STATE_PROCESS_PACKAGES;
+                flag_FS_isFull = false;
             }else{
                 if(!realTime_send_isRunning){
                     realTime_send_isRunning = true;

@@ -172,8 +172,6 @@ class APC(EDU):
                 mutex_config.acquire()
                 self.isConfig = True
                 mutex_config.release()
-            else:
-                self.send_nodes_to_MPC()
         elif message.topic == self.mqtt_topics['topic_subscribe']:
             print("[INFO] Enrollment message received")
             msg         = json.loads(str_msg)
@@ -214,16 +212,24 @@ class APC(EDU):
         print("\t Active Sensors: " + str(infoEDU["active_sensors"]) )
         print("\t Emergencies: " + str(infoEDU["emergencies"]) )
 
-    def send_nodes_to_MPC(self):
+    def send_nodes_to_MPC(self, id_dev, zone):
         '''
-        Methods that publishes the updated active nodes table in the specific topic. This way, MPCs will always have this table 
-        updated.
+        Methods that publishes the active nodes table in the specific topic for a MPC device.
         '''
-        msg = {}
-        msg["node_table"] = self.active_nodes_Table.getTable().to_dict()
-        json_msg = json.dumps(msg)
-        print("[INFO] Sending to all MPCs the active nodes table updated.")
-        self.client.publish(self.mqtt_topics['topic_update_node_table'], json_msg)
+        infoEDUs  = self.active_nodes_Table.getNodesByZone(zone)
+        n_dev     = infoEDUs["mac"].keys()
+        for index in n_dev:
+            if( (id_dev != infoEDUs["id"][index]) and (infoEDUs["type"][index] != "APC")):
+                msg              = {}
+                msg["id"]        = id_dev
+                msg["id_node"]   = infoEDUs["id"][index]
+                msg["zone"]      = infoEDUs["zone"][index]
+                msg["s"]         = []
+                for sr_i in infoEDUs["active_sensors"][index]:
+                    sr_obj       = {"v": sr_i["v"], "md": sr_i["md"]}
+                    msg["s"].append(sr_obj)
+                json_msg         = json.dumps(msg)
+                self.client.publish(self.mqtt_topics['topic_update_node_table'], json_msg)
 
     def send_config(self, device_mac, isUpdate):
         configEDU     = self.active_nodes_Table.getNodeByMac(device_mac)
@@ -243,7 +249,8 @@ class APC(EDU):
                         "longitude": configEDU["longitude"],
                         "upd":       isUpdate,
                         "H":         datetime.now().hour,
-                        "M":         datetime.now().minute }
+                        "M":         datetime.now().minute,
+                        "S":         datetime.now().second }
         print("[INFO] Sending info config message to device with MAC: " + device_mac)
         self.client.publish(self.mqtt_topics['topic_config/info'], str(infoPackage))
         time.sleep(1)
@@ -261,13 +268,24 @@ class APC(EDU):
             self.client.publish(self.mqtt_topics['topic_config/emg'], str(emgPackages))
             time.sleep(1)
         # Checks the type 
-        if(configEDU["type"] == "MPC"):
+        if( (configEDU["type"] == "MPC") and (isUpdate == False)):
             print("[INFO] Sending emergency list to device with MAC: " + device_mac)
             # Include the list of emergencies registered by APC
             for emg, value in self.emerg.items():
-                emgList = {"mac": configEDU["mac"], "emg_list":{emg : value}, "upd": isUpdate}
+                emgList = {"mac": configEDU["mac"], "emg_list":{emg : value}}
                 self.client.publish(self.mqtt_topics['topic_config/emgList'], str(emgList))
                 time.sleep(1)
+            print("[INFO] Sending active EDU list to device with MAC: " + device_mac)
+            self.send_nodes_to_MPC(configEDU["id"], configEDU["zone"])
+        else:
+            if((configEDU["type"] != "APC")):
+                msg              = {}
+                msg["id"]        = -1 # All MPC devices need to process this update for its table of active nodes
+                msg["id_node"]   = configEDU["id"]
+                msg["zone"]      = configEDU["zone"]
+                msg["s"]         = configEDU["active_sensors"]
+                json_msg         = json.dumps(msg)
+                self.client.publish(self.mqtt_topics['topic_update_node_table'], json_msg)    
         print("[INFO] Config process finished.")
 
     def sensoring(self):

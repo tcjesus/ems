@@ -9,7 +9,8 @@
 #define PIN_SENSOR_3 D7
 #define PIN_SENSOR_4 D7
 #define PIN_SENSOR_5 D6
-#define INFINIT 9999
+#define INFINIT      9999
+#define LESS_INFINIT 9999
 
 const char*    sensorModelInDevice[] = {"lm393", "potentiometer", "DHT11", "DHT11", "lm353"};
 const char*    sensorInDevice[]      = {"luminosity", "uv", "humidity", "temperature", "pression"};      
@@ -26,7 +27,7 @@ typedef struct{
 /*====================================================================
   Parameters of Wifi Connection
   ==================================================================== */
-const char* ssid      = "UEFS_VISITANTES"; // REDE
+const char* ssid      = ""; // REDE
 const char* password  = ""; // SENHA
 int timestamp;
 

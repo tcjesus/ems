@@ -9,13 +9,13 @@
         {
             "variable": "temperature",
             "model": "temp1",
-            "sample_interval": null,
+            "sample_interval": 1,
             "min_variation_rate": 0
         },
         {
             "variable": "humidity",
             "model": "humid1",
-            "sample_interval": null,
+            "sample_interval": 1,
             "min_variation_rate": 0
         }
     ],
@@ -23,7 +23,7 @@
         "fire": [
             {
                 "temperature": {
-                    "min": 9999,
+                    "min": -9999,
                     "max": 50
                 },
                 "humidity": {
@@ -33,11 +33,11 @@
             },
             {
                 "temperature": {
-                    "min": 9999,
+                    "min": -9999,
                     "max": 45
                 },
                 "humidity": {
-                    "min": 9999,
+                    "min": -9999,
                     "max": 20
                 }
             }
@@ -45,7 +45,7 @@
         "flood": [
             {
                 "humidity": {
-                    "min": 9999,
+                    "min": -9999,
                     "max": 85
                 }
             }

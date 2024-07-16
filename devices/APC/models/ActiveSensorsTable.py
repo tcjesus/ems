@@ -32,7 +32,8 @@ class ActiveSensorsTable():
    		self.__activeNodes.drop(idx, inplace = True) # Delete the edu register
 	
 	def getNodesByZone(self, zone_id):
-   		pass
+		infoEDUs = self.__activeNodes.loc[self.__activeNodes["zone"] == zone_id]
+		return infoEDUs.to_dict()
 
 	def getNodesBySensor(self, sensorType):
 		pass
